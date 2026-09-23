@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "689120569757",
+    "project_id": "cinema-booking-1506d",
+    "storage_bucket": "cinema-booking-1506d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689120569757:android:1704c723759dc71bb2e774",
+        "android_client_info": {
+          "package_name": "com.example.cinema_booking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMOLpR3IMhRwXo-EjcXQXaN85cwzpEMok"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

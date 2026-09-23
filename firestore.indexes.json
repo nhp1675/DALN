@@ -1,0 +1,57 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "suatChieu",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "phimId", "order": "ASCENDING" },
+        { "fieldPath": "trangThai", "order": "ASCENDING" },
+        { "fieldPath": "gioBatDau", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "suatChieu",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "phimId", "order": "ASCENDING" },
+        { "fieldPath": "rapId", "order": "ASCENDING" },
+        { "fieldPath": "trangThai", "order": "ASCENDING" },
+        { "fieldPath": "gioBatDau", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "donDatVe",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "ngayDat", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ve",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "gioChieu", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ve",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [
+        { "fieldPath": "uid", "order": "ASCENDING" },
+        { "fieldPath": "suatId", "order": "ASCENDING" },
+        { "fieldPath": "trangThai", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "ghe_suat_chieu",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "trangThaiGhe", "order": "ASCENDING" },
+        { "fieldPath": "thoiGianGiu", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

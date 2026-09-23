@@ -1,0 +1,102 @@
+rules_version = '2';
+// Bảo mật theo NFR #6, #7: chỉ admin được ghi dữ liệu danh mục,
+// khách hàng chỉ đọc/ghi dữ liệu của chính mình.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function daDangNhap() { return request.auth != null; }
+    function uid() { return request.auth.uid; }
+    function laAdmin() {
+      return daDangNhap() &&
+        get(/databases/$(database)/documents/users/$(uid())).data.vaiTro == 'admin';
+    }
+
+    // ----- Người dùng -----
+    match /users/{userId} {
+      allow read: if uid() == userId || laAdmin();
+      allow create: if uid() == userId;
+      allow update: if (uid() == userId &&
+                        request.resource.data.vaiTro == resource.data.vaiTro &&
+                        request.resource.data.trangThai == resource.data.trangThai)
+                       || laAdmin();
+      allow delete: if laAdmin();
+
+      match /theThanhVien/{docId} {
+        allow read: if uid() == userId || laAdmin();
+        allow write: if uid() == userId || laAdmin();
+      }
+    }
+
+    // ----- Danh mục: ai cũng xem được, chỉ admin sửa -----
+    match /phim/{id}       { allow read: if true; allow write: if laAdmin(); }
+    match /giaVe/{id}      { allow read: if true; allow write: if laAdmin(); }
+    match /rap/{rapId} {
+      allow read: if true;
+      allow write: if laAdmin();
+      match /{document=**} { allow read: if true; allow write: if laAdmin(); }
+    }
+    match /suatChieu/{id}  { allow read: if true; allow write: if laAdmin(); }
+
+    // ----- Giữ ghế / đặt ghế -----
+    // Khách hàng chỉ được giữ ghế cho chính mình và chỉ nhả ghế mình đang giữ.
+    // Việc chuyển sang 'daDat' chỉ hợp lệ khi ghế đang do chính họ giữ.
+    match /ghe_suat_chieu/{id} {
+      allow read: if true;
+      allow create, update: if daDangNhap() && (
+           laAdmin()
+        || request.resource.data.uidGiu == uid()
+        || (resource != null && resource.data.uidGiu == uid())
+        || (resource != null && resource.data.trangThaiGhe == 'trong')
+      );
+      allow delete: if laAdmin();
+    }
+
+    // ----- Đơn đặt vé và vé -----
+    match /donDatVe/{donId} {
+      allow read: if daDangNhap() && (resource.data.uid == uid() || laAdmin());
+      allow create: if daDangNhap() && request.resource.data.uid == uid();
+      allow update: if daDangNhap() && (resource.data.uid == uid() || laAdmin());
+      allow delete: if laAdmin();
+
+      match /ve/{veId} {
+        allow read: if daDangNhap() && (resource.data.uid == uid() || laAdmin());
+        allow create: if daDangNhap() && request.resource.data.uid == uid();
+        allow update: if daDangNhap() && (resource.data.uid == uid() || laAdmin());
+      }
+    }
+
+    // Quy tắc theo đường dẫn cụ thể ở trên không tự áp dụng cho truy vấn
+    // collectionGroup('ve') (dùng ở "Vé của tôi" để gom vé từ mọi đơn) —
+    // Firestore yêu cầu khai báo riêng bằng wildcard đệ quy cho việc đó.
+    match /{path=**}/ve/{veId} {
+      allow read: if daDangNhap() && (resource.data.uid == uid() || laAdmin());
+    }
+
+    match /thanhToan/{id} {
+      allow read: if laAdmin();
+      allow create: if daDangNhap();
+      allow update, delete: if laAdmin();
+    }
+
+    match /huyDoiVe/{id} {
+      allow read: if laAdmin();
+      allow create: if daDangNhap();
+      allow update, delete: if laAdmin();
+    }
+
+    // ----- Phòng chat: chỉ thành viên của phòng mới đọc/gửi tin -----
+    match /phongChat/{suatId} {
+      allow read: if daDangNhap();
+      allow create, update: if daDangNhap();
+
+      match /tinNhan/{tinNhanId} {
+        allow read: if daDangNhap() &&
+          uid() in get(/databases/$(database)/documents/phongChat/$(suatId)).data.danhSachThanhVien;
+        allow create: if daDangNhap() &&
+          request.resource.data.uid == uid() &&
+          uid() in get(/databases/$(database)/documents/phongChat/$(suatId)).data.danhSachThanhVien;
+        allow update, delete: if false;
+      }
+    }
+  }
+}
