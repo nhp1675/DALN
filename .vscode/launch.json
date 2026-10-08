@@ -1,0 +1,40 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "CineGo - Chrome (auto port)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/frontend",
+      "program": "${workspaceFolder}/frontend/lib/main.dart",
+      "deviceId": "chrome",
+      "flutterMode": "debug",
+      "toolArgs": [
+        "--web-hostname=localhost",
+        "--dart-define=API_BASE_URL=http://localhost:4000"
+      ]
+    },
+    {
+      "name": "CineGo - Chrome (choose port)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/frontend",
+      "program": "${workspaceFolder}/frontend/lib/main.dart",
+      "deviceId": "chrome",
+      "flutterMode": "debug",
+      "toolArgs": [
+        "--web-hostname=localhost",
+        "--web-port=${input:flutterWebPort}",
+        "--dart-define=API_BASE_URL=http://localhost:4000"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "id": "flutterWebPort",
+      "type": "promptString",
+      "description": "Cổng Flutter còn trống (1–65535), khác cổng backend 4000",
+      "default": "5173"
+    }
+  ]
+}

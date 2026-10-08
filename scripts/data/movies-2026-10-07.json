@@ -1,0 +1,58 @@
+{
+  "checkedAt": "2026-10-07",
+  "note": "Suzume: ngày chiếu lại tại Việt Nam. Danh sách tuyển chọn, không phải bảng xếp hạng doanh thu.",
+  "movies": [
+    {
+      "title": "Quyết Cua Anh Này",
+      "genre": "Tình cảm · Hài",
+      "duration": 115,
+      "ageRating": "T13",
+      "director": "Mez Tharatorn",
+      "cast": "Nadech Kugimiya, Minnie Nicha",
+      "synopsis": "Lucy tìm cách xây dựng tình yêu với Henry, người mất ký ức về ngày hôm trước mỗi khi thức dậy.",
+      "poster": "https://api-website.cinestar.com.vn/media/wysiwyg/Posters/10-2026/henry.jpg",
+      "status": "now",
+      "releaseDate": "2026-10-02",
+      "source": "https://www.cinestar.com.vn/movie/8907c33a-0f25-48cb-ba66-caca866ab99a/"
+    },
+    {
+      "title": "Thần Sư Chung Quỳ: Linh Giới Đại Chiến",
+      "genre": "Hoạt hình · Phiêu lưu",
+      "duration": 96,
+      "ageRating": "T13",
+      "director": "Wang Yuxi, Huang Shanchuan",
+      "cast": "Duan Yixuan, Yu Haowei, Hu Liangwei",
+      "synopsis": "Sơ Cửu theo chân Chung Quỳ vào thế giới linh hồn, cùng chống lại âm mưu đe dọa sự cân bằng giữa con người và yêu quái.",
+      "poster": "https://api-website.cinestar.com.vn/media/wysiwyg/Posters/10-2026/master-zhong.jpg",
+      "status": "now",
+      "releaseDate": "2026-10-02",
+      "source": "https://www.cinestar.com.vn/movie/3d564340-eb10-4e0b-a6fd-adfaeefdf9a3/"
+    },
+    {
+      "title": "Scotty: Giải Cứu Hoàng Thượng",
+      "genre": "Hoạt hình · Phiêu lưu",
+      "duration": 80,
+      "ageRating": "P",
+      "director": "Mohammad Pirzadi",
+      "cast": "Dario Coates, Phil Cornwell, Adam Diggle",
+      "synopsis": "Mèo hoang Scotty và mèo nhà Katie vượt qua những thử thách trên chuyến phiêu lưu, dần khám phá tình bạn và ý nghĩa của mái ấm.",
+      "poster": "https://api-website.cinestar.com.vn/media/wysiwyg/Posters/10-2026/scotty.jpg",
+      "status": "now",
+      "releaseDate": "2026-10-02",
+      "source": "https://www.cinestar.com.vn/movie/82c40625-cdf6-4692-8662-fdb1755f9126/"
+    },
+    {
+      "title": "Khóa Chặt Cửa Nào Suzume",
+      "genre": "Hoạt hình · Phiêu lưu",
+      "duration": 122,
+      "ageRating": "P",
+      "director": "Makoto Shinkai",
+      "cast": "",
+      "synopsis": "Suzume đồng hành cùng một chàng trai bí ẩn để đóng những cánh cửa có thể mang thảm họa đến Nhật Bản.",
+      "poster": "https://api-website.cinestar.com.vn/media/wysiwyg/Posters/10-2026/SUZUME.jpg",
+      "status": "now",
+      "releaseDate": "2026-10-02",
+      "source": "https://www.cinestar.com.vn/movie/47f644e0-dd2a-4668-a129-a3e9d09d1bfb/"
+    }
+  ]
+}

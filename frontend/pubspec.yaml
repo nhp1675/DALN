@@ -1,0 +1,32 @@
+name: cinego
+version: 2.0.0+1
+description: Website dat ve xem phim CineGo bang Flutter Web va MongoDB.
+publish_to: none
+environment:
+  sdk: '>=3.9.0 <4.0.0'
+dependencies:
+  cupertino_icons: ^1.0.8
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  http: ^1.5.0
+  flutter_svg: ^2.2.0
+  qr_flutter: ^4.1.0
+  intl: ^0.20.2
+  uuid: ^4.5.1
+  web: ^1.1.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/posters/
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 700

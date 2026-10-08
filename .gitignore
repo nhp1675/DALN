@@ -1,47 +1,39 @@
-# Miscellaneous
-*.class
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
 *.log
-*.pyc
-*.swp
-.DS_Store
-.atom/
-.build/
-.buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
+coverage/
+test-results/
+playwright-report/
+backups/
 
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-.idea/
+frontend/.dart_tool/
+frontend/build/
+frontend/.flutter-plugins*
+frontend/coverage/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# Mật khẩu và cấu hình riêng
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*firebase-adminsdk*.json
+serviceAccountKey.json
 
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
+# Node.js
+node_modules/
+*.log
+
+# Flutter
 .dart_tool/
+build/
+.flutter-plugins
 .flutter-plugins-dependencies
-.pub-cache/
-.pub/
-/build/
-/coverage/
+android/local.properties
 
-# Symbolication related
-app.*.symbols
-
-# Obfuscation related
-app.*.map.json
-
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
-
-cinema-booking-1506d-firebase-adminsdk-fbsvc-67c1ca4c52.json
+# Database và bản sao lưu
+dump/
+backups/

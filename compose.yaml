@@ -1,0 +1,66 @@
+# Local development only. Database is exposed exclusively to loopback.
+services:
+  mongo-key-init:
+    image: mongo:7.0
+    user: "0:0"
+    entrypoint:
+      [
+        "bash",
+        "-c",
+        "test -s /keys/keyfile || openssl rand -base64 756 > /keys/keyfile; chown 999:999 /keys/keyfile; chmod 400 /keys/keyfile",
+      ]
+    volumes:
+      - mongo-key:/keys
+  mongo:
+    image: mongo:7.0
+    command:
+      [
+        "mongod",
+        "--replSet",
+        "rs0",
+        "--bind_ip_all",
+        "--keyFile",
+        "/keys/keyfile",
+      ]
+    depends_on:
+      mongo-key-init:
+        condition: service_completed_successfully
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?Run npm run setup first}
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - mongo-key:/keys:ro
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--quiet",
+          "--eval",
+          "quit(db.adminCommand({ping:1}).ok ? 0 : 1)",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+  mongo-init:
+    image: mongo:7.0
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      MONGO_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD}
+    volumes:
+      - ./scripts/init-mongo.js:/setup/init-mongo.js:ro
+    entrypoint:
+      [
+        "bash",
+        "-c",
+        'mongosh --host mongo:27017 --username root --password "$$MONGO_ROOT_PASSWORD" --authenticationDatabase admin --quiet /setup/init-mongo.js',
+      ]
+volumes:
+  mongo-data:
+  mongo-key:
