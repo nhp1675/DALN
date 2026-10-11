@@ -7,7 +7,9 @@ import '../widgets/common.dart';
 import '../platform/browser.dart';
 
 class TicketsScreen extends StatefulWidget {
-  const TicketsScreen({super.key});
+  // 'success' khi vừa thanh toán xong và được chuyển từ cổng thanh toán về.
+  final String? paymentResult;
+  const TicketsScreen({super.key, this.paymentResult});
   @override
   State<TicketsScreen> createState() => _TicketsState();
 }
@@ -15,11 +17,20 @@ class TicketsScreen extends StatefulWidget {
 class _TicketsState extends State<TicketsScreen> {
   Future<Json>? future;
   bool busy = false;
+  bool announced = false;
   String? error;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     future ??= load();
+    if (!announced && widget.paymentResult == 'success') {
+      announced = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          notice(context, 'Thanh toán thành công! Vé của bạn đã sẵn sàng.');
+        }
+      });
+    }
   }
 
   Future<Json> load() async {
@@ -156,6 +167,29 @@ class _TicketsState extends State<TicketsScreen> {
         ),
       ),
       ErrorNote(error),
+      if (widget.paymentResult == 'success')
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Semantics(
+            liveRegion: true,
+            child: Panel(
+              color: const Color(0xFFE8F6EE),
+              padding: const EdgeInsets.all(16),
+              child: const Row(
+                children: [
+                  Icon(Icons.check_circle, color: Color(0xFF1E8E4E)),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Thanh toán thành công! Vé của bạn đã được phát hành, hãy xem mã QR bên dưới.',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       DataView<Json>(
         future: future!,
         retry: refresh,

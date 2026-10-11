@@ -24,8 +24,9 @@ class CineGoApp extends StatelessWidget {
   Widget build(BuildContext context) => AppScope(
     session: session,
     child: MaterialApp(
-      title: 'CineGo — Hẹn nhau ở rạp',
+      title: 'CineGo',
       debugShowCheckedModeBanner: false,
+      navigatorObservers: [routeObserver],
       locale: const Locale('vi'),
       supportedLocales: const [Locale('vi'), Locale('en')],
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
@@ -94,10 +95,15 @@ class CineGoApp extends StatelessWidget {
               );
             case 'checkout':
               protected = true;
-              screen = CheckoutScreen(id: parts.length > 1 ? parts[1] : '');
+              screen = CheckoutScreen(
+                id: parts.length > 1 ? parts[1] : '',
+                result: uri.queryParameters['payment'],
+              );
             case 'tickets':
               protected = true;
-              screen = const TicketsScreen();
+              screen = TicketsScreen(
+                paymentResult: uri.queryParameters['payment'],
+              );
             case 'cinemas':
               screen = const CinemasScreen();
             case 'chat':

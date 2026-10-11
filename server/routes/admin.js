@@ -1,4 +1,5 @@
 import { moderationRouter } from "./moderation.js";
+import { movieKey } from "../movie-key.js";
 import { Router } from "express";
 import { z } from "zod";
 import {
@@ -47,6 +48,20 @@ const poster = z
       /^https:\/\//.test(x),
     "Ảnh cần URL HTTPS hoặc ảnh poster có sẵn",
   );
+// Trailer: liên kết HTTPS tới YouTube, Facebook, Vimeo... (để trống nếu chưa có).
+const trailer = z
+  .string()
+  .trim()
+  .max(2048)
+  .refine((x) => {
+    if (x === "") return true;
+    try {
+      const u = new URL(x);
+      return u.protocol === "https:" && !u.username && !u.password;
+    } catch {
+      return false;
+    }
+  }, "Trailer cần là liên kết HTTPS (YouTube, Facebook...)");
 const movieSchema = z
   .object({
     title: str,
@@ -58,6 +73,7 @@ const movieSchema = z
     ageRating: z.enum(["P", "K", "T13", "T16", "T18"]),
     status: z.enum(["now", "soon", "archived"]),
     poster: poster.default(""),
+    trailerUrl: trailer.default(""),
     releaseDate: z.string().date().optional(),
   })
   .strict();
@@ -155,6 +171,23 @@ adminRouter.get(
     res.json({ items, total, page, pages: Math.ceil(total / 50) });
   }),
 );
+// Chặn thêm lại cùng một phim (cùng tên và đạo diễn).
+async function assertMovieUnique(data, excludeId, session) {
+  const key = movieKey(data);
+  const query = Movie.find(
+    excludeId ? { _id: { $ne: excludeId } } : {},
+    "title director status",
+  ).lean();
+  if (session) query.session(session);
+  const dup = (await query).find((m) => movieKey(m) === key);
+  if (dup)
+    fail(
+      409,
+      dup.status === "archived"
+        ? "Phim này đã có nhưng đang được lưu trữ. Hãy chỉnh sửa phim đó thay vì thêm mới."
+        : "Phim này đã có trong hệ thống (cùng tên và đạo diễn). Hãy chỉnh sửa phim hiện có thay vì thêm mới.",
+    );
+}
 for (const [name, Model, schema] of [
   ["movies", Movie, movieSchema],
   ["cinemas", Cinema, cinemaSchema],
@@ -163,6 +196,7 @@ for (const [name, Model, schema] of [
     "/" + name,
     body(schema),
     route(async (req, res) => {
+      if (name === "movies") await assertMovieUnique(req.data);
       const doc = await Model.create(req.data);
       await Audit.create({
         userId: req.user._id,
@@ -179,6 +213,12 @@ for (const [name, Model, schema] of [
       const id = parseId(req.params.id);
       res.json(
         await transaction(async (session) => {
+          if (name === "movies") {
+            // Chỉ kiểm tra khi đổi tên hoặc đạo diễn, để vẫn sửa/ẩn được bản trùng cũ.
+            const current = await Movie.findById(id).session(session);
+            if (current && movieKey(current) !== movieKey(req.data))
+              await assertMovieUnique(req.data, id, session);
+          }
           const doc = await Model.findByIdAndUpdate(
             id,
             { $set: req.data },

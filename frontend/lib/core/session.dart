@@ -10,6 +10,11 @@ class Session extends ChangeNotifier {
   Session(this.api);
   bool get isAdmin => user?['role'] == 'admin';
   bool get isDemo => config['paymentMode'] == 'demo';
+  bool get isGateway => config['paymentMode'] == 'online';
+  List<String> get paymentMethods {
+    final m = config['paymentMethods'];
+    return m is List ? m.map((e) => '$e').toList() : <String>[];
+  }
   Json get policy => config['policy'] is Map ? asMap(config['policy']) : {};
   Future<void> initialize() async {
     try {

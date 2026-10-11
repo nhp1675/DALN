@@ -2,10 +2,10 @@ import { Router } from "express";
 import { z } from "zod";
 import { Movie, Cinema, Showtime, ShowtimeSeat, Room } from "../models.js";
 import { route, parseId, fail } from "../core.js";
-import { config, policy } from "../config.js";
+import { config, policy, paymentMethods } from "../config.js";
 export const publicRouter = Router();
 publicRouter.get("/config", (req, res) =>
-  res.json({ paymentMode: config.PAYMENT_MODE, policy }),
+  res.json({ paymentMode: config.PAYMENT_MODE, paymentMethods, policy }),
 );
 publicRouter.get(
   "/movies",

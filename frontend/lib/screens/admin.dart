@@ -29,6 +29,7 @@ const defaults = <String, Json>{
     'ageRating': 'P',
     'status': 'now',
     'poster': '',
+    'trailerUrl': '',
   },
   'cinemas': {
     'name': '',
@@ -59,6 +60,7 @@ const fields = <String, List<List<String>>>{
     ['ageRating', 'Độ tuổi', 'select', 'P,K,T13,T16,T18'],
     ['status', 'Trạng thái', 'select', 'now,soon,archived'],
     ['poster', 'Poster (HTTPS hoặc /posters/...)'],
+    ['trailerUrl', 'Trailer (link YouTube, Facebook... bắt đầu bằng https://)'],
   ],
   'cinemas': [
     ['name', 'Tên rạp'],
@@ -183,7 +185,13 @@ class _AdminState extends State<AdminScreen> {
         api: AppScope.of(context).api,
       ),
     );
-    if (result == true && mounted) refresh();
+    if (result == true && mounted) {
+      refresh();
+      notice(
+        context,
+        '${item == null ? 'Đã thêm' : 'Đã cập nhật'} ${adminNames[tab]!.toLowerCase()} thành công.',
+      );
+    }
   }
 
   Future<void> remove(Json item) async {
@@ -202,9 +210,20 @@ class _AdminState extends State<AdminScreen> {
       await AppScope.of(
         context,
       ).api.request('/admin/$tab/${item['_id']}', method: 'DELETE');
-      if (mounted) refresh();
+      if (mounted) {
+        refresh();
+        notice(
+          context,
+          ['movies', 'cinemas'].contains(tab)
+              ? 'Đã ẩn mục thành công.'
+              : 'Đã xóa mục thành công.',
+        );
+      }
     } catch (e) {
-      if (mounted) setState(() => error = '$e');
+      if (mounted) {
+        setState(() => error = '$e');
+        notice(context, '$e');
+      }
     } finally {
       if (mounted) setState(() => busy = false);
     }
@@ -671,6 +690,7 @@ class _EditorState extends State<AdminEditor> {
   late Json values;
   bool busy = false;
   String? error;
+  final errorKey = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -760,7 +780,14 @@ class _EditorState extends State<AdminEditor> {
       );
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
-      if (mounted) setState(() => error = '$e');
+      if (mounted) {
+        setState(() => error = '$e');
+        // Cuộn lên để admin thấy ngay thông báo lỗi trong hộp thoại.
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final ctx = errorKey.currentContext;
+          if (ctx != null) Scrollable.ensureVisible(ctx);
+        });
+      }
     } finally {
       if (mounted) setState(() => busy = false);
     }
@@ -786,7 +813,7 @@ class _EditorState extends State<AdminEditor> {
                     'Nửa sau phòng là VIP. Có thể sửa từng ghế trước khi lên lịch.',
                   ),
                 ),
-              ErrorNote(error),
+              KeyedSubtree(key: errorKey, child: ErrorNote(error)),
               ...fields[widget.entity]!.map((f) {
                 final key = f[0], label = f[1], type = f.length > 2 ? f[2] : '';
                 Widget input;
@@ -852,6 +879,14 @@ class _EditorState extends State<AdminEditor> {
                     validator: (v) {
                       if (['cast', 'director', 'poster'].contains(key)) {
                         return null;
+                      }
+                      if (key == 'trailerUrl') {
+                        final t = (v ?? '').trim();
+                        if (t.isEmpty) return null;
+                        final u = Uri.tryParse(t);
+                        return u != null && u.scheme == 'https' && u.host.isNotEmpty
+                            ? null
+                            : 'Trailer cần là liên kết bắt đầu bằng https://';
                       }
                       if ((v ?? '').trim().isEmpty) {
                         return 'Vui lòng nhập thông tin';

@@ -3,7 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../core/api.dart';
 import '../core/format.dart';
+import '../platform/browser.dart';
 import '../widgets/common.dart';
+
+const _methodLabels = {'vnpay': 'VNPay', 'atm': 'Thẻ ATM', 'momo': 'MoMo'};
+const _methodIcons = {
+  'vnpay': Icons.qr_code_2,
+  'atm': Icons.credit_card,
+  'momo': Icons.account_balance_wallet,
+};
 
 class BookingScreen extends StatefulWidget {
   final String id;
@@ -55,11 +63,45 @@ class _BookingState extends State<BookingScreen> {
       final d = asMap(
         await AppScope.of(context).api.request('/showtimes/${widget.id}/seats'),
       );
-      if (mounted && data != null) setState(() => data!['seats'] = d['seats']);
+      if (mounted && data != null) {
+        setState(() {
+          data!['seats'] = d['seats'];
+          dropTaken();
+        });
+      }
     } catch (_) {
       /* The next user action is still checked by the server. */
     } finally {
       polling = false;
+    }
+  }
+
+  // Bỏ khỏi lựa chọn những ghế vừa bị người khác giữ/đặt và báo cho người dùng.
+  void dropTaken() {
+    final taken = asList(data?['seats'])
+        .where(
+          (s) => selected.contains(sid(s['id'])) && s['status'] != 'available',
+        )
+        .toList();
+    if (taken.isEmpty) return;
+    selected.removeAll(taken.map((s) => sid(s['id'])));
+    error =
+        'Ghế ${taken.map((s) => s['label']).join(', ')} vừa có người khác chọn nên đã được bỏ khỏi lựa chọn của bạn. Vui lòng chọn ghế khác.';
+  }
+
+  Future<void> refreshSeats() async {
+    try {
+      final d = asMap(
+        await AppScope.of(context).api.request('/showtimes/${widget.id}/seats'),
+      );
+      if (mounted && data != null) {
+        setState(() {
+          data!['seats'] = d['seats'];
+          dropTaken();
+        });
+      }
+    } catch (_) {
+      /* Lần thao tác sau vẫn được server kiểm tra. */
     }
   }
 
@@ -105,7 +147,11 @@ class _BookingState extends State<BookingScreen> {
       );
       if (mounted) go(context, '/checkout/${order['_id']}');
     } catch (e) {
-      if (mounted) setState(() => error = '$e');
+      if (mounted) {
+        setState(() => error = '$e');
+        // Ghế có thể vừa bị người khác lấy: tải lại sơ đồ và bỏ ghế đó khỏi lựa chọn.
+        await refreshSeats();
+      }
     } finally {
       if (mounted) setState(() => busy = false);
     }
@@ -223,7 +269,9 @@ class _BookingState extends State<BookingScreen> {
                                       available = s['status'] == 'available',
                                       vip = s['type'] == 'vip';
                                   final bg = !available
-                                      ? const Color(0xFFE2E4E5)
+                                      ? (active
+                                            ? const Color(0xFFF6D3CE)
+                                            : const Color(0xFFE2E4E5))
                                       : active
                                       ? coral
                                       : vip
@@ -260,7 +308,7 @@ class _BookingState extends State<BookingScreen> {
                                                     BorderRadius.circular(7),
                                               ),
                                             ),
-                                            onPressed: available && !busy
+                                            onPressed: (available || active) && !busy
                                                 ? () => toggle(s)
                                                 : null,
                                             child: Text(
@@ -405,35 +453,159 @@ class _BookingState extends State<BookingScreen> {
 
 class CheckoutScreen extends StatefulWidget {
   final String id;
-  const CheckoutScreen({super.key, required this.id});
+  // Kết quả khi VNPay chuyển khách quay lại: success | failed | invalid.
+  final String? result;
+  const CheckoutScreen({super.key, required this.id, this.result});
   @override
   State<CheckoutScreen> createState() => _CheckoutState();
 }
 
-class _CheckoutState extends State<CheckoutScreen> {
+class _CheckoutState extends State<CheckoutScreen> with RouteAware {
   Future<Json>? future;
   Timer? timer;
   bool busy = false;
   String? error;
+  String method = 'vnpay';
+  bool polling = false;
+  bool checking = false;
+  int ticks = 0;
+  Api? api;
+  bool subscribed = false,
+      released = false,
+      redirecting = false,
+      confirming = false;
+  String orderStatus = '';
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    api = AppScope.of(context).api;
+    final route = ModalRoute.of(context);
+    if (!subscribed && route != null) {
+      routeObserver.subscribe(this, route);
+      subscribed = true;
+    }
     if (future == null) {
       future = load();
+      final ms = AppScope.of(context).paymentMethods;
+      if (ms.isNotEmpty && !ms.contains(method)) method = ms.first;
+      polling = widget.result == 'success';
+      if (widget.result == 'failed') {
+        error =
+            'Thanh toán chưa thành công hoặc đã bị hủy. Bạn có thể thử lại khi ghế còn được giữ.';
+      } else if (widget.result == 'invalid') {
+        error = 'Không xác minh được kết quả thanh toán. Vui lòng thử lại.';
+      }
       timer = Timer.periodic(const Duration(seconds: 1), (_) {
-        if (mounted) setState(() {});
+        if (!mounted) return;
+        ticks++;
+        if (polling && ticks % 2 == 0) checkPaid();
+        setState(() {});
       });
     }
   }
 
   @override
   void dispose() {
+    routeObserver.unsubscribe(this);
+    releaseSeats();
     timer?.cancel();
     super.dispose();
   }
 
-  Future<Json> load() async =>
-      asMap(await AppScope.of(context).api.request('/orders/${widget.id}'));
+  // Rời trang thanh toán khi chưa trả tiền (về trang chủ, quay lại...): trả ghế
+  // ngay thay vì giữ khóa đến hết hạn.
+  bool get canRelease =>
+      !released &&
+      !redirecting &&
+      !confirming &&
+      !polling &&
+      widget.result != 'success' &&
+      orderStatus == 'pending';
+  void releaseSeats() {
+    if (!canRelease) return;
+    released = true;
+    api
+        ?.request('/orders/${widget.id}/cancel', method: 'POST')
+        .catchError((_) => null);
+  }
+
+  @override
+  void didPushNext() => releaseSeats();
+  @override
+  void didPop() => releaseSeats();
+  @override
+  void didPopNext() {
+    if (released && mounted) setState(() => future = load());
+  }
+
+  Future<Json> load() async {
+    final d = asMap(
+      await AppScope.of(context).api.request('/orders/${widget.id}'),
+    );
+    orderStatus = sid(asMap(d['order'])['status']);
+    return d;
+  }
+
+  // Sau khi VNPay chuyển về, đợi server xác nhận (qua IPN hoặc return URL).
+  Future<void> checkPaid() async {
+    if (checking) return;
+    checking = true;
+    final s = AppScope.of(context);
+    try {
+      final d = await load();
+      final status = asMap(d['order'])['status'];
+      if (!mounted) return;
+      if (status == 'paid') {
+        polling = false;
+        await s.refresh();
+        if (mounted) go(context, '/tickets?payment=success');
+      } else if (status != 'pending' || ticks > 30) {
+        polling = false;
+        setState(() {
+          future = Future.value(d);
+          error =
+              'Chưa xác nhận được thanh toán cho đơn này. Nếu tài khoản đã bị trừ tiền, hãy liên hệ quản trị viên kèm mã đơn ${widget.id}.';
+        });
+      }
+    } catch (_) {
+      // Lỗi mạng tạm thời: thử lại ở lần kiểm tra sau.
+    } finally {
+      checking = false;
+    }
+  }
+
+  Future<void> startPayment() async {
+    setState(() {
+      busy = true;
+      error = null;
+    });
+    final s = AppScope.of(context);
+    try {
+      final r = asMap(
+        await s.api.request(
+          '/orders/${widget.id}/pay',
+          method: 'POST',
+          body: {'method': method},
+        ),
+      );
+      if (r['paid'] == true) {
+        await s.refresh();
+        if (mounted) {
+          orderStatus = 'paid';
+          notice(context, 'Đơn không phát sinh thêm tiền. Vé đã được cập nhật.');
+          go(context, '/tickets');
+        }
+      } else if (r['paymentUrl'] != null) {
+        redirecting = true; // sang cổng thanh toán: chưa nhả ghế
+        redirectTo(sid(r['paymentUrl']));
+      }
+    } catch (e) {
+      if (mounted) setState(() => error = '$e');
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
   Future<void> pay(String outcome) async {
     setState(() {
       busy = true;
@@ -449,6 +621,7 @@ class _CheckoutState extends State<CheckoutScreen> {
         ),
       );
       if (order['status'] == 'paid') {
+        orderStatus = 'paid';
         await s.refresh();
         if (mounted) {
           notice(
@@ -472,10 +645,15 @@ class _CheckoutState extends State<CheckoutScreen> {
   }
 
   Future<void> cancel() async {
-    if (!await confirm(context, 'Hủy đơn?', 'Ghế đang giữ sẽ được trả lại.')) {
-      return;
-    }
-    if (!mounted) return;
+    confirming = true;
+    final ok = await confirm(
+      context,
+      'Hủy đơn?',
+      'Ghế đang giữ sẽ được trả lại.',
+    );
+    confirming = false;
+    if (!ok || !mounted) return;
+    released = true;
     setState(() => busy = true);
     try {
       await AppScope.of(
@@ -566,6 +744,35 @@ class _CheckoutState extends State<CheckoutScreen> {
                         const Text(
                           'Không nhập thông tin thẻ hoặc chuyển tiền thật. Chế độ này dùng để thử luồng thành công và thất bại.',
                         ),
+                      ] else if (AppScope.of(context).isGateway) ...[
+                        SegmentedButton<String>(
+                          segments: [
+                            for (final m in AppScope.of(context).paymentMethods)
+                              ButtonSegment(
+                                value: m,
+                                label: Text(_methodLabels[m] ?? m),
+                                icon: Icon(_methodIcons[m] ?? Icons.payment),
+                              ),
+                          ],
+                          selected: {method},
+                          onSelectionChanged: busy || polling
+                              ? null
+                              : (v) => setState(() => method = v.first),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          method == 'momo'
+                              ? 'Bạn sẽ được chuyển sang MoMo để quét mã QR hoặc mở ứng dụng MoMo.'
+                              : 'Bạn sẽ được chuyển sang cổng VNPay để chọn cách thanh toán (quét QR, thẻ ATM...).',
+                        ),
+                        if (polling)
+                          const Padding(
+                            padding: EdgeInsets.only(top: 16),
+                            child: Tag(
+                              'Đang xác nhận thanh toán…',
+                              color: coral,
+                            ),
+                          ),
                       ] else
                         const Text('Dịch vụ thanh toán chưa được cấu hình.'),
                     ],
@@ -610,11 +817,19 @@ class _CheckoutState extends State<CheckoutScreen> {
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
-                        onPressed: busy || !AppScope.of(context).isDemo
+                        onPressed: busy || polling
                             ? null
-                            : () => pay('success'),
+                            : AppScope.of(context).isGateway
+                            ? startPayment
+                            : AppScope.of(context).isDemo
+                            ? () => pay('success')
+                            : null,
                         child: Text(
-                          busy ? 'Đang xử lý…' : 'Xác nhận thanh toán mô phỏng',
+                          busy || polling
+                              ? 'Đang xử lý…'
+                              : AppScope.of(context).isGateway
+                              ? 'Thanh toán qua ${method == 'atm' ? 'thẻ ATM' : method == 'momo' ? 'MoMo' : 'VNPay'}'
+                              : 'Xác nhận thanh toán mô phỏng',
                         ),
                       ),
                     ),

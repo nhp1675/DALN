@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { randomBytes } from "node:crypto";
-import { config, policy } from "../config.js";
+import { config, policy, vnpay, momo, paymentMethods } from "../config.js";
 import {
   Order,
   OrderItem,
@@ -15,7 +15,20 @@ import {
   Membership,
   ChatRoom,
 } from "../models.js";
-import { transaction, create, fail, same, audit } from "../core.js";
+import {
+  transaction,
+  create,
+  fail,
+  same,
+  audit,
+  HttpError,
+} from "../core.js";
+import {
+  createPaymentUrl,
+  makeTxnRef,
+  bankCodeFor,
+} from "../payments/vnpay.js";
+import { createPayment as createMomoPayment } from "../payments/momo.js";
 const now = () => new Date();
 export async function releaseExpired() {
   return transaction(async (session) => {
@@ -284,6 +297,124 @@ async function revokeChat(userId, showtimeId, session) {
       );
   }
 }
+// Đơn còn thanh toán được không (kiểm tra trước khi thu tiền).
+async function assertPayable(order, session) {
+  if (order.status !== "pending" || order.expiresAt <= now())
+    fail(409, "Đơn đã hết thời gian giữ ghế.");
+  await lockShowtime(order.showtimeId, session);
+  const items = await OrderItem.find({ orderId: order._id }).session(session);
+  const held = await ShowtimeSeat.countDocuments({
+    orderId: order._id,
+    status: "held",
+    holdUntil: { $gt: now() },
+  }).session(session);
+  if (held !== items.length) fail(409, "Thời gian giữ ghế đã hết.");
+  return items;
+}
+// Phát hành vé sau khi đã thu tiền. Dùng chung cho demo và cổng thanh toán.
+async function settlePaid(order, items, { provider, reference }, session) {
+  const userId = order.userId,
+    orderId = order._id;
+  const payment = await create(
+    Payment,
+    {
+      userId,
+      orderId,
+      amount: order.total,
+      status: "success",
+      provider,
+      reference,
+      purpose: order.kind,
+    },
+    session,
+  );
+  if (order.kind === "booking") {
+    for (const item of items) {
+      const ticket = await create(
+        Ticket,
+        {
+          userId,
+          orderId,
+          orderItemId: item._id,
+          showtimeId: order.showtimeId,
+          showtimeSeatId: item.showtimeSeatId,
+          currentValue: item.price,
+          qr: randomBytes(32).toString("base64url"),
+          policy: order.policy,
+        },
+        session,
+      );
+      await create(
+        Allocation,
+        { ticketId: ticket._id, paymentId: payment._id, amount: item.price },
+        session,
+      );
+      await ShowtimeSeat.updateOne(
+        { _id: item.showtimeSeatId, orderId },
+        {
+          $set: { status: "booked", ticketId: ticket._id },
+          $unset: { holdUntil: 1 },
+        },
+        { session },
+      );
+    }
+  } else {
+    const ticket = await Ticket.findOne({
+      _id: order.exchangeTicketId,
+      userId,
+    }).session(session);
+    await checkChange(ticket, session);
+    if (!same(ticket.showtimeSeatId, order.oldShowtimeSeatId))
+      fail(409, "Vé đã thay đổi. Hãy tạo yêu cầu mới.");
+    const oldShow = ticket.showtimeId;
+    const request = await ChangeRequest.findOne({
+      orderId,
+      status: "pending",
+    }).session(session);
+    if (!request) fail(409, "Yêu cầu đổi không còn hiệu lực.");
+    if (order.total > 0)
+      await create(
+        Allocation,
+        { ticketId: ticket._id, paymentId: payment._id, amount: order.total },
+        session,
+      );
+    if (order.refundAmount)
+      await refundTicket(ticket, order.refundAmount, request._id, session);
+    await ShowtimeSeat.updateOne(
+      { _id: ticket.showtimeSeatId, ticketId: ticket._id },
+      {
+        $set: { status: "available" },
+        $unset: { orderId: 1, ticketId: 1, holdUntil: 1 },
+      },
+      { session },
+    );
+    ticket.showtimeId = order.showtimeId;
+    ticket.showtimeSeatId = items[0].showtimeSeatId;
+    ticket.currentValue = order.newValue;
+    ticket.qr = randomBytes(32).toString("base64url");
+    await ticket.save({ session });
+    await ShowtimeSeat.updateOne(
+      { _id: ticket.showtimeSeatId, orderId },
+      {
+        $set: { status: "booked", ticketId: ticket._id },
+        $unset: { holdUntil: 1 },
+      },
+      { session },
+    );
+    request.status = "completed";
+    await request.save({ session });
+    await revokeChat(userId, oldShow, session);
+  }
+  await User.updateOne(
+    { _id: userId },
+    { $inc: { netSpend: order.total } },
+    { session },
+  );
+  order.status = "paid";
+  await order.save({ session });
+  await audit(userId, `payment.${provider}.success`, order._id, session);
+  return order;
+}
 export async function payDemo(userId, orderId, outcome) {
   if (config.PAYMENT_MODE !== "demo" || config.NODE_ENV === "production")
     fail(503, "Thanh toán chưa được cấu hình. Liên hệ quản trị viên.");
@@ -293,16 +424,7 @@ export async function payDemo(userId, orderId, outcome) {
     );
     if (!order) fail(404, "Không tìm thấy đơn.");
     if (order.status === "paid") return order;
-    if (order.status !== "pending" || order.expiresAt <= now())
-      fail(409, "Đơn đã hết thời gian giữ ghế.");
-    await lockShowtime(order.showtimeId, session);
-    const items = await OrderItem.find({ orderId }).session(session);
-    const held = await ShowtimeSeat.countDocuments({
-      orderId,
-      status: "held",
-      holdUntil: { $gt: now() },
-    }).session(session);
-    if (held !== items.length) fail(409, "Thời gian giữ ghế đã hết.");
+    const items = await assertPayable(order, session);
     if (outcome === "failed") {
       await create(
         Payment,
@@ -319,106 +441,179 @@ export async function payDemo(userId, orderId, outcome) {
       await audit(userId, "payment.failed", order._id, session);
       return order;
     }
-    const payment = await create(
-      Payment,
-      {
-        userId,
-        orderId,
-        amount: order.total,
-        status: "success",
-        reference: `demo:${orderId}`,
-        purpose: order.kind,
-      },
+    return settlePaid(
+      order,
+      items,
+      { provider: "demo", reference: `demo:${orderId}` },
       session,
     );
-    if (order.kind === "booking") {
-      for (const item of items) {
-        const ticket = await create(
-          Ticket,
-          {
-            userId,
-            orderId,
-            orderItemId: item._id,
-            showtimeId: order.showtimeId,
-            showtimeSeatId: item.showtimeSeatId,
-            currentValue: item.price,
-            qr: randomBytes(32).toString("base64url"),
-            policy: order.policy,
-          },
-          session,
-        );
-        await create(
-          Allocation,
-          { ticketId: ticket._id, paymentId: payment._id, amount: item.price },
-          session,
-        );
-        await ShowtimeSeat.updateOne(
-          { _id: item.showtimeSeatId, orderId },
-          {
-            $set: { status: "booked", ticketId: ticket._id },
-            $unset: { holdUntil: 1 },
-          },
-          { session },
-        );
-      }
-    } else {
-      const ticket = await Ticket.findOne({
-        _id: order.exchangeTicketId,
-        userId,
-      }).session(session);
-      await checkChange(ticket, session);
-      if (!same(ticket.showtimeSeatId, order.oldShowtimeSeatId))
-        fail(409, "Vé đã thay đổi. Hãy tạo yêu cầu mới.");
-      const oldShow = ticket.showtimeId;
-      const request = await ChangeRequest.findOne({
-        orderId,
-        status: "pending",
-      }).session(session);
-      if (!request) fail(409, "Yêu cầu đổi không còn hiệu lực.");
-      if (order.total > 0)
-        await create(
-          Allocation,
-          { ticketId: ticket._id, paymentId: payment._id, amount: order.total },
-          session,
-        );
-      if (order.refundAmount)
-        await refundTicket(ticket, order.refundAmount, request._id, session);
-      await ShowtimeSeat.updateOne(
-        { _id: ticket.showtimeSeatId, ticketId: ticket._id },
-        {
-          $set: { status: "available" },
-          $unset: { orderId: 1, ticketId: 1, holdUntil: 1 },
-        },
-        { session },
-      );
-      ticket.showtimeId = order.showtimeId;
-      ticket.showtimeSeatId = items[0].showtimeSeatId;
-      ticket.currentValue = order.newValue;
-      ticket.qr = randomBytes(32).toString("base64url");
-      await ticket.save({ session });
-      await ShowtimeSeat.updateOne(
-        { _id: ticket.showtimeSeatId, orderId },
-        {
-          $set: { status: "booked", ticketId: ticket._id },
-          $unset: { holdUntil: 1 },
-        },
-        { session },
-      );
-      request.status = "completed";
-      await request.save({ session });
-      await revokeChat(userId, oldShow, session);
-    }
-    await User.updateOne(
-      { _id: userId },
-      { $inc: { netSpend: order.total } },
-      { session },
-    );
-    order.status = "paid";
-    await order.save({ session });
-    await audit(userId, "payment.demo.success", order._id, session);
-    return order;
   });
 }
+// Bước 1 của thanh toán qua cổng: trả về đường dẫn để chuyển khách sang VNPay.
+export async function startGatewayPayment(userId, orderId, method, ipAddr) {
+  if (config.PAYMENT_MODE !== "online")
+    fail(503, "Thanh toán trực tuyến chưa được cấu hình. Liên hệ quản trị viên.");
+  if (!paymentMethods.includes(method))
+    fail(400, "Phương thức thanh toán này chưa được bật.");
+  const order = await Order.findOne({ _id: orderId, userId });
+  if (!order) fail(404, "Không tìm thấy đơn.");
+  if (order.status === "paid") return { paid: true };
+  if (order.total === 0) {
+    // Đổi vé không phát sinh thêm tiền: không cần qua cổng thanh toán.
+    await transaction(async (session) => {
+      const fresh = await Order.findOne({ _id: orderId, userId }).session(
+        session,
+      );
+      if (fresh.status === "paid") return;
+      const items = await assertPayable(fresh, session);
+      await settlePaid(
+        fresh,
+        items,
+        { provider: "none", reference: `free:${orderId}` },
+        session,
+      );
+    });
+    return { paid: true };
+  }
+  if (order.status !== "pending" || order.expiresAt <= now())
+    fail(409, "Đơn đã hết thời gian giữ ghế.");
+  const [held, count] = await Promise.all([
+    ShowtimeSeat.countDocuments({
+      orderId: order._id,
+      status: "held",
+      holdUntil: { $gt: now() },
+    }),
+    OrderItem.countDocuments({ orderId: order._id }),
+  ]);
+  if (held !== count) fail(409, "Thời gian giữ ghế đã hết.");
+  await Order.updateOne({ _id: order._id }, { $set: { paymentMethod: method } });
+  const txnRef = makeTxnRef(String(order._id));
+  const orderInfo = `Thanh toan ve CineGo ${order._id}`;
+  if (method === "momo") {
+    // MoMo tạo giao dịch bằng cuộc gọi từ server; payUrl trả về để chuyển khách sang.
+    try {
+      const { payUrl } = await createMomoPayment(momo, {
+        txnRef,
+        amount: order.total,
+        orderInfo,
+      });
+      return { paymentUrl: payUrl };
+    } catch (e) {
+      console.error(
+        JSON.stringify({
+          level: "error",
+          path: "momo-create",
+          message: String(e.message).slice(0, 200),
+        }),
+      );
+      fail(502, "Không tạo được giao dịch MoMo. Vui lòng thử lại sau.");
+    }
+  }
+  return {
+    paymentUrl: createPaymentUrl(vnpay, {
+      txnRef,
+      amount: order.total,
+      orderInfo,
+      ipAddr,
+      bankCode: bankCodeFor(method),
+      expiresAt: order.expiresAt,
+    }),
+  };
+}
+// Đã thu tiền nhưng không phát hành được vé (đơn hết hạn, ghế mất, trả trùng...).
+// Ghi lại để quản trị viên đối soát và hoàn tiền thủ công.
+async function recordUnfulfilled(order, r, purpose, session) {
+  await create(
+    Payment,
+    {
+      userId: order.userId,
+      orderId: order._id,
+      amount: order.total,
+      status: "success",
+      provider: r.provider,
+      reference: r.txnRef,
+      purpose,
+    },
+    session,
+  );
+  await audit(order.userId, `payment.${purpose}`, order._id, session, {
+    reference: r.txnRef,
+    amount: r.amount,
+  });
+}
+// Bước 2: xử lý kết quả cổng thanh toán gửi về (IPN hoặc return URL, đã kiểm tra chữ ký).
+// Gọi nhiều lần với cùng một giao dịch vẫn an toàn.
+// Trả về { code } theo mã RspCode mà VNPay yêu cầu cho IPN (MoMo dùng lại để phân loại).
+export async function handleGatewayResult(r) {
+  const run = () =>
+    transaction(async (session) => {
+      const order = r.orderId
+        ? await Order.findById(r.orderId).session(session)
+        : null;
+      if (!order) return { code: "01" };
+      if (order.total !== r.amount) return { code: "04", order };
+      const seen = await Payment.exists({ reference: r.txnRef }).session(
+        session,
+      );
+      if (!r.success) {
+        if (!seen && order.status === "pending")
+          await create(
+            Payment,
+            {
+              userId: order.userId,
+              orderId: order._id,
+              amount: order.total,
+              status: "failed",
+              provider: r.provider,
+              reference: r.txnRef,
+              purpose: order.kind,
+            },
+            session,
+          );
+        return { code: "00", order };
+      }
+      if (seen) return { code: "02", order };
+      if (order.status === "paid") {
+        await recordUnfulfilled(order, r, "duplicate", session);
+        return { code: "00", order };
+      }
+      const items = await OrderItem.find({ orderId: order._id }).session(
+        session,
+      );
+      const held =
+        order.status === "pending"
+          ? await ShowtimeSeat.countDocuments({
+              orderId: order._id,
+              status: "held",
+            }).session(session)
+          : 0;
+      if (order.status !== "pending" || held !== items.length) {
+        await recordUnfulfilled(order, r, "late-unfulfilled", session);
+        return { code: "00", order, late: true };
+      }
+      await lockShowtime(order.showtimeId, session);
+      await settlePaid(
+        order,
+        items,
+        { provider: r.provider, reference: r.txnRef },
+        session,
+      );
+      return { code: "00", order };
+    });
+  try {
+    return await run();
+  } catch (e) {
+    if (!(e instanceof HttpError) || !r.success) throw e;
+    // Tiền đã thu nhưng không phát hành được vé (ví dụ suất chiếu bị hủy).
+    return transaction(async (session) => {
+      const order = await Order.findById(r.orderId).session(session);
+      if (!(await Payment.exists({ reference: r.txnRef }).session(session)))
+        await recordUnfulfilled(order, r, "late-unfulfilled", session);
+      return { code: "00", order, late: true };
+    });
+  }
+}
+export const handleVnpayResult = handleGatewayResult;
 export async function cancelOrder(userId, orderId) {
   return transaction(async (session) => {
     const order = await Order.findOne({ _id: orderId, userId }).session(
@@ -444,7 +639,8 @@ export async function cancelOrder(userId, orderId) {
   });
 }
 export async function cancelTicket(userId, ticketId) {
-  if (config.PAYMENT_MODE !== "demo" || config.NODE_ENV === "production")
+  // Hoàn tiền hiện vẫn là mô phỏng (chưa gọi API hoàn tiền của VNPay).
+  if (config.PAYMENT_MODE === "disabled" || config.NODE_ENV === "production")
     fail(503, "Dịch vụ hoàn tiền chưa được cấu hình.");
   return transaction(async (session) => {
     const ticket = await Ticket.findOne({ _id: ticketId, userId }).session(

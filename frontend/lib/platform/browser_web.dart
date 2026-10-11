@@ -34,6 +34,11 @@ void openExternal(String url) {
   web.window.open(url, '_blank', 'noopener,noreferrer');
 }
 
+// Chuyển cả tab sang địa chỉ khác (dùng để sang trang thanh toán của VNPay).
+void redirectTo(String url) {
+  web.window.location.assign(url);
+}
+
 void downloadData(String name, String dataUrl) {
   final anchor = web.HTMLAnchorElement()
     ..href = dataUrl

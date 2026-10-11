@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/api.dart';
 import '../core/format.dart';
+import '../platform/browser.dart';
 import '../widgets/common.dart';
 import '../widgets/home_carousel.dart';
 
@@ -91,6 +92,7 @@ class _CatalogState extends State<CatalogScreen> {
                 children: movies
                     .map(
                       (m) => SizedBox(
+                        key: ValueKey(sid(m['_id'])),
                         width: width,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,7 +163,7 @@ class _CatalogState extends State<CatalogScreen> {
       const SizedBox(height: 36),
       const Divider(),
       const SizedBox(height: 22),
-      const Text(
+      /*const Text(
         'CineGo · Hẹn nhau ở rạp.',
         style: TextStyle(fontWeight: FontWeight.bold, color: ink),
       ),
@@ -169,9 +171,17 @@ class _CatalogState extends State<CatalogScreen> {
       const Text(
         'Khám phá phim yêu thích và chọn suất chiếu phù hợp với bạn.',
         style: TextStyle(color: muted, fontSize: 13),
-      ),
+      ),*/
     ],
   );
+}
+
+// Chỉ mở trailer khi là liên kết HTTPS hợp lệ.
+String? _trailerUrl(Json movie) {
+  final u = Uri.tryParse(sid(movie['trailerUrl']).trim());
+  return u != null && u.scheme == 'https' && u.host.isNotEmpty
+      ? u.toString()
+      : null;
 }
 
 class MovieScreen extends StatefulWidget {
@@ -288,6 +298,15 @@ class _MovieState extends State<MovieScreen> {
                                 ),
                               ],
                             ),
+                            if (_trailerUrl(movie) != null) ...[
+                              const SizedBox(height: 14),
+                              OutlinedButton.icon(
+                                onPressed: () =>
+                                    openExternal(_trailerUrl(movie)!),
+                                icon: const Icon(Icons.play_circle_outline),
+                                label: const Text('Xem trailer'),
+                              ),
+                            ],
                             if (!small) ...[
                               const SizedBox(height: 20),
                               Text(

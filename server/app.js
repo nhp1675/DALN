@@ -10,6 +10,7 @@ import { isTrustedOrigin } from "./origins.js";
 import { authenticate, csrf, authRouter } from "./auth.js";
 import { publicRouter } from "./routes/public.js";
 import { customerRouter } from "./routes/customer.js";
+import { paymentsRouter } from "./routes/payments.js";
 import { adminRouter } from "./routes/admin.js";
 export const app = express();
 app.disable("x-powered-by");
@@ -60,6 +61,8 @@ app.use('/api', (req, res, next) => {
   next();
 });
 app.use(express.json({ limit: "16kb" }), cookieParser());
+// Cổng thanh toán gọi vào không có cookie/CSRF: phải đặt trước authenticate và csrf.
+app.use("/api/payments", paymentsRouter);
 app.use("/api", authenticate, csrf, (req, res, next) => {
   res.set("Cache-Control", "no-store");
   next();

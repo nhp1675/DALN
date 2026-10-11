@@ -7,6 +7,15 @@ const coral = Color(0xFFD93B28);
 const ink = Color(0xFF243644);
 const muted = Color(0xFF687582);
 
+// Theo dõi việc chuyển trang (dùng để nhả ghế khi rời trang thanh toán).
+final RouteObserver<ModalRoute<void>> routeObserver =
+    RouteObserver<ModalRoute<void>>();
+
+// Thông tin chăm sóc khách hàng ở chân trang: chỉnh sửa tại đây.
+const supportHotline = '1900 0000';
+const supportEmail = 'support@cinego.example';
+const supportHours = '8:00 – 22:00 mỗi ngày';
+
 class AppScope extends InheritedNotifier<Session> {
   const AppScope({super.key, required Session session, required super.child})
     : super(notifier: session);
@@ -24,23 +33,99 @@ class PageBody extends StatelessWidget {
   final List<Widget> children;
   final double width;
   const PageBody({super.key, required this.children, this.width = 1180});
+  // Nội dung ở trên, chân trang luôn nằm dưới cùng (kể cả khi nội dung ngắn).
+  // Không dùng IntrinsicHeight/SliverFillRemaining vì các màn hình có
+  // LayoutBuilder và PageView không tính được kích thước nội tại.
   @override
-  Widget build(BuildContext context) => SingleChildScrollView(
-    child: Center(
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => SingleChildScrollView(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: width),
-        child: Padding(
-          padding: EdgeInsets.all(
-            MediaQuery.sizeOf(context).width < 600 ? 20 : 32,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: children,
-          ),
+        constraints: BoxConstraints(minHeight: constraints.maxHeight),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: width),
+                child: Padding(
+                  padding: EdgeInsets.all(
+                    MediaQuery.sizeOf(context).width < 600 ? 20 : 32,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: children,
+                  ),
+                ),
+              ),
+            ),
+            const SiteFooter(),
+          ],
         ),
       ),
     ),
   );
+}
+
+class SiteFooter extends StatelessWidget {
+  const SiteFooter({super.key});
+  @override
+  Widget build(BuildContext context) {
+    const light = TextStyle(color: Colors.white70, height: 1.7, fontSize: 14);
+    const heading = TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.w700,
+      fontSize: 15,
+    );
+    return Container(
+      width: double.infinity,
+      color: ink,
+      padding: EdgeInsets.symmetric(
+        horizontal: MediaQuery.sizeOf(context).width < 600 ? 20 : 32,
+        vertical: 28,
+      ),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1180),
+          child: Wrap(
+            spacing: 56,
+            runSpacing: 24,
+            children: [
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'CineGo',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  SizedBox(height: 6),
+                  Text(
+                    'Đặt vé xem phim nhanh chóng,\nchọn ghế dễ dàng.',
+                    style: light,
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Chăm sóc khách hàng', style: heading),
+                  const SizedBox(height: 6),
+                  SelectableText('Hotline CSKH: $supportHotline', style: light),
+                  SelectableText('Email hỗ trợ: $supportEmail', style: light),
+                  const Text('Giờ hỗ trợ: $supportHours', style: light),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class Panel extends StatelessWidget {
@@ -210,11 +295,14 @@ class Poster extends StatelessWidget {
     if (url.startsWith('/posters/')) {
       image = SvgPicture.asset(
         'assets/posters/${url.split('/').last}',
+        key: ValueKey(url),
         fit: BoxFit.cover,
       );
     } else if (url.startsWith('https://')) {
+      // key theo địa chỉ ảnh: đổi phim thì tạo lại ảnh, tránh hiện nhầm poster cũ.
       image = Image.network(
         url,
+        key: ValueKey(url),
         webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
         fit: BoxFit.cover,
         errorBuilder: (c, e, s) => _fallback(),

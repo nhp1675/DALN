@@ -32,6 +32,7 @@ import {
   hold,
   exchange,
   payDemo,
+  startGatewayPayment,
   cancelOrder,
   cancelTicket,
 } from "../services/booking.js";
@@ -118,6 +119,24 @@ customerRouter.post(
   route(async (req, res) =>
     res.json(
       await payDemo(req.user._id, parseId(req.params.id), req.data.outcome),
+    ),
+  ),
+);
+const clientIp = (req) => {
+  const ip = (req.ip || "").replace(/^::ffff:/, "");
+  return !ip || ip === "::1" ? "127.0.0.1" : ip;
+};
+customerRouter.post(
+  "/orders/:id/pay",
+  body(z.object({ method: z.enum(["vnpay", "atm", "momo"]) }).strict()),
+  route(async (req, res) =>
+    res.json(
+      await startGatewayPayment(
+        req.user._id,
+        parseId(req.params.id),
+        req.data.method,
+        clientIp(req),
+      ),
     ),
   ),
 );
