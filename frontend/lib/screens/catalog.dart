@@ -1,7 +1,7 @@
+import '../widgets/trailer.dart';
 import 'package:flutter/material.dart';
 import '../core/api.dart';
 import '../core/format.dart';
-import '../platform/browser.dart';
 import '../widgets/common.dart';
 import '../widgets/home_carousel.dart';
 
@@ -279,7 +279,7 @@ class _MovieState extends State<MovieScreen> {
                               style: TextStyle(
                                 fontSize: small ? 25 : 40,
                                 fontWeight: FontWeight.w800,
-                                color: ink,
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
                             const SizedBox(height: 14),
@@ -300,12 +300,7 @@ class _MovieState extends State<MovieScreen> {
                             ),
                             if (_trailerUrl(movie) != null) ...[
                               const SizedBox(height: 14),
-                              OutlinedButton.icon(
-                                onPressed: () =>
-                                    openExternal(_trailerUrl(movie)!),
-                                icon: const Icon(Icons.play_circle_outline),
-                                label: const Text('Xem trailer'),
-                              ),
+                              Trailer(url: _trailerUrl(movie)!),
                             ],
                             if (!small) ...[
                               const SizedBox(height: 20),

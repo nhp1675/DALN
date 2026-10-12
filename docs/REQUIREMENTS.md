@@ -28,4 +28,4 @@
 | UC-PC | Chủ động vào/rời, kiểm tra vé cùng suất, tin nhắn chữ, không upload ảnh |
 | UC-DVI | Browser geolocation, tính khoảng cách local, bán kính/thành phố, Google Maps chỉ đường |
 
-Các giả định phải xác nhận trước vận hành thật: 10 phút giữ ghế; 8 ghế/đơn; 3 đơn giữ/khách; hủy/đổi trước 24 giờ; hoàn 100%; đổi cùng phim có thể khác rạp; 1 điểm/10.000 VND; chat đóng cuối suất. Các cấu hình dễ thay đổi nằm trong `.env`; quy tắc khác ghi rõ trong service để nhóm dự án điều chỉnh có kiểm thử.
+Các giả định phải xác nhận trước vận hành thật: 10 phút giữ ghế; 8 ghế/đơn; 3 đơn giữ/khách; hủy/đổi trước ít nhất 12 giờ; hoàn 100%; đổi khác phim/rạp; suất mới chỉ cần chưa bắt đầu; 1 điểm/10.000 VND; chat đóng cuối suất. Các cấu hình dễ thay đổi nằm trong `.env`; quy tắc khác ghi rõ trong service để nhóm dự án điều chỉnh có kiểm thử.

@@ -18,10 +18,12 @@ class HomeCarousel extends StatefulWidget {
 }
 
 class _HomeCarouselState extends State<HomeCarousel> {
-  final controller = PageController();
+  final controller = PageController(initialPage: 1);
   Timer? timer;
   int index = 0;
-  bool paused = false, hover = false, focused = false, touching = false;
+  int page = 1;
+  bool moving = false;
+  bool hover = false, focused = false, touching = false;
   List<Json> get movies =>
       widget.movies.where((m) => m['status'] == 'now').take(4).toList();
   int get count => movies.length + 2;
@@ -30,39 +32,57 @@ class _HomeCarouselState extends State<HomeCarousel> {
     super.initState();
     timer = Timer.periodic(const Duration(seconds: 6), (_) {
       if (!mounted ||
-          paused ||
+          !(ModalRoute.of(context)?.isCurrent ?? true) ||
           hover ||
           focused ||
           touching ||
           !controller.hasClients ||
-          !TickerMode.of(context) ||
-          MediaQuery.disableAnimationsOf(context))
+          MediaQuery.disableAnimationsOf(context)) {
         return;
+      }
       move(index + 1);
     });
   }
 
-  void move(int next) {
-    if (!controller.hasClients) return;
-    final target = (next + count) % count;
-    if (MediaQuery.disableAnimationsOf(context)) {
-      controller.jumpToPage(target);
-    } else {
-      controller.animateToPage(
-        target,
-        duration: const Duration(milliseconds: 450),
-        curve: Curves.easeInOut,
-      );
+  Future<void> move(int next) async {
+    if (!controller.hasClients || moving) return;
+    moving = true;
+    final target = next + 1;
+    try {
+      if (MediaQuery.disableAnimationsOf(context)) {
+        controller.jumpToPage(target);
+      } else {
+        await controller.animateToPage(
+          target,
+          duration: const Duration(milliseconds: 450),
+          curve: Curves.easeInOut,
+        );
+      }
+      wrapPage();
+    } finally {
+      moving = false;
+    }
+  }
+
+  void wrapPage() {
+    if (!mounted || !controller.hasClients) return;
+    final current = controller.page?.round();
+    if (current == 0) {
+      controller.jumpToPage(count);
+    }
+    if (current == count + 1) {
+      controller.jumpToPage(1);
     }
   }
 
   @override
   void didUpdateWidget(covariant HomeCarousel oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (index >= count) {
+    if (oldWidget.movies.where((m) => m["status"] == "now").take(4).length !=
+        movies.length) {
       index = 0;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted && controller.hasClients) controller.jumpToPage(0);
+        if (mounted && controller.hasClients) controller.jumpToPage(1);
       });
     }
   }
@@ -102,124 +122,136 @@ class _HomeCarouselState extends State<HomeCarousel> {
                           PointerDeviceKind.trackpad,
                         },
                       ),
-                      child: PageView.builder(
-                        controller: controller,
-                        itemCount: count,
-                        onPageChanged: (v) => setState(() => index = v),
-                        itemBuilder: (context, i) {
-                          final movie = i < films.length ? films[i] : null;
-                          final cinema = i == films.length;
-                          final title =
-                              movie?['title'] as String? ??
-                              (cinema
-                                  ? 'Hẹn nhau ở rạp.'
-                                  : 'Chọn ghế đẹp.\nTrọn cảm xúc.');
-                          final subtitle = movie == null
-                              ? (cinema
-                                    ? 'Tìm rạp gần bạn và lên kế hoạch cho buổi xem phim tiếp theo.'
-                                    : 'Khám phá lịch chiếu, chọn ghế yêu thích và nhận vé điện tử trên CineGo.')
-                              : '${movie['genre']} • ${movie['duration']} phút • ${movie['ageRating']}';
-                          return LayoutBuilder(
-                            builder: (context, c) {
-                              final compact = c.maxWidth < 600;
-                              return Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      ink,
-                                      i.isEven
-                                          ? const Color(0xFF354857)
-                                          : const Color(0xFF663D45),
-                                    ],
+                      child: NotificationListener<ScrollEndNotification>(
+                        onNotification: (_) {
+                          WidgetsBinding.instance.addPostFrameCallback(
+                            (_) => wrapPage(),
+                          );
+                          return false;
+                        },
+                        child: PageView.builder(
+                          controller: controller,
+                          itemCount: count + 2,
+                          onPageChanged: (v) => setState(() {
+                            page = v;
+                            index = (v - 1 + count) % count;
+                          }),
+                          itemBuilder: (context, raw) {
+                            final i = (raw - 1 + count) % count;
+                            final movie = i < films.length ? films[i] : null;
+                            final cinema = i == films.length;
+                            final title =
+                                movie?['title'] as String? ??
+                                (cinema
+                                    ? 'Hẹn nhau ở rạp.'
+                                    : 'Chọn ghế đẹp.\nTrọn cảm xúc.');
+                            final subtitle = movie == null
+                                ? (cinema
+                                      ? 'Tìm rạp gần bạn và lên kế hoạch cho buổi xem phim tiếp theo.'
+                                      : 'Khám phá lịch chiếu, chọn ghế yêu thích và nhận vé điện tử trên CineGo.')
+                                : '${movie['genre']} • ${movie['duration']} phút • ${movie['ageRating']}';
+                            return LayoutBuilder(
+                              builder: (context, c) {
+                                final compact = c.maxWidth < 600;
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        ink,
+                                        i.isEven
+                                            ? const Color(0xFF354857)
+                                            : const Color(0xFF663D45),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                padding: EdgeInsets.all(compact ? 22 : 32),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: SingleChildScrollView(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              movie != null
-                                                  ? 'TIÊU ĐIỂM ĐIỆN ẢNH'
-                                                  : 'KHÁM PHÁ CINEGO',
-                                              style: const TextStyle(
-                                                color: Color(0xFFE6C891),
-                                                letterSpacing: 2,
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 16),
-                                            Text(
-                                              title,
-                                              style: TextStyle(
-                                                fontSize: compact ? 27 : 37,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w800,
-                                                height: 1.15,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 16),
-                                            Text(
-                                              subtitle,
-                                              style: const TextStyle(
-                                                color: Color(0xFFDEE5EB),
-                                                height: 1.5,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 22),
-                                            FilledButton.icon(
-                                              onPressed: () => go(
-                                                context,
+                                  padding: EdgeInsets.all(compact ? 22 : 32),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
                                                 movie != null
-                                                    ? widget.moviePath(movie)
-                                                    : '/cinemas',
-                                              ),
-                                              icon: Icon(
-                                                movie != null
-                                                    ? Icons
-                                                          .local_movies_outlined
-                                                    : Icons
-                                                          .location_on_outlined,
-                                              ),
-                                              label: Text(
-                                                movie != null
-                                                    ? 'Xem phim & lịch chiếu'
-                                                    : 'Tìm rạp gần bạn',
-                                              ),
-                                              style: FilledButton.styleFrom(
-                                                backgroundColor: const Color(
-                                                  0xFFE6C891,
+                                                    ? 'TIÊU ĐIỂM ĐIỆN ẢNH'
+                                                    : 'KHÁM PHÁ CINEGO',
+                                                style: const TextStyle(
+                                                  color: Color(0xFFE6C891),
+                                                  letterSpacing: 2,
+                                                  fontSize: 12,
                                                 ),
-                                                foregroundColor: ink,
                                               ),
-                                            ),
-                                          ],
+                                              const SizedBox(height: 16),
+                                              Text(
+                                                title,
+                                                style: TextStyle(
+                                                  fontSize: compact ? 27 : 37,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w800,
+                                                  height: 1.15,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 16),
+                                              Text(
+                                                subtitle,
+                                                style: const TextStyle(
+                                                  color: Color(0xFFDEE5EB),
+                                                  height: 1.5,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 22),
+                                              FilledButton.icon(
+                                                onPressed: () => go(
+                                                  context,
+                                                  movie != null
+                                                      ? widget.moviePath(movie)
+                                                      : '/cinemas',
+                                                ),
+                                                icon: Icon(
+                                                  movie != null
+                                                      ? Icons
+                                                            .local_movies_outlined
+                                                      : Icons
+                                                            .location_on_outlined,
+                                                ),
+                                                label: Text(
+                                                  movie != null
+                                                      ? 'Xem phim & lịch chiếu'
+                                                      : 'Tìm rạp gần bạn',
+                                                ),
+                                                style: FilledButton.styleFrom(
+                                                  backgroundColor: const Color(
+                                                    0xFFE6C891,
+                                                  ),
+                                                  foregroundColor: ink,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    if (!compact) ...[
-                                      const SizedBox(width: 28),
-                                      if (movie != null)
-                                        Poster(movie, width: 175, height: 263)
-                                      else
-                                        const Icon(
-                                          Icons.local_activity_outlined,
-                                          size: 150,
-                                          color: Color(0xFFE6C891),
-                                        ),
+                                      if (!compact) ...[
+                                        const SizedBox(width: 28),
+                                        if (movie != null)
+                                          Poster(movie, width: 175, height: 263)
+                                        else
+                                          const Icon(
+                                            Icons.local_activity_outlined,
+                                            size: 150,
+                                            color: Color(0xFFE6C891),
+                                          ),
+                                      ],
                                     ],
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -263,14 +295,6 @@ class _HomeCarouselState extends State<HomeCarousel> {
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        IconButton(
-                          tooltip: paused ? 'Tự chuyển slide' : 'Tạm dừng',
-                          onPressed: () => setState(() => paused = !paused),
-                          icon: Icon(
-                            paused ? Icons.play_arrow : Icons.pause,
-                            color: Colors.white,
                           ),
                         ),
                         IconButton(

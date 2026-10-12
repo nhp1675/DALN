@@ -1,3 +1,4 @@
+import 'snacks.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -43,7 +44,26 @@ class _TicketsState extends State<TicketsScreen> {
   }
 
   void refresh() => setState(() => future = load());
-  Future<void> cancel(Json t) async {
+  Future<void> cancel(Json t, Json show) async {
+    if (!_canChange(show)) {
+      notice(
+        context,
+        "Không thể hủy/đổi khi còn dưới 12 tiếng trước suất chiếu.",
+      );
+      return;
+    }
+    Json? basket;
+    try {
+      basket = await chooseSnacks(
+        context,
+        ticketId: sid(t["_id"]),
+        cancelOnly: true,
+      );
+    } catch (e) {
+      if (mounted) notice(context, "$e");
+      return;
+    }
+    if (basket == null || !mounted) return;
     final refund =
         ((t['currentValue'] as num) *
                 (t['policy']['refundPercent'] as num) /
@@ -52,7 +72,7 @@ class _TicketsState extends State<TicketsScreen> {
     if (!await confirm(
       context,
       'Hủy vé này?',
-      'Vé sẽ mất hiệu lực. Khoản hoàn mô phỏng: ${money(refund)}.',
+      'Vé sẽ mất hiệu lực. Hoàn vé mô phỏng: ${money(refund)}. Phần bỏng nước đã chọn cũng được hủy và hoàn mô phỏng.',
     )) {
       return;
     }
@@ -63,7 +83,11 @@ class _TicketsState extends State<TicketsScreen> {
     });
     final s = AppScope.of(context);
     try {
-      await s.api.request('/tickets/${t['_id']}/cancel', method: 'POST');
+      await s.api.request(
+        '/tickets/${t['_id']}/cancel',
+        method: 'POST',
+        body: {'snackChanges': basket['snackChanges']},
+      );
       await s.refresh();
       if (mounted) {
         refresh();
@@ -76,7 +100,20 @@ class _TicketsState extends State<TicketsScreen> {
     }
   }
 
+  bool _canChange(Json show) {
+    final at = DateTime.tryParse(sid(show["startAt"]));
+    return at != null &&
+        at.difference(DateTime.now()).inMilliseconds >= 12 * 3600000;
+  }
+
   Future<void> exchange(Json t, Json show) async {
+    if (!_canChange(show)) {
+      notice(
+        context,
+        "Không thể hủy/đổi khi còn dưới 12 tiếng trước suất chiếu.",
+      );
+      return;
+    }
     setState(() {
       busy = true;
       error = null;
@@ -84,11 +121,12 @@ class _TicketsState extends State<TicketsScreen> {
     try {
       final api = AppScope.of(context).api;
       final r = await Future.wait([
-        api.request('/showtimes?movieId=${show['movieId']}'),
+        api.request('/showtimes'),
+        api.request('/movies'),
         api.request('/cinemas'),
       ]);
       if (!mounted) return;
-      final shows = asList(r[0]), cinemas = asList(r[1]);
+      final shows = asList(r[0]), movies = asList(r[1]), cinemas = asList(r[2]);
       final id = await showDialog<String>(
         context: context,
         builder: (c) => AlertDialog(
@@ -104,7 +142,9 @@ class _TicketsState extends State<TicketsScreen> {
                     itemBuilder: (c, i) {
                       final s = shows[i];
                       return ListTile(
-                        title: Text(dateTime(s['startAt'])),
+                        title: Text(
+                          '${byId(movies, s["movieId"])?["title"] ?? "Phim"} · ${dateTime(s["startAt"])}',
+                        ),
                         subtitle: Text(
                           '${byId(cinemas, s['cinemaId'])?['name'] ?? 'Rạp'} · Từ ${money(s['standardPrice'])}',
                         ),
@@ -243,12 +283,6 @@ class _TicketsState extends State<TicketsScreen> {
                       movie = byId(movies, show['movieId']) ?? {},
                       cinema = byId(cinemas, show['cinemaId']) ?? {},
                       seat = byId(seats, t['showtimeSeatId']) ?? {};
-                  final eligible =
-                      t['status'] == 'valid' &&
-                      DateTime.parse(
-                            sid(show['startAt']),
-                          ).difference(DateTime.now()).inMinutes >=
-                          (t['policy']['changeCutoffHours'] as num) * 60;
                   final details = Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -304,13 +338,13 @@ class _TicketsState extends State<TicketsScreen> {
                         spacing: 10,
                         runSpacing: 10,
                         children: [
-                          if (eligible) ...[
+                          if (t['status'] == 'valid') ...[
                             OutlinedButton(
                               onPressed: busy ? null : () => exchange(t, show),
                               child: const Text('Đổi vé'),
                             ),
                             OutlinedButton(
-                              onPressed: busy ? null : () => cancel(t),
+                              onPressed: busy ? null : () => cancel(t, show),
                               child: const Text('Hủy vé'),
                             ),
                           ],

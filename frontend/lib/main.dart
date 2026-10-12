@@ -1,3 +1,6 @@
+import 'screens/settings.dart';
+import 'screens/snacks.dart';
+import 'screens/commerce_admin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/api.dart';
@@ -21,124 +24,145 @@ class CineGoApp extends StatelessWidget {
   final Session session;
   const CineGoApp({super.key, required this.session});
   @override
-  Widget build(BuildContext context) => AppScope(
-    session: session,
-    child: MaterialApp(
-      title: 'CineGo',
-      debugShowCheckedModeBanner: false,
-      navigatorObservers: [routeObserver],
-      locale: const Locale('vi'),
-      supportedLocales: const [Locale('vi'), Locale('en')],
-      localizationsDelegates: GlobalMaterialLocalizations.delegates,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: coral,
-          primary: coral,
-          surface: Colors.white,
-        ),
-        scaffoldBackgroundColor: const Color(0xFFFCFBF8),
-        fontFamily: 'Roboto',
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.transparent,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.all(16),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Color(0xFFDADFD8)),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Color(0xFFDADFD8)),
+  Widget build(BuildContext context) => ValueListenableBuilder<ThemeMode>(
+    valueListenable: appearance,
+    builder: (context, mode, child) => AppScope(
+      session: session,
+      child: MaterialApp(
+        title: 'CineGo',
+        themeMode: mode,
+        darkTheme: ThemeData(
+          useMaterial3: true,
+          brightness: Brightness.dark,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: coral,
+            brightness: Brightness.dark,
           ),
         ),
-        filledButtonTheme: FilledButtonThemeData(
-          style: FilledButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(9),
+        debugShowCheckedModeBanner: false,
+        navigatorObservers: [routeObserver],
+        locale: const Locale('vi'),
+        supportedLocales: const [Locale('vi'), Locale('en')],
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: coral,
+            primary: coral,
+            surface: Colors.white,
+          ),
+          scaffoldBackgroundColor: const Color(0xFFFCFBF8),
+          fontFamily: 'Roboto',
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.white,
+            surfaceTintColor: Colors.transparent,
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.all(16),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Color(0xFFDADFD8)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Color(0xFFDADFD8)),
+            ),
+          ),
+          filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(9),
+              ),
+            ),
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(9),
+              ),
             ),
           ),
         ),
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(9),
-            ),
-          ),
-        ),
-      ),
-      onGenerateRoute: (settings) {
-        final uri = Uri.parse(settings.name ?? '/');
-        final parts = uri.pathSegments;
-        Widget screen;
-        bool protected = false, admin = false;
-        if (parts.isEmpty) {
-          screen = CatalogScreen(cinema: uri.queryParameters['cinema']);
-        } else {
-          switch (parts.first) {
-            case 'movies':
-              screen = MovieScreen(
-                id: parts.length > 1 ? parts[1] : '',
-                initialCinema: uri.queryParameters['cinema'],
-              );
-            case 'booking':
-              protected = true;
-              screen = BookingScreen(
-                id: parts.length > 1 ? parts[1] : '',
-                exchangeId: uri.queryParameters['exchange'],
-              );
-            case 'checkout':
-              protected = true;
-              screen = CheckoutScreen(
-                id: parts.length > 1 ? parts[1] : '',
-                result: uri.queryParameters['payment'],
-              );
-            case 'tickets':
-              protected = true;
-              screen = TicketsScreen(
-                paymentResult: uri.queryParameters['payment'],
-              );
-            case 'cinemas':
-              screen = const CinemasScreen();
-            case 'chat':
-              protected = true;
-              screen = ChatScreen(id: parts.length > 1 ? parts[1] : '');
-            case 'profile':
-              protected = true;
-              screen = const ProfileScreen();
-            case 'admin':
-              protected = true;
-              admin = true;
-              screen = const AdminScreen();
-            case 'login':
-              screen = AuthScreen(next: uri.queryParameters['next'] ?? '/');
-            case 'register':
-              screen = AuthScreen(
-                register: true,
-                next: uri.queryParameters['next'] ?? '/',
-              );
-            default:
-              screen = const Empty('Trang không tồn tại.');
+        onGenerateRoute: (settings) {
+          final uri = Uri.parse(settings.name ?? '/');
+          final parts = uri.pathSegments;
+          Widget screen;
+          bool protected = false, admin = false;
+          if (parts.isEmpty) {
+            screen = CatalogScreen(cinema: uri.queryParameters['cinema']);
+          } else {
+            switch (parts.first) {
+              case 'movies':
+                screen = MovieScreen(
+                  id: parts.length > 1 ? parts[1] : '',
+                  initialCinema: uri.queryParameters['cinema'],
+                );
+              case 'booking':
+                protected = true;
+                screen = BookingScreen(
+                  id: parts.length > 1 ? parts[1] : '',
+                  exchangeId: uri.queryParameters['exchange'],
+                );
+              case 'checkout':
+                protected = true;
+                screen = CheckoutScreen(
+                  id: parts.length > 1 ? parts[1] : '',
+                  result: uri.queryParameters['payment'],
+                );
+              case 'tickets':
+                protected = true;
+                screen = TicketsScreen(
+                  paymentResult: uri.queryParameters['payment'],
+                );
+              case 'cinemas':
+                screen = const CinemasScreen();
+              case 'chat':
+                protected = true;
+                screen = ChatScreen(id: parts.length > 1 ? parts[1] : '');
+              case 'settings':
+                screen = const SettingsScreen();
+              case 'snacks':
+                protected = true;
+                screen = const SnacksScreen();
+              case 'commerce-admin':
+                protected = true;
+                admin = true;
+                screen = const CommerceAdminScreen();
+              case 'profile':
+                protected = true;
+                screen = const ProfileScreen();
+              case 'admin':
+                protected = true;
+                admin = true;
+                screen = const AdminScreen();
+              case 'login':
+                screen = AuthScreen(next: uri.queryParameters['next'] ?? '/');
+              case 'register':
+                screen = AuthScreen(
+                  register: true,
+                  next: uri.queryParameters['next'] ?? '/',
+                );
+              default:
+                screen = const Empty('Trang không tồn tại.');
+            }
           }
-        }
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (context) => Shell(
-            child: Guard(
-              required: protected,
-              admin: admin,
-              next: settings.name ?? '/',
-              child: screen,
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (context) => Shell(
+              child: Guard(
+                required: protected,
+                admin: admin,
+                next: settings.name ?? '/',
+                child: screen,
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     ),
   );
 }
@@ -196,12 +220,14 @@ class Shell extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 9),
-              const Text.rich(
+              Text.rich(
                 TextSpan(
                   children: [
                     TextSpan(
                       text: 'Cine',
-                      style: TextStyle(color: ink),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                     ),
                     TextSpan(
                       text: 'Go',
@@ -267,6 +293,16 @@ class Shell extends StatelessWidget {
               }
             },
             itemBuilder: (context) => [
+              const PopupMenuItem(value: '/settings', child: Text('Cài đặt')),
+              const PopupMenuItem(
+                value: '/snacks',
+                child: Text('Bỏng nước & đơn của tôi'),
+              ),
+              if (s.isAdmin)
+                const PopupMenuItem(
+                  value: '/commerce-admin',
+                  child: Text('Kho, nhận hàng & doanh thu'),
+                ),
               const PopupMenuItem(value: '/', child: Text('Phim')),
               const PopupMenuItem(
                 value: '/cinemas',

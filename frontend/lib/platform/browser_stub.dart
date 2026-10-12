@@ -6,3 +6,6 @@ void redirectTo(String url) =>
     throw UnsupportedError('Chức năng này hiện hỗ trợ Web.');
 void downloadData(String name, String dataUrl) =>
     throw UnsupportedError('Chức năng này hiện hỗ trợ Web.');
+
+String? readPreference(String key) => null;
+void savePreference(String key, String value) {}

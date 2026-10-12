@@ -13,8 +13,8 @@
     "admin": "node scripts/create-admin.js",
     "test": "node --test --test-concurrency=1 tests/*.test.js",
     "setup": "node scripts/setup-local.js",
-    "test:unit": "node --test tests/security-unit.test.js",
-    "test:integration": "node --test tests/integration.test.js",
+    "test:unit": "node --test tests/security-unit.test.js tests/vnpay-unit.test.js tests/momo-unit.test.js tests/movie-key.test.js tests/payment-return-unit.test.js tests/commerce-unit.test.js",
+    "test:integration": "node --test --test-concurrency=1 tests/integration.test.js tests/vnpay-integration.test.js",
     "test:ui": "playwright test"
   },
   "dependencies": {

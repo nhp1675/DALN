@@ -393,7 +393,14 @@ class _AdminState extends State<AdminScreen> {
   Widget build(BuildContext context) => PageBody(
     width: 1340,
     children: [
-      const Heading('Quản trị rạp phim', eyebrow: 'CINEGO MANAGEMENT'),
+      Heading(
+        'Quản trị rạp phim',
+        eyebrow: 'CINEGO MANAGEMENT',
+        action: OutlinedButton(
+          onPressed: () => go(context, '/commerce-admin'),
+          child: const Text('Kho, nhận hàng & doanh thu'),
+        ),
+      ),
       DataView<Json>(
         future: overview!,
         builder: (v) => LayoutBuilder(
@@ -548,7 +555,9 @@ class _AdminState extends State<AdminScreen> {
                           scrollDirection: Axis.horizontal,
                           child: DataTable(
                             headingRowColor: WidgetStateProperty.all(
-                              const Color(0xFFF5F4EF),
+                              Theme.of(
+                                context,
+                              ).colorScheme.surfaceContainerHighest,
                             ),
                             columns: [
                               ...headers.map((h) => DataColumn(label: Text(h))),
@@ -884,7 +893,9 @@ class _EditorState extends State<AdminEditor> {
                         final t = (v ?? '').trim();
                         if (t.isEmpty) return null;
                         final u = Uri.tryParse(t);
-                        return u != null && u.scheme == 'https' && u.host.isNotEmpty
+                        return u != null &&
+                                u.scheme == 'https' &&
+                                u.host.isNotEmpty
                             ? null
                             : 'Trailer cần là liên kết bắt đầu bằng https://';
                       }

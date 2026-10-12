@@ -1,7 +1,10 @@
+import { reserveSnacks, releaseSnacks, selectChanges, takeCredit, allocate, refundCredit, removeLines, fulfillSnacks, cancelLines, selectionKey, ensureChangeTime } from './concessions.js';
 import mongoose from "mongoose";
 import { randomBytes } from "node:crypto";
 import { config, policy, vnpay, momo, paymentMethods } from "../config.js";
 import {
+  RevenueEntry,
+  Cinema,
   Order,
   OrderItem,
   Showtime,
@@ -44,6 +47,7 @@ export async function releaseExpired() {
         { $set: { status: "available" }, $unset: { orderId: 1, holdUntil: 1 } },
         { session },
       );
+      await releaseSnacks(o, session);
       o.status = "expired";
       await o.save({ session });
       await ChangeRequest.updateMany(
@@ -68,15 +72,7 @@ async function checkChange(ticket, session) {
   if (!ticket || ticket.status !== "valid")
     fail(409, "Vé không còn hiệu lực để hủy/đổi.");
   const show = await Showtime.findById(ticket.showtimeId).session(session);
-  if (
-    !show ||
-    show.startAt.getTime() - Date.now() <
-      ticket.policy.changeCutoffHours * 3600000
-  )
-    fail(
-      409,
-      `Chỉ hủy/đổi trước giờ chiếu ít nhất ${ticket.policy.changeCutoffHours} giờ.`,
-    );
+  ensureChangeTime(show?.startAt);
   return show;
 }
 async function holdSeats(ids, orderId, expiresAt, showtimeId, session) {
@@ -119,7 +115,7 @@ async function lockCustomer(userId, session) {
   if (pending >= 3)
     fail(429, "Bạn đang có 3 đơn chờ. Hãy hoàn tất hoặc hủy đơn cũ.");
 }
-export async function hold(userId, { showtimeId, seatIds, idempotencyKey }) {
+export async function hold(userId, { showtimeId, seatIds, idempotencyKey, snacks = [] }) {
   return transaction(async (session) => {
     const existing = await Order.findOne({ userId, idempotencyKey }).session(
       session,
@@ -131,6 +127,7 @@ export async function hold(userId, { showtimeId, seatIds, idempotencyKey }) {
       if (
         !same(existing.showtimeId, showtimeId) ||
         existing.kind !== "booking" ||
+        (existing.selectionKey || selectionKey()) !== selectionKey(snacks) ||
         items
           .map((x) => String(x.showtimeSeatId))
           .sort()
@@ -140,17 +137,21 @@ export async function hold(userId, { showtimeId, seatIds, idempotencyKey }) {
       return existing;
     }
     await lockCustomer(userId, session);
-    await lockShowtime(showtimeId, session);
+    const show = await lockShowtime(showtimeId, session);
     const _id = new mongoose.Types.ObjectId(),
       expiresAt = new Date(Date.now() + policy.holdMinutes * 60000);
     const seats = await holdSeats(seatIds, _id, expiresAt, showtimeId, session);
+    const snackLines = await reserveSnacks(show.cinemaId, snacks, session);
+    const snackTotal = snackLines.reduce((n,x)=>n+x.price*x.quantity,0);
     const order = await create(
       Order,
       {
         _id,
         userId,
         showtimeId,
-        total: seats.reduce((n, s) => n + s.price, 0),
+        total: seats.reduce((n, s) => n + s.price, 0) + snackTotal,
+        cinemaId: show.cinemaId, pickupDate: show.startAt.toLocaleDateString("en-CA",{timeZone:"Asia/Ho_Chi_Minh"}),
+        snacks: snackLines, snackTotal, selectionKey: selectionKey(snacks),
         expiresAt,
         idempotencyKey,
         policy,
@@ -167,7 +168,7 @@ export async function hold(userId, { showtimeId, seatIds, idempotencyKey }) {
     return order;
   });
 }
-export async function exchange(userId, ticketId, { seatId, idempotencyKey }) {
+export async function exchange(userId, ticketId, { seatId, idempotencyKey, snacks = [], snackChanges = [] }) {
   return transaction(async (session) => {
     const existing = await Order.findOne({ userId, idempotencyKey }).session(
       session,
@@ -178,6 +179,7 @@ export async function exchange(userId, ticketId, { seatId, idempotencyKey }) {
       );
       if (
         existing.kind !== "exchange" ||
+        (existing.selectionKey || selectionKey()) !== selectionKey(snacks,snackChanges) ||
         !same(existing.exchangeTicketId, ticketId) ||
         !same(item?.showtimeSeatId, seatId)
       )
@@ -200,13 +202,16 @@ export async function exchange(userId, ticketId, { seatId, idempotencyKey }) {
     const seat = await ShowtimeSeat.findById(seatId).session(session);
     if (!seat) fail(404, "Không tìm thấy ghế.");
     const target = await lockShowtime(seat.showtimeId, session);
-    const source = await Showtime.findById(ticket.showtimeId).session(session);
-    if (!same(source.movieId, target.movieId))
-      fail(400, "Chỉ đổi suất chiếu của cùng một phim.");
+
     const _id = new mongoose.Types.ObjectId(),
       expiresAt = new Date(Date.now() + policy.holdMinutes * 60000);
     await holdSeats([seatId], _id, expiresAt, seat.showtimeId, session);
-    const difference = seat.price - ticket.currentValue;
+    const changes = await selectChanges(ticket, snackChanges, _id, session);
+    const oldSnackTotal = changes.reduce((n,x)=>n+x.price*x.quantity,0);
+    const snackLines = await reserveSnacks(target.cinemaId,snacks,session,changes);
+    const snackTotal = snackLines.reduce((n,x)=>n+x.price*x.quantity,0);
+    const difference = seat.price + snackTotal - ticket.currentValue - oldSnackTotal;
+    if(difference<0 && config.NODE_ENV==="production")fail(503,"Hoàn tiền mô phỏng chỉ dùng trong môi trường thử nghiệm.");
     const order = await create(
       Order,
       {
@@ -217,11 +222,13 @@ export async function exchange(userId, ticketId, { seatId, idempotencyKey }) {
         total: Math.max(difference, 0),
         refundAmount: Math.max(-difference, 0),
         newValue: seat.price,
+        cinemaId:target.cinemaId,pickupDate:target.startAt.toLocaleDateString("en-CA",{timeZone:"Asia/Ho_Chi_Minh"}),
+        snacks:snackLines,snackChanges:changes,snackTotal,oldSnackTotal,selectionKey:selectionKey(snacks,snackChanges),
         exchangeTicketId: ticketId,
         oldShowtimeSeatId: ticket.showtimeSeatId,
         expiresAt,
         idempotencyKey,
-        policy: ticket.policy,
+        policy: {...ticket.policy,changeCutoffHours:12},
       },
       session,
     );
@@ -241,7 +248,7 @@ export async function exchange(userId, ticketId, { seatId, idempotencyKey }) {
         newSeatId: seatId,
         orderId: _id,
         difference,
-        policy: ticket.policy,
+        policy: {...ticket.policy,changeCutoffHours:12},
       },
       session,
     );
@@ -267,6 +274,7 @@ async function refundTicket(ticket, amount, requestId, session) {
         amount: portion,
         status: "success",
         provider: "demo",
+        reportVersion: 1,
       },
       session,
     );
@@ -301,7 +309,7 @@ async function revokeChat(userId, showtimeId, session) {
 async function assertPayable(order, session) {
   if (order.status !== "pending" || order.expiresAt <= now())
     fail(409, "Đơn đã hết thời gian giữ ghế.");
-  await lockShowtime(order.showtimeId, session);
+  if (order.kind !== "snack") await lockShowtime(order.showtimeId, session);
   const items = await OrderItem.find({ orderId: order._id }).session(session);
   const held = await ShowtimeSeat.countDocuments({
     orderId: order._id,
@@ -312,11 +320,20 @@ async function assertPayable(order, session) {
   return items;
 }
 // Phát hành vé sau khi đã thu tiền. Dùng chung cho demo và cổng thanh toán.
+// Nâng giao dịch thất bại lên thành công trong cùng transaction phát hành vé.
+// Giữ nguyên _id; callback lặp lại được chặn trước khi gọi hàm này.
+async function saveSuccessfulPayment(data, session) {
+  const previous = await Payment.findOneAndUpdate(
+    { reference: data.reference, status: "failed", orderId: data.orderId },
+    { $set: data },
+    { new: true, runValidators: true, session },
+  );
+  return previous || create(Payment, data, session);
+}
 async function settlePaid(order, items, { provider, reference }, session) {
   const userId = order.userId,
     orderId = order._id;
-  const payment = await create(
-    Payment,
+  const payment = await saveSuccessfulPayment(
     {
       userId,
       orderId,
@@ -328,6 +345,8 @@ async function settlePaid(order, items, { provider, reference }, session) {
     },
     session,
   );
+  const funds = [{paymentId:payment._id,amount:order.total}];
+  if (!order.cinemaId && order.showtimeId) order.cinemaId = (await Showtime.findById(order.showtimeId).session(session)).cinemaId;
   if (order.kind === "booking") {
     for (const item of items) {
       const ticket = await create(
@@ -344,11 +363,7 @@ async function settlePaid(order, items, { provider, reference }, session) {
         },
         session,
       );
-      await create(
-        Allocation,
-        { ticketId: ticket._id, paymentId: payment._id, amount: item.price },
-        session,
-      );
+      await allocate(funds,{ticketId:ticket._id},item.price,session);
       await ShowtimeSeat.updateOne(
         { _id: item.showtimeSeatId, orderId },
         {
@@ -358,7 +373,7 @@ async function settlePaid(order, items, { provider, reference }, session) {
         { session },
       );
     }
-  } else {
+  } else if (order.kind === "exchange") {
     const ticket = await Ticket.findOne({
       _id: order.exchangeTicketId,
       userId,
@@ -372,14 +387,12 @@ async function settlePaid(order, items, { provider, reference }, session) {
       status: "pending",
     }).session(session);
     if (!request) fail(409, "Yêu cầu đổi không còn hiệu lực.");
-    if (order.total > 0)
-      await create(
-        Allocation,
-        { ticketId: ticket._id, paymentId: payment._id, amount: order.total },
-        session,
-      );
-    if (order.refundAmount)
-      await refundTicket(ticket, order.refundAmount, request._id, session);
+    const sourceShow = await Showtime.findById(ticket.showtimeId).session(session);
+    const oldValue = ticket.currentValue;
+    funds.push(...await takeCredit({ticketId:ticket._id,snackLineId:{$exists:false}}, oldValue, session));
+    funds.push(...await removeLines(order,session));
+    await allocate(funds,{ticketId:ticket._id},order.newValue,session);
+    await create(RevenueEntry,{orderId,cinemaId:sourceShow.cinemaId,description:'Giá trị chuyển khỏi vé/bỏng nước cũ',ticketNet:-oldValue,snackNet:-(order.oldSnackTotal||0)},session);
     await ShowtimeSeat.updateOne(
       { _id: ticket.showtimeSeatId, ticketId: ticket._id },
       {
@@ -405,9 +418,16 @@ async function settlePaid(order, items, { provider, reference }, session) {
     await request.save({ session });
     await revokeChat(userId, oldShow, session);
   }
+  await fulfillSnacks(order,funds,session);
+  const returned = await refundCredit(funds, order.exchangeTicketId ? {ticketId:order.exchangeTicketId} : {}, order._id,session);
+  if (returned !== (order.refundAmount || 0)) fail(409,'Chênh lệch hoàn tiền không khớp.');
+  await create(RevenueEntry,{orderId,paymentId:payment._id,cinemaId:order.cinemaId,
+    description: order.kind === 'exchange' ? 'Đổi vé và bỏng nước' : 'Thanh toán đơn',
+    ticketNet: order.kind === 'exchange' ? order.newValue : order.total-(order.snackTotal||0),
+    snackNet:order.snackTotal||0,received:order.total,returned},session);
   await User.updateOne(
     { _id: userId },
-    { $inc: { netSpend: order.total } },
+    { $inc: { netSpend: order.total - returned } },
     { session },
   );
   order.status = "paid";
@@ -523,8 +543,7 @@ export async function startGatewayPayment(userId, orderId, method, ipAddr) {
 // Đã thu tiền nhưng không phát hành được vé (đơn hết hạn, ghế mất, trả trùng...).
 // Ghi lại để quản trị viên đối soát và hoàn tiền thủ công.
 async function recordUnfulfilled(order, r, purpose, session) {
-  await create(
-    Payment,
+  await saveSuccessfulPayment(
     {
       userId: order.userId,
       orderId: order._id,
@@ -552,7 +571,7 @@ export async function handleGatewayResult(r) {
         : null;
       if (!order) return { code: "01" };
       if (order.total !== r.amount) return { code: "04", order };
-      const seen = await Payment.exists({ reference: r.txnRef }).session(
+      const seen = await Payment.findOne({ reference: r.txnRef }).session(
         session,
       );
       if (!r.success) {
@@ -572,7 +591,7 @@ export async function handleGatewayResult(r) {
           );
         return { code: "00", order };
       }
-      if (seen) return { code: "02", order };
+      if (seen?.status === "success") return { code: "02", order };
       if (order.status === "paid") {
         await recordUnfulfilled(order, r, "duplicate", session);
         return { code: "00", order };
@@ -587,11 +606,11 @@ export async function handleGatewayResult(r) {
               status: "held",
             }).session(session)
           : 0;
-      if (order.status !== "pending" || held !== items.length) {
+      if (order.status !== "pending" || order.expiresAt <= now() || held !== items.length) {
         await recordUnfulfilled(order, r, "late-unfulfilled", session);
         return { code: "00", order, late: true };
       }
-      await lockShowtime(order.showtimeId, session);
+      if (order.kind !== "snack") await lockShowtime(order.showtimeId, session);
       await settlePaid(
         order,
         items,
@@ -607,7 +626,7 @@ export async function handleGatewayResult(r) {
     // Tiền đã thu nhưng không phát hành được vé (ví dụ suất chiếu bị hủy).
     return transaction(async (session) => {
       const order = await Order.findById(r.orderId).session(session);
-      if (!(await Payment.exists({ reference: r.txnRef }).session(session)))
+      if (!(await Payment.exists({ reference: r.txnRef, status: "success" }).session(session)))
         await recordUnfulfilled(order, r, "late-unfulfilled", session);
       return { code: "00", order, late: true };
     });
@@ -632,13 +651,14 @@ export async function cancelOrder(userId, orderId) {
       { $set: { status: "failed" } },
       { session },
     );
+    await releaseSnacks(order, session);
     order.status = "cancelled";
     await order.save({ session });
     await audit(userId, "order.cancelled", order._id, session);
     return order;
   });
 }
-export async function cancelTicket(userId, ticketId) {
+export async function cancelTicket(userId, ticketId, snackChanges = []) {
   // Hoàn tiền hiện vẫn là mô phỏng (chưa gọi API hoàn tiền của VNPay).
   if (config.PAYMENT_MODE === "disabled" || config.NODE_ENV === "production")
     fail(503, "Dịch vụ hoàn tiền chưa được cấu hình.");
@@ -668,11 +688,15 @@ export async function cancelTicket(userId, ticketId) {
         status: "completed",
         oldSeatId: ticket.showtimeSeatId,
         difference: -amount,
-        policy: ticket.policy,
+        policy: {...ticket.policy,changeCutoffHours:12},
       },
       session,
     );
+    const changes = await selectChanges(ticket,snackChanges,null,session);
+    await cancelLines(userId,changes,session,{ticket,requestId:request._id});
     await refundTicket(ticket, amount, request._id, session);
+    const show = await Showtime.findById(ticket.showtimeId).session(session);
+    await create(RevenueEntry,{orderId:ticket.orderId,cinemaId:show.cinemaId,description:'Hủy vé (hoàn mô phỏng)',ticketNet:-amount,returned:amount},session);
     ticket.status = "cancelled";
     await ticket.save({ session });
     await ShowtimeSeat.updateOne(
@@ -688,5 +712,22 @@ export async function cancelTicket(userId, ticketId) {
       refund: amount,
     });
     return ticket;
+  });
+}
+
+export async function holdSnackOrder(userId,{cinemaId,pickupDate,snacks,idempotencyKey}) {
+  return transaction(async session=>{
+    const existing=await Order.findOne({userId,idempotencyKey}).session(session);
+    if(existing) {
+      if(existing.kind!=='snack'||!same(existing.cinemaId,cinemaId)||existing.pickupDate!==pickupDate||existing.selectionKey!==selectionKey(snacks)) fail(409,'Khóa yêu cầu đã dùng cho nội dung khác.');
+      return existing;
+    }
+    await lockCustomer(userId,session);
+    const today=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Ho_Chi_Minh'});
+    if(pickupDate<today)fail(400,'Ngày nhận không được ở quá khứ.');
+    const lines=await reserveSnacks(cinemaId,snacks,session);
+    const total=lines.reduce((n,x)=>n+x.price*x.quantity,0);
+    return create(Order,{userId,kind:'snack',cinemaId,pickupDate,snacks:lines,snackTotal:total,total,
+      selectionKey:selectionKey(snacks),idempotencyKey,policy,expiresAt:new Date(Date.now()+policy.holdMinutes*60000)},session);
   });
 }

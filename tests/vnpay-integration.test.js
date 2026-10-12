@@ -11,11 +11,11 @@ process.env.APP_ORIGIN = "http://localhost:5173";
 process.env.MONGODB_URI = "mongodb://placeholder";
 process.env.VNP_TMN_CODE = "TESTCODE";
 process.env.VNP_HASH_SECRET = "test-hash-secret";
-process.env.VNP_RETURN_URL = "http://localhost:5173/api/payments/vnpay-return";
+process.env.VNP_RETURN_URL = "http://localhost:4000/api/payments/vnpay-return";
 process.env.MOMO_PARTNER_CODE = "MOMOTEST";
 process.env.MOMO_ACCESS_KEY = "access-key-test";
 process.env.MOMO_SECRET_KEY = "secret-key-test";
-process.env.MOMO_RETURN_URL = "http://localhost:5173/api/payments/momo-return";
+process.env.MOMO_RETURN_URL = "http://localhost:4000/api/payments/momo-return";
 const origin = "http://localhost:5173";
 const cfg = {
   tmnCode: "TESTCODE",
@@ -55,7 +55,7 @@ async function call(agent, method, url, body, expected = 200) {
 // Mỗi test dùng người dùng và ghế riêng để không ảnh hưởng nhau.
 async function newOrder(seatCount = 2) {
   const user = await register(`vnp${++n}@example.test`);
-  const mine = seats.slice(n * 2, n * 2 + seatCount).map((s) => String(s._id));
+  const mine = seats.slice((n - 1) * 2, (n - 1) * 2 + seatCount).map((s) => String(s._id));
   const order = await call(
     user,
     "post",
@@ -116,7 +116,7 @@ before(
     const room = await catalog.saveRoom(admin.user.id, {
       cinemaId: String(cinema._id),
       name: "Room A",
-      rows: 4,
+      rows: 15,
       columns: 6,
     });
     const show = await catalog.saveShowtime(admin.user.id, {
@@ -348,4 +348,93 @@ test("MoMo thất bại giữ nguyên đơn; return URL chuyển đúng trang", 
     .redirects(0)
     .query({ orderId: "x", signature: "abc" });
   assert.equal(bad.headers.location, `${origin}/#/?payment=invalid`);
+});
+
+
+test("Cùng mã: thất bại rồi thành công phát vé đúng một lần", async () => {
+  const { order, seatIds } = await newOrder();
+  const txn = String(order._id) + "recover";
+  await ipn(order, { vnp_ResponseCode: "24", vnp_TransactionStatus: "02" }, txn);
+  const previous = (await payments(order))[0];
+  assert.equal(previous.status, "failed");
+  assert.equal((await ipn(order, {}, txn)).body.RspCode, "00");
+  assert.equal((await ipn(order, {}, txn)).body.RspCode, "02");
+  await ipn(order, { vnp_ResponseCode: "24", vnp_TransactionStatus: "02" }, txn);
+  const list = await payments(order);
+  assert.equal(list.length, 1);
+  assert.equal(String(list[0]._id), String(previous._id));
+  assert.equal(list[0].status, "success");
+  assert.equal(await tickets(order), seatIds.length);
+});
+
+test("Cùng mã: thất bại, hủy đơn, rồi thành công được ghi đối soát", async () => {
+  const { user, order } = await newOrder();
+  const txn = String(order._id) + "late-recover";
+  await ipn(order, { vnp_ResponseCode: "24", vnp_TransactionStatus: "02" }, txn);
+  await booking.cancelOrder(user.user.id, String(order._id));
+  assert.equal((await ipn(order, {}, txn)).body.RspCode, "00");
+  assert.equal((await ipn(order, {}, txn)).body.RspCode, "02");
+  const list = await payments(order);
+  assert.equal(list.length, 1);
+  assert.equal(list[0].status, "success");
+  assert.equal(list[0].purpose, "late-unfulfilled");
+  assert.equal(await tickets(order), 0);
+});
+
+test('Kho: giữ, hết hàng, hủy giữ và hết hạn trả tồn; không gọi database thật',async()=>{
+ const sh=await M.Showtime.findById(seats[0].showtimeId);
+ const product=await M.Snack.create({cinemaId:sh.cinemaId,name:'Combo test',price:50000,stock:2});
+ const u=await register('stock-test@example.test');
+ const input={cinemaId:String(sh.cinemaId),pickupDate:'2099-01-01',snacks:[{snackId:String(product._id),quantity:2}],idempotencyKey:randomUUID()};
+ const order=await booking.holdSnackOrder(u.user.id,input);
+ assert.equal((await M.Snack.findById(product._id)).held,2);
+ assert.equal(String((await booking.holdSnackOrder(u.user.id,input))._id),String(order._id));
+ await assert.rejects(()=>booking.holdSnackOrder(u.user.id,{...input,idempotencyKey:randomUUID()}),/tồn/);
+ await booking.cancelOrder(u.user.id,order._id);
+ assert.equal((await M.Snack.findById(product._id)).held,0);
+ const next=await booking.holdSnackOrder(u.user.id,{...input,idempotencyKey:randomUUID()});
+ await M.Order.updateOne({_id:next._id},{$set:{expiresAt:new Date(0)}});await booking.releaseExpired();
+ assert.equal((await M.Snack.findById(product._id)).held,0);
+});
+test('Bỏng nước riêng: trả tiền, nhận mã, hủy hoàn mô phỏng và trả tồn một lần',async()=>{
+ const sh=await M.Showtime.findById(seats[0].showtimeId);
+ const p=await M.Snack.create({cinemaId:sh.cinemaId,name:'Nước test',price:30000,stock:3});
+ const u=await register('snack-paid@example.test');
+ const o=await booking.holdSnackOrder(u.user.id,{cinemaId:String(sh.cinemaId),pickupDate:'2099-01-01',snacks:[{snackId:String(p._id),quantity:2}],idempotencyKey:randomUUID()});
+ await ipn(o,{},String(o._id)+'snack');
+ const line=await M.SnackLine.findOne({orderId:o._id});assert.ok(line.pickupCode);assert.equal((await M.Snack.findById(p._id)).stock,1);
+ const {cancelStandalone}=await import('../server/services/concessions.js');
+ await cancelStandalone(u.user.id,[{lineId:String(line._id),quantity:2}]);
+ assert.equal((await M.Snack.findById(p._id)).stock,3);
+ assert.equal((await M.SnackLine.findById(line._id)).remaining,0);
+ await assert.rejects(()=>cancelStandalone(u.user.id,[{lineId:String(line._id),quantity:2}]));
+ assert.equal((await M.Refund.find({snackLineId:line._id})).length,1);
+});
+test('Đổi khác phim sang suất dưới 12h: giữ món khi tồn 0, chuyển tín dụng, hủy vé cũ chỉ khi hoàn tất',async()=>{
+ const u=await register('cross-movie@example.test');
+ const source=await M.Showtime.findById(seats[0].showtimeId);
+ const p=await M.Snack.create({cinemaId:source.cinemaId,name:'Last combo',price:40000,stock:1});
+ const mine=seats.slice(60,61);
+ const o=await booking.hold(u.user.id,{showtimeId:String(source._id),seatIds:mine.map(s=>String(s._id)),snacks:[{snackId:String(p._id),quantity:1}],idempotencyKey:randomUUID()});
+ await ipn(o,{},String(o._id)+'old');
+ const t=await M.Ticket.findOne({orderId:o._id});
+ const oldLine=await M.SnackLine.findOne({orderId:o._id});
+ const movie=await M.Movie.create({title:'Phim khác',genre:'Drama',duration:90,synopsis:'Test'});
+ const target=await M.Showtime.create({movieId:movie._id,cinemaId:source.cinemaId,roomId:source.roomId,startAt:new Date(Date.now()+4*3600000),endAt:new Date(Date.now()+6*3600000),standardPrice:50000,vipPrice:50000});
+ const seat=await M.ShowtimeSeat.create({showtimeId:target._id,seatId:mine[0].seatId,label:'A1',type:'standard',price:50000});
+ const change=await booking.exchange(u.user.id,t._id,{seatId:String(seat._id),snacks:[{snackId:String(p._id),quantity:1}],snackChanges:[{lineId:String(oldLine._id),quantity:1}],idempotencyKey:randomUUID()});
+ assert.equal(String((await M.Ticket.findById(t._id)).showtimeId),String(source._id));
+ assert.equal((await M.SnackLine.findById(oldLine._id)).remaining,1);
+ const result=await booking.startGatewayPayment(u.user.id,change._id,'vnpay','127.0.0.1');assert.equal(result.paid,true);
+ assert.equal(String((await M.Ticket.findById(t._id)).showtimeId),String(target._id));
+ assert.equal((await M.SnackLine.findById(oldLine._id)).remaining,0);
+ assert.equal((await M.Snack.findById(p._id)).stock,0);
+ const renewed=await M.SnackLine.findOne({orderId:change._id});assert.equal(renewed.remaining,1);
+ await assert.rejects(()=>booking.cancelTicket(u.user.id,t._id),/12 tiếng/);
+});
+test('Tài khoản bị khóa: đúng mật khẩu có thông báo khóa, sai mật khẩu không tiết lộ trạng thái',async()=>{
+ await M.User.create({name:'Blocked',email:'blocked@example.test',passwordHash:(await M.User.findById(admin.user.id)).passwordHash,active:false});
+ const good=await request(app).post('/api/auth/login').set('Origin',origin).send({email:'blocked@example.test',password:'Long-test-password-123'});
+ assert.equal(good.status,403);assert.match(good.body.message,/bị khóa/);
+ const bad=await request(app).post('/api/auth/login').set('Origin',origin).send({email:'blocked@example.test',password:'wrong'});assert.equal(bad.status,401);
 });

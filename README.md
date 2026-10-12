@@ -84,7 +84,7 @@ MONGODB_URI="mongodb+srv://DB_USER:DB_PASSWORD@CLUSTER_HOST/cinego?retryWrites=t
 SESSION_SECRET=THAY_BANG_CHUOI_NGAU_NHIEN_IT_NHAT_48_KY_TU
 PAYMENT_MODE=demo
 HOLD_MINUTES=10
-CHANGE_CUTOFF_HOURS=24
+CHANGE_CUTOFF_HOURS=12
 REFUND_PERCENT=100
 POINTS_PER_VND=10000
 ```
@@ -257,3 +257,19 @@ Kiểm thử tích hợp cần môi trường có thể chạy MongoDB replica s
 Thanh toán và hoàn tiền đang ở chế độ thử nghiệm, chưa kết nối cổng thanh toán thật. Điểm tích lũy chưa được dùng để giảm giá. Hệ thống chưa có gửi email/SMS hoặc khôi phục mật khẩu tự động.
 
 Các điều kiện giữ ghế, hủy, đổi và hoàn tiền hiện là cấu hình mô phỏng. Trước khi triển khai thực tế cần tích hợp thanh toán, xác định chính sách vận hành, cấu hình HTTPS và sao lưu, đồng thời kiểm thử đầy đủ các luồng giao dịch và bảo mật.
+
+
+## Bản cập nhật chức năng ngày 12/10/2026
+
+Hướng dẫn chép file, tạo sản phẩm, kiểm tra luồng và giới hạn kiểm thử:
+[docs/UPDATE-2026-10-12.md](docs/UPDATE-2026-10-12.md).
+
+- Hủy/đổi vé còn ít nhất 12 tiếng, áp dụng cả vé cũ. Dưới mốc này vẫn có nút để xem thông báo.
+- Đổi sang phim/rạp khác; suất mới chỉ cần chưa bắt đầu. Chênh lệch tính chung vé và bỏng nước.
+- Bỏng nước mua riêng hoặc kèm vé, tồn kho theo rạp, giữ hàng, mã nhận, hủy hoàn mô phỏng và chọn lại khi đổi vé.
+- Banner vòng liền kề, không có nút tạm dừng. Giao diện Sáng/Tối/Theo hệ thống trong Cài đặt.
+- Trailer YouTube/Vimeo nhúng tại chi tiết phim, có liên kết dự phòng khi nguồn từ chối nhúng.
+- Tài khoản khóa có thông báo riêng khi nhập đúng mật khẩu.
+- Admin có Kho, nhận hàng & doanh thu; báo cáo theo ngày/rạp và xuất CSV.
+
+Phạm vi thanh toán là VNPay Sandbox; hoàn tiền vẫn là mô phỏng. Combo được quản lý như sản phẩm tồn kho độc lập, không tự trừ nguyên liệu của từng món thành phần.

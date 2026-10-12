@@ -1,3 +1,5 @@
+import 'package:cinego/screens/settings.dart';
+import 'package:cinego/widgets/home_carousel.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,7 +21,7 @@ class Fixture {
   final calls = <http.Request>[];
   final policy = {
     'holdMinutes': 10,
-    'changeCutoffHours': 24,
+    'changeCutoffHours': 12,
     'refundPercent': 100,
     'pointsPerVnd': 10000,
   };
@@ -109,6 +111,8 @@ class Fixture {
           'seats': seats,
           'room': {'name': 'Phòng 01 · 2D'},
         };
+      } else if (path == '/snacks') {
+        result = [];
       } else if (path == '/orders' && request.method == 'POST') {
         final body = jsonDecode(request.body) as Map;
         final chosen = seats
@@ -126,6 +130,8 @@ class Fixture {
           'createdAt': DateTime.now().toUtc().toIso8601String(),
           'policy': policy,
           'chosen': chosen,
+          'snacks': [],
+          'oldSnackTotal': 0,
         };
         result = order;
       } else if (path == '/orders') {
@@ -242,6 +248,80 @@ class Fixture {
 }
 
 void main() {
+  testWidgets('Theme settings change light/dark/system', (tester) async {
+    final f = Fixture();
+    await tester.pumpWidget(CineGoApp(session: await f.session()));
+    Navigator.of(
+      tester.element(find.byType(Shell).first),
+    ).pushNamed('/settings');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tối'));
+    await tester.pumpAndSettle();
+    expect(appearance.value, ThemeMode.dark);
+    expect(
+      Theme.of(tester.element(find.byType(SettingsScreen))).brightness,
+      Brightness.dark,
+    );
+    await tester.tap(find.text('Sáng'));
+    await tester.pumpAndSettle();
+    expect(appearance.value, ThemeMode.light);
+    await tester.tap(find.text('Theo hệ thống'));
+    await tester.pumpAndSettle();
+    expect(appearance.value, ThemeMode.system);
+    await tester.pumpWidget(const SizedBox());
+  });
+  testWidgets('Carousel wraps both directions and has no pause button', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: HomeCarousel(movies: const [], moviePath: (_) => '/'),
+        ),
+      ),
+    );
+    expect(find.byTooltip('Tạm dừng'), findsNothing);
+    await tester.tap(find.byTooltip('Slide trước'));
+    await tester.pumpAndSettle();
+    var controller = tester.widget<PageView>(find.byType(PageView)).controller!;
+    expect(controller.page, 2);
+    await tester.tap(find.byTooltip('Slide sau'));
+    await tester.pumpAndSettle();
+    expect(controller.page, 1);
+    await tester.pumpWidget(const SizedBox());
+  });
+  testWidgets('Late ticket keeps change/cancel buttons and displays refusal', (
+    tester,
+  ) async {
+    final f = Fixture();
+    f.show['startAt'] = DateTime.now()
+        .add(const Duration(hours: 1))
+        .toIso8601String();
+    f.tickets = [
+      {
+        '_id': '777777777777777777777777',
+        'showtimeId': showId,
+        'showtimeSeatId': f.seats.first['id'],
+        'currentValue': 80000,
+        'status': 'valid',
+        'policy': f.policy,
+        'qr': 'a' * 43,
+      },
+    ];
+    await tester.pumpWidget(CineGoApp(session: await f.session()));
+    Navigator.of(
+      tester.element(find.byType(Shell).first),
+    ).pushNamed('/tickets');
+    await tester.pumpAndSettle();
+    expect(find.text('Đổi vé'), findsOneWidget);
+    expect(find.text('Hủy vé'), findsOneWidget);
+    await tester.ensureVisible(find.text('Hủy vé'));
+    await tester.tap(find.text('Hủy vé'));
+    await tester.pump();
+    expect(find.textContaining('Không thể hủy/đổi'), findsOneWidget);
+    expect(f.calls.where((r) => r.url.path.endsWith('/cancel')), isEmpty);
+    await tester.pumpWidget(const SizedBox());
+  });
   test('Distance calculation stays local and returns zero at same point', () {
     expect(distanceKm(21, 105, 21, 105), closeTo(0, 0.001));
     expect(distanceKm(21, 105, 22, 105), closeTo(111.19, 0.1));
@@ -373,6 +453,13 @@ void main() {
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Tiếp tục'));
       await tester.tap(find.text('Tiếp tục'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.descendant(
+          of: find.byType(AlertDialog),
+          matching: find.text('Tiếp tục'),
+        ),
+      );
       await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Thử thanh toán thất bại'));
       await tester.tap(find.text('Thử thanh toán thất bại'));

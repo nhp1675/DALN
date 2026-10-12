@@ -143,9 +143,11 @@ class Panel extends StatelessWidget {
     width: double.infinity,
     padding: padding,
     decoration: BoxDecoration(
-      color: color ?? Colors.white,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? Theme.of(context).colorScheme.surfaceContainer
+          : (color ?? Colors.white),
       borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: const Color(0xFFE5E5DF)),
+      border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
     ),
     child: child,
   );
@@ -184,7 +186,7 @@ class Heading extends StatelessWidget {
               style: TextStyle(
                 fontSize: MediaQuery.sizeOf(context).width < 600 ? 28 : 36,
                 fontWeight: FontWeight.w800,
-                color: ink,
+                color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
           ],

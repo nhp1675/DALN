@@ -1,3 +1,4 @@
+import 'snacks.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -129,6 +130,12 @@ class _BookingState extends State<BookingScreen> {
       error = null;
     });
     try {
+      final basket = await chooseSnacks(
+        context,
+        cinemaId: sid(data!['showtime']['cinemaId']),
+        ticketId: widget.exchangeId,
+      );
+      if (basket == null || !mounted) return;
       final api = AppScope.of(context).api;
       final order = asMap(
         await api.request(
@@ -138,11 +145,16 @@ class _BookingState extends State<BookingScreen> {
           method: 'POST',
           body: widget.exchangeId == null
               ? {
+                  'snacks': basket['snacks'],
                   'showtimeId': widget.id,
                   'seatIds': selected.toList(),
                   'idempotencyKey': const Uuid().v4(),
                 }
-              : {'seatId': selected.first, 'idempotencyKey': const Uuid().v4()},
+              : {
+                  'seatId': selected.first,
+                  'idempotencyKey': const Uuid().v4(),
+                  ...basket,
+                },
         ),
       );
       if (mounted) go(context, '/checkout/${order['_id']}');
@@ -200,14 +212,19 @@ class _BookingState extends State<BookingScreen> {
                     child: Container(
                       width: 420,
                       padding: const EdgeInsets.symmetric(vertical: 18),
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         border: Border(
                           top: BorderSide(color: Color(0xFFB2C9CE), width: 4),
                         ),
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [Color(0xFFE7F0F0), Colors.white],
+                          colors: [
+                            Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerHighest,
+                            Theme.of(context).colorScheme.surface,
+                          ],
                         ),
                       ),
                       child: const Text(
@@ -308,7 +325,8 @@ class _BookingState extends State<BookingScreen> {
                                                     BorderRadius.circular(7),
                                               ),
                                             ),
-                                            onPressed: (available || active) && !busy
+                                            onPressed:
+                                                (available || active) && !busy
                                                 ? () => toggle(s)
                                                 : null,
                                             child: Text(
@@ -514,7 +532,10 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
 
   // Rời trang thanh toán khi chưa trả tiền (về trang chủ, quay lại...): trả ghế
   // ngay thay vì giữ khóa đến hết hạn.
+  bool creatingPayment = false;
+
   bool get canRelease =>
+      !creatingPayment &&
       !released &&
       !redirecting &&
       !confirming &&
@@ -558,7 +579,14 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
       if (status == 'paid') {
         polling = false;
         await s.refresh();
-        if (mounted) go(context, '/tickets?payment=success');
+        if (mounted) {
+          go(
+            context,
+            asMap(d['order'])['kind'] == 'snack'
+                ? '/snacks'
+                : '/tickets?payment=success',
+          );
+        }
       } else if (status != 'pending' || ticks > 30) {
         polling = false;
         setState(() {
@@ -575,6 +603,9 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
   }
 
   Future<void> startPayment() async {
+    if (busy || released) return;
+    final route = ModalRoute.of(context);
+    creatingPayment = true;
     setState(() {
       busy = true;
       error = null;
@@ -589,20 +620,27 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
         ),
       );
       if (r['paid'] == true) {
+        orderStatus = 'paid';
         await s.refresh();
-        if (mounted) {
-          orderStatus = 'paid';
-          notice(context, 'Đơn không phát sinh thêm tiền. Vé đã được cập nhật.');
+        if (mounted && route?.isCurrent == true) {
+          notice(
+            context,
+            'Đơn không phát sinh thêm tiền. Vé đã được cập nhật.',
+          );
           go(context, '/tickets');
         }
       } else if (r['paymentUrl'] != null) {
+        if (!mounted || route?.isCurrent != true || released) return;
         redirecting = true; // sang cổng thanh toán: chưa nhả ghế
         redirectTo(sid(r['paymentUrl']));
       }
     } catch (e) {
       if (mounted) setState(() => error = '$e');
     } finally {
-      if (mounted) setState(() => busy = false);
+      busy = false;
+      creatingPayment = false;
+      if (!mounted || route?.isCurrent != true) releaseSeats();
+      if (mounted) setState(() {});
     }
   }
 
@@ -624,11 +662,8 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
         orderStatus = 'paid';
         await s.refresh();
         if (mounted) {
-          notice(
-            context,
-            'Thanh toán mô phỏng thành công. Vé đã được phát hành.',
-          );
-          go(context, '/tickets');
+          notice(context, 'Thanh toán mô phỏng thành công.');
+          go(context, order['kind'] == 'snack' ? '/snacks' : '/tickets');
         }
       } else if (mounted) {
         setState(() {
@@ -689,6 +724,8 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
                 Heading(
                   o['kind'] == 'exchange'
                       ? 'Xác nhận đổi vé'
+                      : o['kind'] == 'snack'
+                      ? 'Thanh toán bỏng nước'
                       : 'Thanh toán & nhận vé',
                   eyebrow: 'KIỂM TRA LẠI MỘT CHÚT',
                 ),
@@ -705,8 +742,31 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
                       ),
                       const SizedBox(height: 16),
                       InfoLine('Rạp', sid(d['cinema']['name'])),
-                      InfoLine('Suất chiếu', dateTime(d['show']['startAt'])),
-                      InfoLine('Ghế', seats.map((s) => s['label']).join(', ')),
+                      InfoLine(
+                        o['kind'] == 'snack' ? 'Ngày nhận' : 'Suất chiếu',
+                        o['kind'] == 'snack'
+                            ? sid(o['pickupDate'])
+                            : dateTime(d['show']['startAt']),
+                      ),
+                      if (o['kind'] != 'snack')
+                        InfoLine(
+                          'Ghế',
+                          seats.map((s) => s['label']).join(', '),
+                        ),
+                      for (final line in asList(o['snacks'] ?? []))
+                        InfoLine(
+                          sid(line['name']),
+                          '${line['quantity']} × ${money(line['price'])}',
+                        ),
+                      if ((o['oldSnackTotal'] as num? ?? 0) > 0)
+                        InfoLine(
+                          'Bỏng nước cũ chuyển đổi',
+                          money(o['oldSnackTotal']),
+                        ),
+                      TextButton(
+                        onPressed: () => go(context, '/snacks'),
+                        child: const Text('Xem đơn & mã nhận bỏng nước'),
+                      ),
                       InfoLine('Trạng thái', status(o['status'])),
                       InfoLine('Mã đơn', widget.id),
                       if (o['status'] == 'pending')
@@ -828,7 +888,11 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
                           busy || polling
                               ? 'Đang xử lý…'
                               : AppScope.of(context).isGateway
-                              ? 'Thanh toán qua ${method == 'atm' ? 'thẻ ATM' : method == 'momo' ? 'MoMo' : 'VNPay'}'
+                              ? 'Thanh toán qua ${method == 'atm'
+                                    ? 'thẻ ATM'
+                                    : method == 'momo'
+                                    ? 'MoMo'
+                                    : 'VNPay'}'
                               : 'Xác nhận thanh toán mô phỏng',
                         ),
                       ),

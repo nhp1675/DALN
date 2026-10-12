@@ -111,7 +111,7 @@ adminRouter.get(
       User.countDocuments({ role: "customer" }),
       Ticket.countDocuments({ status: "valid" }),
       Payment.aggregate([
-        { $match: { status: "success" } },
+        { $match: { status: "success", purpose: {$nin:["duplicate","late-unfulfilled"]} } },
         { $group: { _id: null, total: { $sum: "$amount" } } },
       ]),
       Refund.aggregate([

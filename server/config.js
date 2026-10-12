@@ -35,7 +35,7 @@ const env = z
       .enum(["captureWallet", "payWithATM", "payWithMethod"])
       .default("captureWallet"),
     HOLD_MINUTES: z.coerce.number().int().min(1).max(30).default(10),
-    CHANGE_CUTOFF_HOURS: z.coerce.number().min(0).max(168).default(24),
+    CHANGE_CUTOFF_HOURS: z.coerce.number().min(0).max(168).default(12),
     REFUND_PERCENT: z.coerce.number().int().min(0).max(100).default(100),
     POINTS_PER_VND: z.coerce.number().int().positive().default(10000),
   })
@@ -102,7 +102,7 @@ export const paymentMethods =
 export const policy = {
   version: "proposal-1",
   holdMinutes: env.HOLD_MINUTES,
-  changeCutoffHours: env.CHANGE_CUTOFF_HOURS,
+  changeCutoffHours: 12,
   refundPercent: env.REFUND_PERCENT,
   pointsPerVnd: env.POINTS_PER_VND,
 };

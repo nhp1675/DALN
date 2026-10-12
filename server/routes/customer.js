@@ -1,3 +1,4 @@
+import {snackSelections, snackChanges} from './concessions.js';
 import { Router } from "express";
 import { z } from "zod";
 import { rateLimit } from "express-rate-limit";
@@ -53,6 +54,7 @@ customerRouter.post(
   body(
     z
       .object({
+        snacks: snackSelections.default([]),
         showtimeId: objectId,
         seatIds: z
           .array(objectId)
@@ -105,12 +107,12 @@ customerRouter.get(
     }).lean();
     const show = await Showtime.findById(order.showtimeId).lean();
     const [movie, cinema, payments, requests] = await Promise.all([
-      Movie.findById(show.movieId).lean(),
-      Cinema.findById(show.cinemaId).lean(),
+      Movie.findById(show?.movieId).lean(),
+      Cinema.findById(order.cinemaId || show?.cinemaId).lean(),
       Payment.find({ orderId: order._id }).select("-reference").lean(),
       ChangeRequest.find({ orderId: order._id }).lean(),
     ]);
-    res.json({ order, items, seats, show, movie, cinema, payments, requests });
+    res.json({ order, items, seats, show:show||{startAt:order.pickupDate}, movie:movie||{title:"Bỏng nước"}, cinema, payments, requests });
   }),
 );
 customerRouter.post(
@@ -171,14 +173,15 @@ customerRouter.get(
 );
 customerRouter.post(
   "/tickets/:id/cancel",
+  body(z.object({snackChanges:snackChanges.default([])}).strict().default({})),
   route(async (req, res) =>
-    res.json(await cancelTicket(req.user._id, parseId(req.params.id))),
+    res.json(await cancelTicket(req.user._id, parseId(req.params.id), req.data.snackChanges)),
   ),
 );
 customerRouter.post(
   "/tickets/:id/exchange",
   holdLimiter,
-  body(z.object({ seatId: objectId, idempotencyKey: key }).strict()),
+  body(z.object({ seatId: objectId, idempotencyKey: key, snacks:snackSelections.default([]), snackChanges:snackChanges.default([]) }).strict()),
   route(async (req, res) =>
     res
       .status(201)

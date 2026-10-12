@@ -24,7 +24,7 @@ const log = (level, path, extra = {}) =>
 
 // Trình duyệt của khách quay lại. Cookie SameSite=Strict không được gửi ở
 // request này nên route không đòi đăng nhập; chỉ xử lý rồi chuyển hướng.
-const appBase = () => new URL(vnpay.returnUrl || momo.returnUrl).origin;
+const appBase = () => new URL(config.APP_ORIGIN).origin;
 async function finishReturn(res, name, valid, parse) {
   const to = (hash) => res.redirect(`${appBase()}/#${hash}`);
   if (!valid) {
@@ -32,17 +32,17 @@ async function finishReturn(res, name, valid, parse) {
     return to("/?payment=invalid");
   }
   const r = parse();
-  let paid = false;
+  let paid = null;
   try {
     await handleGatewayResult(r);
     paid =
-      r.success && !!(await Order.exists({ _id: r.orderId, status: "paid" }));
+      r.success && (await Order.findOne({ _id: r.orderId, status: "paid" }).lean());
   } catch (e) {
     log("error", name, { name: e.name });
   }
   if (!r.orderId) return to("/tickets");
   // Thanh toán xong và vé đã phát hành: đưa thẳng tới "Vé của tôi".
-  if (paid) return to(`/tickets?payment=success&order=${r.orderId}`);
+  if (paid) return to(`/${paid.kind === "snack" ? "snacks" : "tickets"}?payment=success&order=${r.orderId}`);
   to(`/checkout/${r.orderId}?payment=${r.success ? "success" : "failed"}`);
 }
 

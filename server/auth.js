@@ -170,7 +170,8 @@ authRouter.post(
       req.data.password,
       user?.passwordHash || dummy,
     );
-    if (!valid || !user?.active) fail(401, "Email hoặc mật khẩu không đúng.");
+    if (!valid) fail(401, "Email hoặc mật khẩu không đúng.");
+    if (!user.active) fail(403, "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.");
     await loginSession(user, req, res);
   }),
 );

@@ -416,7 +416,9 @@ class _ChatState extends State<ChatScreen> {
                           decoration: BoxDecoration(
                             color: mine
                                 ? const Color(0xFFFFE3D8)
-                                : Colors.white,
+                                : Theme.of(
+                                    context,
+                                  ).colorScheme.surfaceContainerHighest,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Column(

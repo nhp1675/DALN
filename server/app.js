@@ -1,3 +1,4 @@
+import {concessionsRouter, commerceAdminRouter} from './routes/concessions.js';
 import express from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
@@ -26,6 +27,7 @@ app.use(
         connectSrc: ["'self'"],
         fontSrc: ["'self'", "data:"],
         objectSrc: ["'none'"],
+        frameSrc: ["https://www.youtube-nocookie.com", "https://player.vimeo.com"],
         frameAncestors: ["'none'"],
         upgradeInsecureRequests:
           process.env.NODE_ENV === "production" ? [] : null,
@@ -71,6 +73,8 @@ app.get("/api/health", (req, res) => res.json({ ok: true }));
 app.use("/api/auth", authRouter);
 app.use("/api", publicRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api", concessionsRouter);
+app.use("/api/admin", commerceAdminRouter);
 app.use("/api", customerRouter);
 app.use("/api", (req, res) =>
   res.status(404).json({ message: "API không tồn tại." }),

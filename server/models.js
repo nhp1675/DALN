@@ -129,8 +129,15 @@ export const Order = model(
   "Order",
   {
     userId: id,
-    showtimeId: id,
-    kind: { type: String, enum: ["booking", "exchange"], default: "booking" },
+    showtimeId: Schema.Types.ObjectId,
+    cinemaId: Schema.Types.ObjectId,
+    pickupDate: String,
+    snacks: {type: [Schema.Types.Mixed], default: []},
+    snackChanges: {type: [Schema.Types.Mixed], default: []},
+    snackTotal: {type: Number, default: 0},
+    oldSnackTotal: {type: Number, default: 0},
+    selectionKey: String,
+    kind: { type: String, enum: ["booking", "exchange", "snack"], default: "booking" },
     status: {
       type: String,
       enum: ["pending", "paid", "expired", "cancelled"],
@@ -199,7 +206,8 @@ export const Payment = model(
 export const Allocation = model(
   "Allocation",
   {
-    ticketId: id,
+    ticketId: Schema.Types.ObjectId,
+    snackLineId: Schema.Types.ObjectId,
     paymentId: id,
     amount: money,
     refunded: { type: Number, default: 0 },
@@ -207,7 +215,9 @@ export const Allocation = model(
   [[{ ticketId: 1, paymentId: 1 }, { unique: true }]],
 );
 export const Refund = model("Refund", {
-  ticketId: id,
+  reportVersion: Number,
+  ticketId: Schema.Types.ObjectId,
+  snackLineId: Schema.Types.ObjectId,
   paymentId: id,
   requestId: id,
   amount: money,
@@ -253,7 +263,25 @@ export const Audit = model("Audit", {
   entityId: Schema.Types.ObjectId,
   details: { type: Schema.Types.Mixed, default: {} },
 });
+export const Snack = model("Snack", {
+  cinemaId: id, name: text, image: {type: String, default: ""}, price: money,
+  active: {type: Boolean, default: true},
+  stock: {...money, default: 0}, held: {...money, default: 0},
+});
+export const SnackLine = model("SnackLine", {
+  userId: id, orderId: id, cinemaId: id, snackId: id, name: text, price: money,
+  quantity: money, remaining: money, collected: {type: Boolean, default: false},
+  pickupDate: text, showtimeId: Schema.Types.ObjectId, ticketId: Schema.Types.ObjectId,
+  pickupCode: text, reservedBy: Schema.Types.ObjectId,
+});
+export const RevenueEntry = model("RevenueEntry", {
+  orderId: Schema.Types.ObjectId, paymentId: Schema.Types.ObjectId,
+  refundId: Schema.Types.ObjectId, cinemaId: id, description: text,
+  ticketNet: {type: Number, default: 0}, snackNet: {type: Number, default: 0},
+  received: {type: Number, default: 0}, returned: {type: Number, default: 0},
+});
 export const allModels = [
+  Snack, SnackLine, RevenueEntry,
   User,
   Session,
   Movie,
