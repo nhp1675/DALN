@@ -66,58 +66,87 @@ class PageBody extends StatelessWidget {
   );
 }
 
+const _footerHead = TextStyle(
+  color: Colors.white,
+  fontWeight: FontWeight.w700,
+  fontSize: 15,
+  letterSpacing: .3,
+);
+const _footerText = TextStyle(
+  color: Color(0xCCFFFFFF),
+  height: 1.6,
+  fontSize: 14,
+);
+const _footerSmall = TextStyle(color: Color(0x99FFFFFF), fontSize: 12.5);
+const _footerGold = Color(0xFFE6C891);
+
 class SiteFooter extends StatelessWidget {
   const SiteFooter({super.key});
   @override
   Widget build(BuildContext context) {
-    const light = TextStyle(color: Colors.white70, height: 1.7, fontSize: 14);
-    const heading = TextStyle(
-      color: Colors.white,
-      fontWeight: FontWeight.w700,
-      fontSize: 15,
-    );
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final pad = MediaQuery.sizeOf(context).width < 600 ? 20.0 : 32.0;
     return Container(
       width: double.infinity,
-      color: ink,
-      padding: EdgeInsets.symmetric(
-        horizontal: MediaQuery.sizeOf(context).width < 600 ? 20 : 32,
-        vertical: 28,
+      decoration: BoxDecoration(
+        color: dark ? const Color(0xFF111A21) : ink,
+        border: dark
+            ? const Border(top: BorderSide(color: Color(0x26FFFFFF)))
+            : null,
       ),
+      padding: EdgeInsets.fromLTRB(pad, 40, pad, 22),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 1180),
-          child: Wrap(
-            spacing: 56,
-            runSpacing: 24,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'CineGo',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  SizedBox(height: 6),
-                  Text(
-                    'Đặt vé xem phim nhanh chóng,\nchọn ghế dễ dàng.',
-                    style: light,
-                  ),
-                ],
+              LayoutBuilder(
+                builder: (context, box) {
+                  final blocks = <Widget>[
+                    const _FooterBrand(),
+                    const _FooterLinks(),
+                    const _FooterSupport(),
+                    const _FooterPayments(),
+                  ];
+                  if (box.maxWidth >= 820) {
+                    const flex = [5, 3, 4, 3];
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (var i = 0; i < blocks.length; i++) ...[
+                          if (i > 0) const SizedBox(width: 32),
+                          Expanded(flex: flex[i], child: blocks[i]),
+                        ],
+                      ],
+                    );
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (final b in blocks)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 28),
+                          child: b,
+                        ),
+                    ],
+                  );
+                },
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
+              const Divider(color: Color(0x26FFFFFF), height: 1),
+              const SizedBox(height: 16),
+              const Wrap(
+                spacing: 20,
+                runSpacing: 6,
                 children: [
-                  const Text('Chăm sóc khách hàng', style: heading),
-                  const SizedBox(height: 6),
-                  SelectableText('Hotline CSKH: $supportHotline', style: light),
-                  SelectableText('Email hỗ trợ: $supportEmail', style: light),
-                  const Text('Giờ hỗ trợ: $supportHours', style: light),
+                  Text(
+                    '© 2026 CineGo. Bảo lưu mọi quyền.',
+                    style: _footerSmall,
+                  ),
+                  Text(
+                    'Thanh toán thử nghiệm (sandbox), không thu tiền thật.',
+                    style: _footerSmall,
+                  ),
                 ],
               ),
             ],
@@ -126,6 +155,165 @@ class SiteFooter extends StatelessWidget {
       ),
     );
   }
+}
+
+class _FooterBrand extends StatelessWidget {
+  const _FooterBrand();
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: coral,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.local_movies_outlined, color: Colors.white),
+          ),
+          const SizedBox(width: 12),
+          const Text(
+            'CineGo',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 14),
+      const Text(
+        'Đặt vé xem phim nhanh chóng, chọn ghế dễ dàng và nhận bỏng nước ngay tại rạp.',
+        style: _footerText,
+      ),
+    ],
+  );
+}
+
+class _FooterLinks extends StatelessWidget {
+  const _FooterLinks();
+  @override
+  Widget build(BuildContext context) => const Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text('Khám phá', style: _footerHead),
+      SizedBox(height: 6),
+      _FooterLink('Phim đang chiếu', '/'),
+      _FooterLink('Hệ thống rạp', '/cinemas'),
+      _FooterLink('Đặt bỏng nước', '/snacks'),
+      _FooterLink('Vé của tôi', '/tickets'),
+      _FooterLink('Cài đặt', '/settings'),
+    ],
+  );
+}
+
+class _FooterLink extends StatelessWidget {
+  final String label, route;
+  const _FooterLink(this.label, this.route);
+  @override
+  Widget build(BuildContext context) => InkWell(
+    onTap: () => go(context, route),
+    hoverColor: Colors.white10,
+    borderRadius: BorderRadius.circular(6),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.chevron_right, size: 16, color: _footerGold),
+          const SizedBox(width: 4),
+          Text(label, style: _footerText),
+        ],
+      ),
+    ),
+  );
+}
+
+class _FooterSupport extends StatelessWidget {
+  const _FooterSupport();
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text('Chăm sóc khách hàng', style: _footerHead),
+      const SizedBox(height: 10),
+      const Text('Hotline CSKH', style: _footerSmall),
+      SelectableText(
+        supportHotline,
+        style: const TextStyle(
+          color: _footerGold,
+          fontSize: 26,
+          fontWeight: FontWeight.w800,
+          letterSpacing: .5,
+        ),
+      ),
+      const SizedBox(height: 10),
+      const _FooterInfo(Icons.mail_outline, supportEmail),
+      const _FooterInfo(Icons.schedule, supportHours),
+    ],
+  );
+}
+
+class _FooterInfo extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  const _FooterInfo(this.icon, this.text);
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 18, color: _footerGold),
+        const SizedBox(width: 8),
+        Expanded(child: SelectableText(text, style: _footerText)),
+      ],
+    ),
+  );
+}
+
+class _FooterPayments extends StatelessWidget {
+  const _FooterPayments();
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text('Thanh toán', style: _footerHead),
+      const SizedBox(height: 10),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          for (final t in const ['VNPay', 'MoMo', 'Thẻ ATM'])
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0x40FFFFFF)),
+              ),
+              child: Text(
+                t,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+        ],
+      ),
+      const SizedBox(height: 10),
+      const Text(
+        'Giao dịch xử lý qua cổng thanh toán đối tác.',
+        style: _footerSmall,
+      ),
+    ],
+  );
 }
 
 class Panel extends StatelessWidget {

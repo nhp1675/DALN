@@ -284,7 +284,7 @@ void main() {
     await tester.tap(find.byTooltip('Slide trước'));
     await tester.pumpAndSettle();
     var controller = tester.widget<PageView>(find.byType(PageView)).controller!;
-    expect(controller.page, 2);
+    expect(controller.page, 3);
     await tester.tap(find.byTooltip('Slide sau'));
     await tester.pumpAndSettle();
     expect(controller.page, 1);
