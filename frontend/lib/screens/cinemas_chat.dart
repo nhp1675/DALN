@@ -15,6 +15,22 @@ double distanceKm(double a, double b, double c, double d) {
   return 6371 * 2 * atan2(sqrt(x.clamp(0, 1)), sqrt((1 - x).clamp(0, 1)));
 }
 
+// Chỉ đường đến đúng tọa độ (vĩ độ, kinh độ) quản trị viên đã nhập cho rạp.
+// Chỉ khi rạp chưa có tọa độ hợp lệ mới dùng địa chỉ chữ.
+String directionsUrl(Json r, (double, double)? from) {
+  final lat = (r['latitude'] as num?)?.toDouble();
+  final lng = (r['longitude'] as num?)?.toDouble();
+  final hasCoords = lat != null && lng != null && lat.isFinite && lng.isFinite;
+  return Uri.https('www.google.com', '/maps/dir/', {
+    'api': '1',
+    'destination': hasCoords
+        ? '${lat.toStringAsFixed(6)},${lng.toStringAsFixed(6)}'
+        : '${sid(r['name'])}, ${sid(r['address'])}',
+    if (from != null) 'origin': '${from.$1},${from.$2}',
+    'travelmode': 'driving',
+  }).toString();
+}
+
 class CinemasScreen extends StatefulWidget {
   const CinemasScreen({super.key});
   @override
@@ -56,7 +72,7 @@ class _CinemasState extends State<CinemasScreen> {
     children: [
       Heading(
         'Hệ thống rạp',
-        eyebrow: 'HẸN NHAU GẦN HƠN',
+        eyebrow: 'Hẹn nhau gần hơn',
         action: FilledButton.icon(
           onPressed: locating ? null : findNear,
           icon: const Icon(Icons.my_location, size: 18),
@@ -134,7 +150,7 @@ class _CinemasState extends State<CinemasScreen> {
                         decoration: const InputDecoration(
                           labelText: 'Bán kính',
                         ),
-                        items: [10, 25, 50, 100, 2000]
+                        items: [5, 10, 25, 50]
                             .map(
                               (n) => DropdownMenuItem(
                                 value: n,
@@ -176,22 +192,34 @@ class _CinemasState extends State<CinemasScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      height: 160,
-                                      width: double.infinity,
-                                      decoration: const BoxDecoration(
-                                        color: Color(0xFFE9E3D6),
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(16),
-                                        ),
-                                      ),
-                                      child: const Center(
-                                        child: Icon(
-                                          Icons.theaters_outlined,
-                                          size: 80,
-                                          color: Color(0xFF7C887A),
-                                        ),
-                                      ),
+                                    Builder(
+                                      builder: (context) {
+                                        final dark =
+                                            Theme.of(context).brightness ==
+                                            Brightness.dark;
+                                        return Container(
+                                          height: 160,
+                                          width: double.infinity,
+                                          decoration: BoxDecoration(
+                                            color: dark
+                                                ? const Color(0xFF1E2833)
+                                                : const Color(0xFFE9E3D6),
+                                            borderRadius:
+                                                const BorderRadius.vertical(
+                                                  top: Radius.circular(13),
+                                                ),
+                                          ),
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.theaters_outlined,
+                                              size: 80,
+                                              color: dark
+                                                  ? const Color(0xFF8EA0B2)
+                                                  : const Color(0xFF7C887A),
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.all(22),
@@ -202,11 +230,10 @@ class _CinemasState extends State<CinemasScreen> {
                                           Text(
                                             position == null
                                                 ? sid(r['city'])
-                                                : '${(r['distance'] as double).toStringAsFixed(1)} KM TỪ BẠN',
+                                                : '${(r['distance'] as double).toStringAsFixed(1)} km từ bạn',
                                             style: const TextStyle(
                                               color: muted,
-                                              fontSize: 12,
-                                              letterSpacing: 1.2,
+                                              fontSize: 13,
                                             ),
                                           ),
                                           const SizedBox(height: 12),
@@ -239,7 +266,7 @@ class _CinemasState extends State<CinemasScreen> {
                                               ),
                                               OutlinedButton.icon(
                                                 onPressed: () => openExternal(
-                                                  'https://www.google.com/maps/dir/?api=1&destination=${r['latitude']},${r['longitude']}',
+                                                  directionsUrl(r, position),
                                                 ),
                                                 icon: const Icon(
                                                   Icons.directions,
@@ -376,7 +403,7 @@ class _ChatState extends State<ChatScreen> {
       children: [
         Heading(
           'Phòng trò chuyện',
-          eyebrow: 'CÙNG SUẤT CHIẾU · CÙNG ĐAM MÊ',
+          eyebrow: 'Cùng suất chiếu, cùng đam mê',
           action: OutlinedButton(
             onPressed: leave,
             child: const Text('Rời phòng'),
@@ -392,7 +419,9 @@ class _ChatState extends State<ChatScreen> {
           height: 420,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFFF0EFE8),
+            color: Theme.of(context).brightness == Brightness.dark
+                ? nightRaised
+                : const Color(0xFFF0EFE8),
             borderRadius: BorderRadius.circular(14),
           ),
           child: loading
@@ -415,7 +444,10 @@ class _ChatState extends State<ChatScreen> {
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: mine
-                                ? const Color(0xFFFFE3D8)
+                                ? (Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? const Color(0xFF4A2620)
+                                      : const Color(0xFFFFE3D8))
                                 : Theme.of(
                                     context,
                                   ).colorScheme.surfaceContainerHighest,

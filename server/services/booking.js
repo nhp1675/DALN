@@ -1,4 +1,5 @@
 import { reserveSnacks, releaseSnacks, selectChanges, takeCredit, allocate, refundCredit, removeLines, fulfillSnacks, cancelLines, selectionKey, ensureChangeTime } from './concessions.js';
+import { assertMovieOnSale } from './movies.js';
 import mongoose from "mongoose";
 import { randomBytes } from "node:crypto";
 import { config, policy, vnpay, momo, paymentMethods } from "../config.js";
@@ -138,6 +139,7 @@ export async function hold(userId, { showtimeId, seatIds, idempotencyKey, snacks
     }
     await lockCustomer(userId, session);
     const show = await lockShowtime(showtimeId, session);
+    await assertMovieOnSale(show.movieId, session);
     const _id = new mongoose.Types.ObjectId(),
       expiresAt = new Date(Date.now() + policy.holdMinutes * 60000);
     const seats = await holdSeats(seatIds, _id, expiresAt, showtimeId, session);
@@ -202,6 +204,7 @@ export async function exchange(userId, ticketId, { seatId, idempotencyKey, snack
     const seat = await ShowtimeSeat.findById(seatId).session(session);
     if (!seat) fail(404, "Không tìm thấy ghế.");
     const target = await lockShowtime(seat.showtimeId, session);
+    await assertMovieOnSale(target.movieId, session);
 
     const _id = new mongoose.Types.ObjectId(),
       expiresAt = new Date(Date.now() + policy.holdMinutes * 60000);
@@ -696,7 +699,7 @@ export async function cancelTicket(userId, ticketId, snackChanges = []) {
     await cancelLines(userId,changes,session,{ticket,requestId:request._id});
     await refundTicket(ticket, amount, request._id, session);
     const show = await Showtime.findById(ticket.showtimeId).session(session);
-    await create(RevenueEntry,{orderId:ticket.orderId,cinemaId:show.cinemaId,description:'Hủy vé (hoàn mô phỏng)',ticketNet:-amount,returned:amount},session);
+    await create(RevenueEntry,{orderId:ticket.orderId,cinemaId:show.cinemaId,description:'Hủy vé (hoàn tiền)',ticketNet:-amount,returned:amount},session);
     ticket.status = "cancelled";
     await ticket.save({ session });
     await ShowtimeSeat.updateOne(

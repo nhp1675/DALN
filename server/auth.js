@@ -10,7 +10,8 @@ import { rateLimit } from "express-rate-limit";
 import { z } from "zod";
 import { config } from "./config.js";
 import { isTrustedOrigin } from "./origins.js";
-import { User, Session, Audit } from "./models.js";
+import { User, Session, Audit, PasswordReset } from "./models.js";
+import { sendMail } from "./mailer.js";
 import { route, body, fail } from "./core.js";
 const scrypt = promisify(scryptCallback);
 export async function hashPassword(password) {
@@ -210,5 +211,67 @@ authRouter.post(
       entityId: req.user._id,
     });
     res.clearCookie("cinego_session", cookieOptions).json({ ok: true });
+  }),
+);
+
+const resetLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 8,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+  message: { message: "Thử quá nhiều lần. Vui lòng đợi 15 phút." },
+});
+// Luôn trả về cùng một kết quả để không lộ email nào đã đăng ký.
+authRouter.post(
+  "/forgot-password",
+  resetLimit,
+  body(z.object({ email }).strict()),
+  route(async (req, res) => {
+    const user = await User.findOne({ email: req.data.email, active: true });
+    if (user) {
+      const token = randomBytes(32).toString("base64url");
+      await PasswordReset.deleteMany({ userId: user._id });
+      await PasswordReset.create({
+        userId: user._id,
+        tokenHash: digest(token),
+        expiresAt: new Date(Date.now() + 30 * 60000),
+      });
+      const link = `${new URL(config.APP_ORIGIN).origin}/#/reset-password?token=${token}`;
+      try {
+        await sendMail({
+          to: user.email,
+          subject: "Đặt lại mật khẩu CineGo",
+          text: `Xin chào ${user.name},\n\nBạn vừa yêu cầu đặt lại mật khẩu CineGo. Mở liên kết sau để đặt mật khẩu mới (có hiệu lực trong 30 phút):\n${link}\n\nNếu không phải bạn yêu cầu, hãy bỏ qua email này.`,
+        });
+      } catch {
+        console.error("Không gửi được email đặt lại mật khẩu.");
+      }
+    }
+    res.json({ ok: true });
+  }),
+);
+authRouter.post(
+  "/reset-password",
+  resetLimit,
+  body(z.object({ token: z.string().min(20).max(200), password }).strict()),
+  route(async (req, res) => {
+    const invalid = "Liên kết đặt lại mật khẩu không hợp lệ hoặc đã hết hạn.";
+    const reset = await PasswordReset.findOne({
+      tokenHash: digest(req.data.token),
+      expiresAt: { $gt: new Date() },
+    });
+    if (!reset) fail(400, invalid);
+    const user = await User.findById(reset.userId);
+    if (!user || !user.active) fail(400, invalid);
+    user.passwordHash = await hashPassword(req.data.password);
+    await user.save();
+    await PasswordReset.deleteMany({ userId: user._id });
+    await Session.deleteMany({ userId: user._id });
+    await Audit.create({
+      userId: user._id,
+      action: "password.reset",
+      entityId: user._id,
+    });
+    res.json({ ok: true });
   }),
 );

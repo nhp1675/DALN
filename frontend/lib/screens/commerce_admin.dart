@@ -120,7 +120,7 @@ class _CommerceAdminState extends State<CommerceAdminScreen> {
         'Thời gian',
         'Nội dung',
         'Tiền thu',
-        'Hoàn mô phỏng',
+        'Hoàn tiền',
         'Doanh thu vé',
         'Doanh thu bỏng nước',
       ],
@@ -168,11 +168,11 @@ class _CommerceAdminState extends State<CommerceAdminScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Báo cáo thanh toán thử nghiệm',
+                'Báo cáo thanh toán',
                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
               ),
               const Text(
-                'Tiền hoàn là mô phỏng. Giao dịch trùng/chưa phát hành vé được tách riêng.',
+                'Giao dịch trùng hoặc chưa phát hành vé được tách riêng.',
               ),
               const SizedBox(height: 12),
               Wrap(
@@ -249,7 +249,7 @@ class _CommerceAdminState extends State<CommerceAdminScreen> {
                   children: [
                     for (final e in {
                       'received': 'Tiền thu',
-                      'returned': 'Hoàn mô phỏng',
+                      'returned': 'Hoàn tiền',
                       'ticketNet': 'Doanh thu vé',
                       'snackNet': 'Doanh thu bỏng nước',
                     }.entries)
@@ -441,8 +441,21 @@ class _ProductFormState extends State<_ProductForm> {
               ),
               TextFormField(
                 controller: image,
+                onChanged: (_) => setState(() {}),
                 decoration: const InputDecoration(
-                  labelText: 'Ảnh HTTPS (không bắt buộc)',
+                  labelText: 'Link ảnh (https://…)',
+                  helperText:
+                      'Để trống sẽ dùng ảnh minh họa mặc định theo tên món.',
+                ),
+              ),
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: SnackImage(
+                  url: image.text.trim(),
+                  name: name.text,
+                  width: 96,
+                  height: 72,
                 ),
               ),
               TextFormField(

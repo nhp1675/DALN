@@ -3,6 +3,7 @@ import { config } from "./config.js";
 import { allModels } from "./models.js";
 import { app } from "./app.js";
 import { releaseExpired } from "./services/booking.js";
+import { syncMovieStatuses } from "./services/movies.js";
 await mongoose.connect(config.MONGODB_URI, { serverSelectionTimeoutMS: 10000 });
 const hello = await mongoose.connection.db.admin().command({ hello: 1 });
 if (!hello.setName && hello.msg !== "isdbgrid")
@@ -11,12 +12,14 @@ if (!hello.setName && hello.msg !== "isdbgrid")
   );
 await Promise.all(allModels.map((m) => m.init()));
 await releaseExpired();
+await syncMovieStatuses();
 let cleaning = false;
 const cleanup = setInterval(async () => {
   if (cleaning) return;
   cleaning = true;
   try {
     await releaseExpired();
+    await syncMovieStatuses(60000);
   } catch (e) {
     console.error("Hold cleanup failed; will retry.");
   } finally {

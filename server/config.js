@@ -34,6 +34,11 @@ const env = z
     MOMO_REQUEST_TYPE: z
       .enum(["captureWallet", "payWithATM", "payWithMethod"])
       .default("captureWallet"),
+    SMTP_HOST: blank(z.string().optional()),
+    SMTP_PORT: blank(z.coerce.number().int().min(1).max(65535).default(587)),
+    SMTP_USER: blank(z.string().optional()),
+    SMTP_PASS: blank(z.string().optional()),
+    MAIL_FROM: blank(z.string().optional()),
     HOLD_MINUTES: z.coerce.number().int().min(1).max(30).default(10),
     CHANGE_CUTOFF_HOURS: z.coerce.number().min(0).max(168).default(12),
     REFUND_PERCENT: z.coerce.number().int().min(0).max(100).default(100),

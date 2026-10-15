@@ -64,28 +64,43 @@ class _AuthState extends State<AuthScreen> {
       const SizedBox(height: 22),
       ResponsiveSplit(
         rightWidth: 420,
-        left: Panel(
-          color: const Color(0xFFE9EEE4),
+        left: Container(
+          padding: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: const Color(0x33FFFFFF)),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [night, Color(0xFF1F2B38)],
+            ),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'CINEGO MEMBERS',
-                style: TextStyle(letterSpacing: 2, color: muted, fontSize: 12),
+                'Thành viên CineGo',
+                style: TextStyle(
+                  color: gold,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 24),
               const Text(
                 'Một tài khoản.\nNhiều trải nghiệm.',
                 style: TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.w800,
-                  color: ink,
+                  height: 1.15,
+                  letterSpacing: -.5,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 20),
               const Text(
                 'Lưu vé, tích điểm và trò chuyện cùng những người yêu điện ảnh.',
-                style: TextStyle(color: muted, height: 1.7),
+                style: TextStyle(color: Color(0xFFB8C2CC), height: 1.7),
               ),
               const SizedBox(height: 36),
               Container(
@@ -104,7 +119,7 @@ class _AuthState extends State<AuthScreen> {
                     SizedBox(width: 22),
                     Expanded(
                       child: Text(
-                        'YOUR NEXT\nGREAT STORY',
+                        'Câu chuyện\ntiếp theo của bạn',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -125,7 +140,7 @@ class _AuthState extends State<AuthScreen> {
             children: [
               Heading(
                 widget.register ? 'Tạo tài khoản' : 'Rất vui được gặp bạn',
-                eyebrow: 'CHÀO MỪNG ĐẾN CINEGO',
+                eyebrow: 'Chào mừng đến CineGo',
               ),
               ErrorNote(error),
               if (widget.register) ...[
@@ -205,7 +220,17 @@ class _AuthState extends State<AuthScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              if (!widget.register) ...[
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => go(context, '/forgot-password'),
+                    child: const Text('Quên mật khẩu?'),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 8),
               TextButton(
                 onPressed: () => go(
                   context,
@@ -297,7 +322,7 @@ class _ProfileState extends State<ProfileScreen> {
     final s = AppScope.of(context), u = s.user!;
     return PageBody(
       children: [
-        Heading('Xin chào, ${u['name']}', eyebrow: 'TÀI KHOẢN CINEGO'),
+        Heading('Xin chào, ${u['name']}', eyebrow: 'Tài khoản CineGo'),
         Panel(
           color: ink,
           child: Column(
@@ -435,4 +460,224 @@ class _ProfileState extends State<ProfileScreen> {
       ],
     );
   }
+}
+
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
+  @override
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordState();
+}
+
+class _ForgotPasswordState extends State<ForgotPasswordScreen> {
+  final form = GlobalKey<FormState>();
+  final email = TextEditingController();
+  bool busy = false, sent = false;
+  String? error;
+  @override
+  void dispose() {
+    email.dispose();
+    super.dispose();
+  }
+
+  Future<void> submit() async {
+    if (!form.currentState!.validate()) return;
+    setState(() {
+      busy = true;
+      error = null;
+    });
+    try {
+      await AppScope.of(context).api.request(
+        '/auth/forgot-password',
+        method: 'POST',
+        body: {'email': email.text.trim()},
+      );
+      if (mounted) setState(() => sent = true);
+    } catch (e) {
+      if (mounted) setState(() => error = '$e');
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => PageBody(
+    width: 480,
+    children: [
+      const SizedBox(height: 22),
+      const Heading('Quên mật khẩu', eyebrow: 'Lấy lại quyền truy cập'),
+      if (sent)
+        Panel(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.mark_email_read_outlined, size: 40, color: coral),
+              const SizedBox(height: 14),
+              Text(
+                'Nếu ${email.text.trim()} đã đăng ký tại CineGo, chúng tôi vừa gửi một liên kết đặt lại mật khẩu. Liên kết có hiệu lực trong 30 phút. Hãy kiểm tra cả hộp thư rác.',
+                style: const TextStyle(height: 1.6),
+              ),
+              const SizedBox(height: 18),
+              FilledButton(
+                onPressed: () => go(context, '/login'),
+                child: const Text('Quay lại đăng nhập'),
+              ),
+            ],
+          ),
+        )
+      else
+        Form(
+          key: form,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Nhập email đã đăng ký, chúng tôi sẽ gửi liên kết để bạn đặt mật khẩu mới.',
+                style: TextStyle(color: muted, height: 1.6),
+              ),
+              const SizedBox(height: 20),
+              ErrorNote(error),
+              TextFormField(
+                controller: email,
+                keyboardType: TextInputType.emailAddress,
+                autofillHints: const [AutofillHints.email],
+                decoration: const InputDecoration(labelText: 'Email'),
+                validator: (v) =>
+                    RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(v ?? '')
+                    ? null
+                    : 'Email không hợp lệ',
+                onFieldSubmitted: (_) => busy ? null : submit(),
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: busy ? null : submit,
+                  child: Text(busy ? 'Đang gửi…' : 'Gửi liên kết đặt lại'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () => go(context, '/login'),
+                child: const Text('Quay lại đăng nhập'),
+              ),
+            ],
+          ),
+        ),
+    ],
+  );
+}
+
+class ResetPasswordScreen extends StatefulWidget {
+  final String token;
+  const ResetPasswordScreen({super.key, required this.token});
+  @override
+  State<ResetPasswordScreen> createState() => _ResetPasswordState();
+}
+
+class _ResetPasswordState extends State<ResetPasswordScreen> {
+  final form = GlobalKey<FormState>();
+  final password = TextEditingController(), confirmPassword = TextEditingController();
+  bool busy = false, showPassword = false;
+  String? error;
+  @override
+  void dispose() {
+    password.dispose();
+    confirmPassword.dispose();
+    super.dispose();
+  }
+
+  Future<void> submit() async {
+    if (!form.currentState!.validate()) return;
+    setState(() {
+      busy = true;
+      error = null;
+    });
+    try {
+      await AppScope.of(context).api.request(
+        '/auth/reset-password',
+        method: 'POST',
+        body: {'token': widget.token, 'password': password.text},
+      );
+      if (mounted) {
+        notice(context, 'Đã đặt lại mật khẩu. Hãy đăng nhập bằng mật khẩu mới.');
+        go(context, '/login');
+      }
+    } catch (e) {
+      if (mounted) setState(() => error = '$e');
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => PageBody(
+    width: 480,
+    children: [
+      const SizedBox(height: 22),
+      const Heading('Đặt mật khẩu mới', eyebrow: 'Lấy lại quyền truy cập'),
+      if (widget.token.isEmpty)
+        Panel(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Liên kết đặt lại mật khẩu không hợp lệ.'),
+              const SizedBox(height: 16),
+              FilledButton(
+                onPressed: () => go(context, '/forgot-password'),
+                child: const Text('Gửi lại liên kết'),
+              ),
+            ],
+          ),
+        )
+      else
+        Form(
+          key: form,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ErrorNote(error),
+              TextFormField(
+                controller: password,
+                obscureText: !showPassword,
+                maxLength: 128,
+                autofillHints: const [AutofillHints.newPassword],
+                decoration: InputDecoration(
+                  labelText: 'Mật khẩu mới',
+                  helperText: 'Tối thiểu 12 ký tự',
+                  suffixIcon: IconButton(
+                    tooltip: showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu',
+                    onPressed: () => setState(() => showPassword = !showPassword),
+                    icon: Icon(
+                      showPassword ? Icons.visibility_off : Icons.visibility,
+                    ),
+                  ),
+                ),
+                validator: (v) =>
+                    (v ?? '').length < 12 ? 'Tối thiểu 12 ký tự' : null,
+              ),
+              const SizedBox(height: 14),
+              TextFormField(
+                controller: confirmPassword,
+                obscureText: !showPassword,
+                maxLength: 128,
+                decoration: const InputDecoration(
+                  labelText: 'Nhập lại mật khẩu mới',
+                ),
+                validator: (v) =>
+                    v == password.text ? null : 'Mật khẩu nhập lại chưa khớp',
+                onFieldSubmitted: (_) => busy ? null : submit(),
+              ),
+              const SizedBox(height: 14),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: busy ? null : submit,
+                  child: Text(busy ? 'Đang lưu…' : 'Đặt lại mật khẩu'),
+                ),
+              ),
+            ],
+          ),
+        ),
+    ],
+  );
 }

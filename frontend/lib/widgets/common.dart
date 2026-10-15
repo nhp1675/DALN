@@ -3,9 +3,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../core/api.dart';
 import '../core/session.dart';
 
-const coral = Color(0xFFD93B28);
-const ink = Color(0xFF243644);
-const muted = Color(0xFF687582);
+// Bảng màu CineGo.
+const coral = Color(0xFFE23B2B); // đỏ thương hiệu
+const ink = Color(0xFF16202A); // xanh đêm (chữ, chân trang)
+const muted = Color(0xFF6C7782); // chữ phụ (đủ tương phản trên cả nền sáng và tối)
+const gold = Color(0xFFE6C891); // vàng ánh kim, điểm nhấn trên nền tối
+const paper = Color(0xFFFAF8F5); // nền giao diện sáng
+const night = Color(0xFF0A0E13); // nền giao diện tối
+const nightRaised = Color(0xFF10161D); // bề mặt (thẻ, hộp thoại) trên nền tối
+const hairline = Color(0xFFE7E3DC); // đường viền mảnh trên nền sáng
 
 // Theo dõi việc chuyển trang (dùng để nhả ghế khi rời trang thanh toán).
 final RouteObserver<ModalRoute<void>> routeObserver =
@@ -21,6 +27,22 @@ class AppScope extends InheritedNotifier<Session> {
     : super(notifier: session);
   static Session of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<AppScope>()!.notifier!;
+}
+
+/// Dấu logo: nút phát màu đỏ.
+class LogoMark extends StatelessWidget {
+  final double size;
+  const LogoMark({super.key, this.size = 38});
+  @override
+  Widget build(BuildContext context) => Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      color: coral,
+      borderRadius: BorderRadius.circular(size * .3),
+    ),
+    child: Icon(Icons.play_arrow_rounded, color: Colors.white, size: size * .68),
+  );
 }
 
 void go(BuildContext context, String route) =>
@@ -78,7 +100,7 @@ const _footerText = TextStyle(
   fontSize: 14,
 );
 const _footerSmall = TextStyle(color: Color(0x99FFFFFF), fontSize: 12.5);
-const _footerGold = Color(0xFFE6C891);
+const _footerGold = gold;
 
 class SiteFooter extends StatelessWidget {
   const SiteFooter({super.key});
@@ -89,7 +111,7 @@ class SiteFooter extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: dark ? const Color(0xFF111A21) : ink,
+        color: dark ? night : ink,
         border: dark
             ? const Border(top: BorderSide(color: Color(0x26FFFFFF)))
             : null,
@@ -135,19 +157,9 @@ class SiteFooter extends StatelessWidget {
               ),
               const Divider(color: Color(0x26FFFFFF), height: 1),
               const SizedBox(height: 16),
-              const Wrap(
-                spacing: 20,
-                runSpacing: 6,
-                children: [
-                  Text(
-                    '© 2026 CineGo. Bảo lưu mọi quyền.',
-                    style: _footerSmall,
-                  ),
-                  Text(
-                    'Thanh toán thử nghiệm (sandbox), không thu tiền thật.',
-                    style: _footerSmall,
-                  ),
-                ],
+              const Text(
+                '© 2026 CineGo. Bảo lưu mọi quyền.',
+                style: _footerSmall,
               ),
             ],
           ),
@@ -166,15 +178,7 @@ class _FooterBrand extends StatelessWidget {
       Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: coral,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(Icons.local_movies_outlined, color: Colors.white),
-          ),
+          const LogoMark(size: 40),
           const SizedBox(width: 12),
           const Text(
             'CineGo',
@@ -227,7 +231,7 @@ class _FooterLink extends StatelessWidget {
         children: [
           const Icon(Icons.chevron_right, size: 16, color: _footerGold),
           const SizedBox(width: 4),
-          Text(label, style: _footerText),
+          Flexible(child: Text(label, style: _footerText)),
         ],
       ),
     ),
@@ -332,10 +336,14 @@ class Panel extends StatelessWidget {
     padding: padding,
     decoration: BoxDecoration(
       color: Theme.of(context).brightness == Brightness.dark
-          ? Theme.of(context).colorScheme.surfaceContainer
+          ? nightRaised
           : (color ?? Colors.white),
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+      borderRadius: BorderRadius.circular(14),
+      border: Border.all(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? const Color(0x38FFFFFF)
+            : hairline,
+      ),
     ),
     child: child,
   );
@@ -361,19 +369,20 @@ class Heading extends StatelessWidget {
               Text(
                 eyebrow,
                 style: const TextStyle(
-                  color: Color(0xFF94604D),
-                  letterSpacing: 1.8,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+                  color: coral,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
             ],
             Text(
               title,
               style: TextStyle(
-                fontSize: MediaQuery.sizeOf(context).width < 600 ? 28 : 36,
+                fontSize: MediaQuery.sizeOf(context).width < 600 ? 27 : 34,
                 fontWeight: FontWeight.w800,
+                height: 1.15,
+                letterSpacing: -.5,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
@@ -474,6 +483,56 @@ class DataView<T> extends StatelessWidget {
   );
 }
 
+/// Ảnh món bỏng nước. Không có ảnh (hoặc ảnh lỗi) thì dùng ảnh minh họa theo tên món.
+class SnackImage extends StatelessWidget {
+  final String url, name;
+  final double? width, height;
+  final double radius;
+  const SnackImage({
+    super.key,
+    required this.url,
+    required this.name,
+    this.width,
+    this.height,
+    this.radius = 12,
+  });
+
+  static String kind(String name) {
+    final n = name.toLowerCase();
+    if (n.contains('combo')) return 'combo';
+    if (n.contains('bắp') || n.contains('bỏng') || n.contains('popcorn')) {
+      return 'popcorn';
+    }
+    if (RegExp(r'nước|coca|cola|pepsi|sprite|fanta|trà|tea|soda').hasMatch(n)) {
+      return 'drink';
+    }
+    return 'snack';
+  }
+
+  Widget _fallback() => SvgPicture.asset(
+    'assets/snacks/${kind(name)}.svg',
+    fit: BoxFit.cover,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    final image = url.startsWith('https://')
+        ? Image.network(
+            url,
+            key: ValueKey(url),
+            // Cho phép ảnh từ website khác (không cần CORS), giống poster phim.
+            webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
+            fit: BoxFit.cover,
+            errorBuilder: (c, e, s) => _fallback(),
+          )
+        : _fallback();
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(radius),
+      child: SizedBox(width: width, height: height, child: image),
+    );
+  }
+}
+
 class Poster extends StatelessWidget {
   final Json movie;
   final double? width, height;
@@ -529,18 +588,39 @@ class Tag extends StatelessWidget {
   final String text;
   final Color color;
   const Tag(this.text, {super.key, this.color = ink});
+
+  // Trên nền tối: đổi các màu chữ vốn dành cho nền sáng sang màu sáng hơn.
+  static Color _onDark(Color c) {
+    if (c == ink) return const Color(0xFFE6EBF0);
+    if (c == muted) return const Color(0xFFAAB4BF);
+    if (c == coral) return const Color(0xFFFF8573);
+    if (c == const Color(0xFF28784B)) return const Color(0xFF6FD39B);
+    if (c == const Color(0xFF2E7D32)) return const Color(0xFF6FD39B);
+    if (c == const Color(0xFF427D5A)) return const Color(0xFF7FD6A4);
+    if (c == const Color(0xFF9D7827)) return gold;
+    return c;
+  }
+
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: .08),
-      borderRadius: BorderRadius.circular(6),
-    ),
-    child: Text(
-      text,
-      style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w700),
-    ),
-  );
+  Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final shade = dark ? _onDark(color) : color;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: shade.withValues(alpha: dark ? .16 : .08),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: shade,
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
 }
 
 class InfoLine extends StatelessWidget {
@@ -634,7 +714,11 @@ class Steps extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 15,
-                backgroundColor: i <= current ? coral : const Color(0xFFEDEBE5),
+                backgroundColor: i <= current
+                    ? coral
+                    : (Theme.of(context).brightness == Brightness.dark
+                          ? const Color(0xFF2A3441)
+                          : const Color(0xFFEDEBE5)),
                 child: i < current
                     ? const Icon(Icons.check, size: 17, color: Colors.white)
                     : Text(
