@@ -419,7 +419,8 @@ void main() {
       findsOneWidget,
     );
     expect(find.textContaining('Bản đồ án'), findsNothing);
-    expect(find.text('Quỹ đạo cuối cùng'), findsOneWidget);
+    // Phim vừa nằm ở carousel vừa ở lưới phim.
+    expect(find.text('Quỹ đạo cuối cùng'), findsAtLeastNWidgets(1));
     await tester.enterText(find.byType(TextField).first, 'không tồn tại');
     await tester.pumpAndSettle();
     expect(find.textContaining('Chưa có phim phù hợp'), findsOneWidget);
@@ -461,12 +462,8 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Thử thanh toán thất bại'));
-      await tester.tap(find.text('Thử thanh toán thất bại'));
-      await tester.pumpAndSettle();
-      expect(find.textContaining('Thanh toán thử thất bại'), findsOneWidget);
-      await tester.ensureVisible(find.text('Xác nhận thanh toán mô phỏng'));
-      await tester.tap(find.text('Xác nhận thanh toán mô phỏng'));
+      await tester.ensureVisible(find.text('Xác nhận thanh toán'));
+      await tester.tap(find.text('Xác nhận thanh toán'));
       await tester.pumpAndSettle();
       expect(find.text('Tải mã QR'), findsOneWidget);
       expect(f.tickets, hasLength(1));

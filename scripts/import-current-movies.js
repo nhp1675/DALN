@@ -36,8 +36,9 @@ if (!flags.has('--apply')) {
     }
     console.log('Đã nhập phim. Phim trùng tên được giữ nguyên; không xóa tài khoản, phim cũ hoặc vé.');
     if (flags.has('--demo-showtimes')) {
-      const name = 'CineGo Hà Đông · Demo';
+      const name = 'CineGo Hà Đông';
       let cinema = await Cinema.findOne({ name });
+<<<<<<< HEAD
       if (!cinema) cinema = await Cinema.create({ name, city: 'Hà Nội', address: 'Khu vực Văn Phú, Hà Đông (địa điểm mô phỏng)', latitude: 20.963, longitude: 105.766, active: true });
       const activeMovies = [...new Map(movies
         .filter(movie => movie.status === 'now')
@@ -51,6 +52,11 @@ if (!flags.has('--apply')) {
         if (!room) room = await saveRoom(undefined, { cinemaId: String(cinema._id), name: roomName, rows: 7, columns: 10 });
         rooms.push(room);
       }
+=======
+      if (!cinema) cinema = await Cinema.create({ name, city: 'Hà Nội', address: 'Khu vực Văn Phú, Hà Đông', latitude: 20.963, longitude: 105.766, active: true });
+      let room = await Room.findOne({ cinemaId: cinema._id, name: 'Phòng 01' });
+      if (!room) room = await saveRoom(undefined, { cinemaId: String(cinema._id), name: 'Phòng 01', rows: 7, columns: 10 });
+>>>>>>> a36f4e3432ab8e74b0c9e4d52ed17efe41ea2b63
       const vnToday = new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10);
       let added = 0;
       for (let day = 0; day < 7; day++) {

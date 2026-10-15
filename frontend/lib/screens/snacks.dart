@@ -137,24 +137,27 @@ class _SnackPickerState extends State<_SnackPicker> {
                 if (widget.products.isEmpty)
                   const Text('Rạp chưa có sản phẩm đang bán.'),
                 ...widget.products.map(
-                  (p) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (sid(p['image']).isNotEmpty)
-                        Image.network(
-                          sid(p['image']),
-                          height: 70,
-                          width: 100,
-                          fit: BoxFit.cover,
-                          errorBuilder: (a, b, c) => const SizedBox.shrink(),
+                  (p) => Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Row(
+                      children: [
+                        SnackImage(
+                          url: sid(p['image']),
+                          name: sid(p['name']),
+                          width: 76,
+                          height: 76,
                         ),
-                      quantity(
-                        '${p['name']} · ${money(p['price'])}\nCó thể chọn ${available(p)}',
-                        picked[sid(p['_id'])] ?? 0,
-                        available(p),
-                        (n) => setState(() => picked[sid(p['_id'])] = n),
-                      ),
-                    ],
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: quantity(
+                            '${p['name']} · ${money(p['price'])}\nCó thể chọn ${available(p)}',
+                            picked[sid(p['_id'])] ?? 0,
+                            available(p),
+                            (n) => setState(() => picked[sid(p['_id'])] = n),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Text(
@@ -190,52 +193,88 @@ class _SnackPickerState extends State<_SnackPicker> {
 }
 
 class SnacksScreen extends StatefulWidget {
-  const SnacksScreen({super.key});
+  // 'success' khi vừa thanh toán xong và được chuyển từ cổng thanh toán về.
+  final String? paymentResult;
+  const SnacksScreen({super.key, this.paymentResult});
   @override
   State<SnacksScreen> createState() => _SnacksState();
 }
 
 class _SnacksState extends State<SnacksScreen> {
   Future<Json>? future;
+  Future<List<Json>>? menu;
+  bool announced = false;
   String? cinema;
   DateTime date = DateTime.now();
+  final Map<String, int> picked = {};
   bool busy = false;
   String? error;
   String get dateText =>
       '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  String get dateLabel =>
+      '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     future ??= load();
+    if (!announced && widget.paymentResult == 'success') {
+      announced = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          notice(
+            context,
+            'Thanh toán thành công! Mã nhận bỏng nước nằm ở mục "Đơn bỏng nước của tôi".',
+          );
+        }
+      });
+    }
   }
 
+  // Xem thực đơn không cần đăng nhập; đơn của tôi chỉ tải khi đã đăng nhập.
   Future<Json> load() async {
-    final api = AppScope.of(context).api;
-    final r = await Future.wait([
-      api.request('/cinemas'),
-      api.request('/snack-orders'),
-    ]);
-    return {...asMap(r[1]), 'cinemas': r[0]};
+    final s = AppScope.of(context);
+    final cinemas = await s.api.request('/cinemas');
+    final mine = s.user == null
+        ? <String, dynamic>{'lines': <Json>[]}
+        : asMap(await s.api.request('/snack-orders'));
+    return {...mine, 'cinemas': cinemas};
   }
+
+  Future<List<Json>> loadMenu(String id) async =>
+      asList(await AppScope.of(context).api.request('/snacks?cinemaId=$id'));
+
+  void chooseCinema(String? id) => setState(() {
+    cinema = id;
+    picked.clear();
+    menu = id == null ? null : loadMenu(id);
+  });
 
   Future<void> buy() async {
-    if (cinema == null) {
-      notice(context, 'Hãy chọn rạp.');
+    final s = AppScope.of(context);
+    if (s.user == null) {
+      notice(context, 'Hãy đăng nhập để đặt bỏng nước.');
+      go(context, '/login');
       return;
     }
-    setState(() => busy = true);
+    final snacks = [
+      for (final e in picked.entries)
+        if (e.value > 0) {'snackId': e.key, 'quantity': e.value},
+    ];
+    if (cinema == null || snacks.isEmpty) return;
+    setState(() {
+      busy = true;
+      error = null;
+    });
     try {
-      final basket = await chooseSnacks(context, cinemaId: cinema);
-      if (basket == null || asList(basket['snacks']).isEmpty) return;
-      if (!mounted) return;
       final order = asMap(
-        await AppScope.of(context).api.request(
+        await s.api.request(
           '/snack-orders',
           method: 'POST',
           body: {
             'cinemaId': cinema,
             'pickupDate': dateText,
-            'snacks': basket['snacks'],
+            'snacks': snacks,
             'idempotencyKey': const Uuid().v4(),
           },
         ),
@@ -252,7 +291,7 @@ class _SnacksState extends State<SnacksScreen> {
     if (!await confirm(
       context,
       'Hủy bỏng nước?',
-      'Hủy ${line['remaining']} phần chưa nhận và hoàn tiền mô phỏng.',
+      'Hủy ${line['remaining']} phần chưa nhận và hoàn tiền.',
     )) {
       return;
     }
@@ -276,10 +315,200 @@ class _SnacksState extends State<SnacksScreen> {
     }
   }
 
+  Widget picker(Json d) => Panel(
+    child: Wrap(
+      spacing: 16,
+      runSpacing: 14,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        SizedBox(
+          width: 340,
+          child: DropdownButtonFormField<String>(
+            initialValue: cinema,
+            decoration: const InputDecoration(labelText: 'Rạp nhận hàng'),
+            items: asList(d['cinemas'])
+                .map(
+                  (c) => DropdownMenuItem(
+                    value: sid(c['_id']),
+                    child: Text(sid(c['name'])),
+                  ),
+                )
+                .toList(),
+            onChanged: busy ? null : chooseCinema,
+          ),
+        ),
+        OutlinedButton.icon(
+          onPressed: busy
+              ? null
+              : () async {
+                  final n = await showDatePicker(
+                    context: context,
+                    initialDate: date,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 90)),
+                  );
+                  if (n != null && mounted) setState(() => date = n);
+                },
+          icon: const Icon(Icons.calendar_today_outlined, size: 18),
+          label: Text('Ngày nhận: $dateLabel'),
+        ),
+      ],
+    ),
+  );
+
+  Widget menuView() {
+    if (menu == null) {
+      return const Empty('Chọn rạp nhận hàng để xem thực đơn.');
+    }
+    return DataView<List<Json>>(
+      future: menu!,
+      retry: () => setState(() => menu = loadMenu(cinema!)),
+      builder: (items) {
+        if (items.isEmpty) return const Empty('Rạp này chưa bán bỏng nước.');
+        final count = picked.values.fold<int>(0, (n, q) => n + q);
+        final total = items.fold<num>(
+          0,
+          (n, p) => n + (p['price'] as num) * (picked[sid(p['_id'])] ?? 0),
+        );
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            LayoutBuilder(
+              builder: (context, c) {
+                final cols = c.maxWidth > 900
+                    ? 4
+                    : c.maxWidth > 640
+                    ? 3
+                    : 2;
+                const gap = 16.0;
+                final width = (c.maxWidth - gap * (cols - 1)) / cols;
+                return Wrap(
+                  spacing: gap,
+                  runSpacing: gap,
+                  children: [
+                    for (final p in items)
+                      _ProductCard(
+                        key: ValueKey(sid(p['_id'])),
+                        product: p,
+                        width: width,
+                        quantity: picked[sid(p['_id'])] ?? 0,
+                        onChange: (n) => setState(() {
+                          if (n <= 0) {
+                            picked.remove(sid(p['_id']));
+                          } else {
+                            picked[sid(p['_id'])] = n;
+                          }
+                        }),
+                      ),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(height: 20),
+            Panel(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          count == 0
+                              ? 'Chưa chọn món nào'
+                              : '$count phần đã chọn',
+                          style: const TextStyle(color: muted),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          money(total),
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  FilledButton(
+                    onPressed: busy || count == 0 ? null : buy,
+                    child: const Text('Đặt & thanh toán'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget orderCard(Json l, Json d) {
+    final remaining = (l['remaining'] as num).toInt();
+    final collected = l['collected'] == true;
+    final status = collected
+        ? 'Đã nhận hàng'
+        : remaining == 0
+        ? 'Đã hủy / chuyển sang đơn đổi'
+        : 'Chưa nhận';
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Panel(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SnackImage(
+              url: sid(l['image']),
+              name: sid(l['name']),
+              width: 88,
+              height: 88,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    sid(l['name']),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${money(l['price'])}/phần · Đã mua ${l['quantity']} · Còn hiệu lực $remaining',
+                    style: const TextStyle(color: muted),
+                  ),
+                  Text(
+                    'Rạp: ${byId(asList(d['cinemas']), l['cinemaId'])?['name'] ?? ''} · Ngày nhận: ${l['pickupDate']}',
+                    style: const TextStyle(color: muted),
+                  ),
+                  const SizedBox(height: 8),
+                  Tag(
+                    status,
+                    color: collected ? const Color(0xFF2E7D32) : coral,
+                  ),
+                  if (!collected && remaining > 0) ...[
+                    const SizedBox(height: 8),
+                    SelectableText('Mã nhận: ${l['pickupCode']}'),
+                    TextButton(
+                      onPressed: busy ? null : () => cancel(l),
+                      child: const Text('Hủy & hoàn tiền'),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) => PageBody(
     children: [
-      const Heading('Bỏng nước'),
+      const Heading('Bỏng nước', eyebrow: 'Đặt trước, nhận tại rạp'),
       ErrorNote(error),
       DataView<Json>(
         future: future!,
@@ -287,65 +516,20 @@ class _SnacksState extends State<SnacksScreen> {
         builder: (d) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Panel(
-              child: Column(
-                children: [
-                  DropdownButtonFormField<String>(
-                    initialValue: cinema,
-                    decoration: const InputDecoration(
-                      labelText: 'Rạp nhận hàng',
-                    ),
-                    items: asList(d['cinemas'])
-                        .map(
-                          (c) => DropdownMenuItem(
-                            value: sid(c['_id']),
-                            child: Text(sid(c['name'])),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: busy ? null : (v) => setState(() => cinema = v),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      Expanded(child: Text('Ngày nhận: $dateText')),
-                      TextButton(
-                        onPressed: busy
-                            ? null
-                            : () async {
-                                final n = await showDatePicker(
-                                  context: context,
-                                  initialDate: date,
-                                  firstDate: DateTime.now(),
-                                  lastDate: DateTime.now().add(
-                                    const Duration(days: 90),
-                                  ),
-                                );
-                                if (n != null && mounted) {
-                                  setState(() => date = n);
-                                }
-                              },
-                        child: const Text('Chọn ngày'),
-                      ),
-                    ],
-                  ),
-                  FilledButton(
-                    onPressed: busy ? null : buy,
-                    child: const Text('Chọn món & đặt riêng'),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
+            picker(d),
+            const SizedBox(height: 20),
+            menuView(),
+            const SizedBox(height: 40),
             Row(
               children: [
                 const Expanded(
                   child: Text(
                     'Đơn bỏng nước của tôi',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
                   ),
                 ),
                 IconButton(
+                  tooltip: 'Tải lại',
                   onPressed: busy
                       ? null
                       : () => setState(() => future = load()),
@@ -353,49 +537,147 @@ class _SnacksState extends State<SnacksScreen> {
                 ),
               ],
             ),
-            ...asList(d['lines']).map(
-              (l) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: Panel(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${l['name']} · ${money(l['price'])}/phần',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      Text(
-                        'Rạp: ${byId(asList(d['cinemas']), l['cinemaId'])?['name'] ?? ''} · Ngày nhận: ${l['pickupDate']}',
-                      ),
-                      Text(
-                        'Đã mua: ${l['quantity']} · Còn hiệu lực: ${l['remaining']}',
-                      ),
-                      Text(
-                        l['collected'] == true
-                            ? 'Đã nhận hàng'
-                            : (l['remaining'] as num) == 0
-                            ? 'Đã hủy / chuyển sang đơn đổi'
-                            : 'Chưa nhận',
-                      ),
-                      if (l['collected'] != true &&
-                          (l['remaining'] as num) > 0) ...[
-                        SelectableText('Mã nhận: ${l['pickupCode']}'),
-                        TextButton(
-                          onPressed: busy ? null : () => cancel(l),
-                          child: const Text('Hủy & hoàn mô phỏng'),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            const SizedBox(height: 12),
+            if (asList(d['lines']).isEmpty)
+              const Empty('Bạn chưa có đơn bỏng nước nào.')
+            else
+              ...asList(d['lines']).map((l) => orderCard(l, d)),
           ],
         ),
       ),
     ],
   );
+}
+
+class _ProductCard extends StatelessWidget {
+  final Json product;
+  final double width;
+  final int quantity;
+  final ValueChanged<int> onChange;
+  const _ProductCard({
+    super.key,
+    required this.product,
+    required this.width,
+    required this.quantity,
+    required this.onChange,
+  });
+  @override
+  Widget build(BuildContext context) {
+    final max = ((product['available'] as num?) ?? 0).toInt().clamp(0, 50);
+    final soldOut = max == 0;
+    return SizedBox(
+      width: width,
+      child: Panel(
+        padding: EdgeInsets.zero,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(13),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AspectRatio(
+                aspectRatio: 4 / 3,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    SnackImage(
+                      url: sid(product['image']),
+                      name: sid(product['name']),
+                      radius: 0,
+                    ),
+                    if (soldOut)
+                      const ColoredBox(
+                        color: Color(0x99000000),
+                        child: Center(
+                          child: Text(
+                            'Hết hàng',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 42,
+                      child: Text(
+                        sid(product['name']),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          height: 1.25,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      money(product['price']),
+                      style: const TextStyle(
+                        color: coral,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    if (quantity == 0)
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          onPressed: soldOut ? null : () => onChange(1),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          child: const Text('Thêm'),
+                        ),
+                      )
+                    else
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton.outlined(
+                            tooltip: 'Bớt',
+                            onPressed: () => onChange(quantity - 1),
+                            icon: const Icon(Icons.remove),
+                          ),
+                          Text(
+                            '$quantity',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          IconButton.outlined(
+                            tooltip: 'Thêm',
+                            onPressed: quantity >= max
+                                ? null
+                                : () => onChange(quantity + 1),
+                            icon: const Icon(Icons.add),
+                          ),
+                        ],
+                      ),
+                    if (!soldOut && max <= 5) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        'Chỉ còn $max phần',
+                        style: const TextStyle(color: muted, fontSize: 12),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

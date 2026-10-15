@@ -72,7 +72,7 @@ class _TicketsState extends State<TicketsScreen> {
     if (!await confirm(
       context,
       'Hủy vé này?',
-      'Vé sẽ mất hiệu lực. Hoàn vé mô phỏng: ${money(refund)}. Phần bỏng nước đã chọn cũng được hủy và hoàn mô phỏng.',
+      'Vé sẽ mất hiệu lực. Hoàn tiền vé: ${money(refund)}. Phần bỏng nước đã chọn cũng được hủy và hoàn tiền.',
     )) {
       return;
     }
@@ -199,7 +199,7 @@ class _TicketsState extends State<TicketsScreen> {
     children: [
       Heading(
         'Vé của tôi',
-        eyebrow: 'CÂU CHUYỆN TIẾP THEO CỦA BẠN',
+        eyebrow: 'Câu chuyện tiếp theo của bạn',
         action: OutlinedButton.icon(
           onPressed: busy ? null : refresh,
           icon: const Icon(Icons.refresh, size: 18),
@@ -240,7 +240,8 @@ class _TicketsState extends State<TicketsScreen> {
               movies = asList(d['movies']),
               cinemas = asList(d['cinemas']),
               seats = asList(d['seats']),
-              refunds = asList(d['refunds']);
+              refunds = asList(d['refunds']),
+              snackLines = asList(d['snackLines'] ?? []);
           final pending = orders
               .where((o) => o['status'] == 'pending')
               .toList();
@@ -283,14 +284,25 @@ class _TicketsState extends State<TicketsScreen> {
                       movie = byId(movies, show['movieId']) ?? {},
                       cinema = byId(cinemas, show['cinemaId']) ?? {},
                       seat = byId(seats, t['showtimeSeatId']) ?? {};
+                  final snacks = _snacksOf(t, snackLines);
                   final details = Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Tag(
-                        status(t['status']),
-                        color: t['status'] == 'valid'
-                            ? const Color(0xFF28784B)
-                            : muted,
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          Tag(
+                            status(t['status']),
+                            color: t['status'] == 'valid'
+                                ? const Color(0xFF28784B)
+                                : muted,
+                          ),
+                          if (snacks.isNotEmpty)
+                            const Tag('Kèm bỏng nước', color: coral)
+                          else
+                            const Tag('Không kèm bỏng nước', color: muted),
+                        ],
                       ),
                       const SizedBox(height: 12),
                       Text(
@@ -328,6 +340,10 @@ class _TicketsState extends State<TicketsScreen> {
                           ),
                         ],
                       ),
+                      if (snacks.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        _TicketSnacks(lines: snacks),
+                      ],
                       const SizedBox(height: 10),
                       Text(
                         'Mã vé: ${sid(t['_id']).substring(12)}',
@@ -368,7 +384,7 @@ class _TicketsState extends State<TicketsScreen> {
                             (r) => Padding(
                               padding: const EdgeInsets.only(top: 12),
                               child: Text(
-                                'Hoàn mô phỏng: ${money(r['amount'])} · ${status(r['status'])}',
+                                'Hoàn tiền: ${money(r['amount'])} · ${status(r['status'])}',
                                 style: const TextStyle(
                                   color: muted,
                                   fontSize: 13,
@@ -519,4 +535,81 @@ class TicketQr extends StatelessWidget {
       ),
     ],
   );
+}
+
+// Các phần bỏng nước gắn với vé: gắn trực tiếp vào vé, hoặc mua chung đơn và suất chiếu.
+List<Json> _snacksOf(Json t, List<Json> lines) => lines
+    .where(
+      (l) =>
+          (l['ticketId'] != null && sid(l['ticketId']) == sid(t['_id'])) ||
+          (l['ticketId'] == null &&
+              sid(l['orderId']) == sid(t['orderId']) &&
+              sid(l['showtimeId']) == sid(t['showtimeId'])),
+    )
+    .toList();
+
+class _TicketSnacks extends StatelessWidget {
+  final List<Json> lines;
+  const _TicketSnacks({required this.lines});
+  String _state(Json l) {
+    if (l['collected'] == true) return 'Đã nhận';
+    return ((l['remaining'] as num?) ?? 0) <= 0 ? 'Đã hủy' : 'Chưa nhận';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final pending = lines
+        .where(
+          (l) => l['collected'] != true && ((l['remaining'] as num?) ?? 0) > 0,
+        )
+        .toList();
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: coral.withValues(alpha: .06),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: coral.withValues(alpha: .25)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.fastfood_outlined, size: 18, color: coral),
+              SizedBox(width: 8),
+              Text('Kèm bỏng nước', style: TextStyle(fontWeight: FontWeight.w700)),
+            ],
+          ),
+          const SizedBox(height: 10),
+          for (final l in lines)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                children: [
+                  SnackImage(
+                    url: sid(l['image']),
+                    name: sid(l['name']),
+                    width: 40,
+                    height: 40,
+                    radius: 8,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(child: Text('${l['name']} × ${l['quantity']}')),
+                  Text(
+                    _state(l),
+                    style: const TextStyle(color: muted, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+          if (pending.isNotEmpty)
+            SelectableText(
+              'Nhận tại rạp ngày ${pending.first['pickupDate']} · Mã nhận: ${pending.first['pickupCode']}',
+              style: const TextStyle(fontSize: 13),
+            ),
+        ],
+      ),
+    );
+  }
 }

@@ -2,6 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { Movie, Cinema, Showtime, ShowtimeSeat, Room } from "../models.js";
 import { route, parseId, fail } from "../core.js";
+import { syncMovieStatuses } from "../services/movies.js";
 import { config, policy, paymentMethods } from "../config.js";
 export const publicRouter = Router();
 publicRouter.get("/config", (req, res) =>
@@ -10,6 +11,7 @@ publicRouter.get("/config", (req, res) =>
 publicRouter.get(
   "/movies",
   route(async (req, res) => {
+    await syncMovieStatuses(30000);
     const q = z
       .string()
       .max(100)
@@ -35,8 +37,10 @@ publicRouter.get(
 publicRouter.get(
   "/movies/:id",
   route(async (req, res) => {
+    const id = parseId(req.params.id);
+    await syncMovieStatuses(30000);
     const m = await Movie.findOne({
-      _id: parseId(req.params.id),
+      _id: id,
       status: { $ne: "archived" },
     }).lean();
     if (!m) fail(404, "Không tìm thấy phim.");
@@ -67,6 +71,12 @@ publicRouter.get(
         $lt: new Date(+start + 86400000),
       };
     }
+    // Chỉ hiện lịch chiếu của phim đang mở bán (phim đã ẩn thì ngừng bán vé).
+    await syncMovieStatuses(30000);
+    const open = await Movie.distinct("_id", { status: { $in: ["now", "soon"] } });
+    if (f.movieId) {
+      if (!open.some((x) => String(x) === String(f.movieId))) return res.json([]);
+    } else f.movieId = { $in: open };
     res.json(await Showtime.find(f).sort({ startAt: 1 }).limit(500).lean());
   }),
 );

@@ -20,6 +20,88 @@ void main() {
   session.initialize();
 }
 
+OutlineInputBorder _outline(Color color, [double width = 1]) =>
+    OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(color: color, width: width),
+    );
+
+ThemeData _buildTheme(Brightness brightness) {
+  final dark = brightness == Brightness.dark;
+  final edge = dark ? const Color(0x4DFFFFFF) : const Color(0xFFD9D4CB);
+  final scheme = ColorScheme.fromSeed(
+    seedColor: coral,
+    brightness: brightness,
+    primary: dark ? const Color(0xFFFF6B58) : coral,
+    onPrimary: dark ? const Color(0xFF1A0805) : Colors.white,
+    surface: dark ? nightRaised : Colors.white,
+    onSurface: dark ? const Color(0xFFEDF1F5) : null,
+    onSurfaceVariant: dark ? const Color(0xFFB4BEC9) : null,
+    outlineVariant: dark ? const Color(0xFF2E3946) : null,
+  );
+  return ThemeData(
+    useMaterial3: true,
+    brightness: brightness,
+    colorScheme: scheme,
+    fontFamily: 'Roboto',
+    scaffoldBackgroundColor: dark ? night : paper,
+    dividerTheme: DividerThemeData(
+      color: dark ? const Color(0x33FFFFFF) : hairline,
+    ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: dark ? night : Colors.white,
+      surfaceTintColor: Colors.transparent,
+      scrolledUnderElevation: 0,
+      elevation: 0,
+      shape: Border(
+        bottom: BorderSide(color: dark ? const Color(0x33FFFFFF) : hairline),
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: dark ? nightRaised : Colors.white,
+      contentPadding: const EdgeInsets.all(16),
+      border: _outline(edge),
+      enabledBorder: _outline(edge),
+      focusedBorder: _outline(dark ? const Color(0xFFFF6B58) : coral, 1.6),
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        textStyle: const TextStyle(fontWeight: FontWeight.w700),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        side: BorderSide(color: edge),
+        foregroundColor: dark ? Colors.white : ink,
+        textStyle: const TextStyle(fontWeight: FontWeight.w600),
+      ),
+    ),
+    segmentedButtonTheme: SegmentedButtonThemeData(
+      style: SegmentedButton.styleFrom(
+        selectedBackgroundColor: dark
+            ? const Color(0x33FF6B58)
+            : const Color(0xFFFCE7E4),
+        selectedForegroundColor: dark ? const Color(0xFFFFB4A8) : coral,
+        side: BorderSide(color: edge),
+      ),
+    ),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: dark ? const Color(0xFF263241) : ink,
+      contentTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
+    ),
+    popupMenuTheme: PopupMenuThemeData(
+      color: dark ? nightRaised : Colors.white,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    ),
+  );
+}
+
 class CineGoApp extends StatelessWidget {
   final Session session;
   const CineGoApp({super.key, required this.session});
@@ -31,62 +113,13 @@ class CineGoApp extends StatelessWidget {
       child: MaterialApp(
         title: 'CineGo',
         themeMode: mode,
-        darkTheme: ThemeData(
-          useMaterial3: true,
-          brightness: Brightness.dark,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: coral,
-            brightness: Brightness.dark,
-          ),
-        ),
+        darkTheme: _buildTheme(Brightness.dark),
         debugShowCheckedModeBanner: false,
         navigatorObservers: [routeObserver],
         locale: const Locale('vi'),
         supportedLocales: const [Locale('vi'), Locale('en')],
         localizationsDelegates: GlobalMaterialLocalizations.delegates,
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: coral,
-            primary: coral,
-            surface: Colors.white,
-          ),
-          scaffoldBackgroundColor: const Color(0xFFFCFBF8),
-          fontFamily: 'Roboto',
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.transparent,
-          ),
-          inputDecorationTheme: InputDecorationTheme(
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: const EdgeInsets.all(16),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Color(0xFFDADFD8)),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Color(0xFFDADFD8)),
-            ),
-          ),
-          filledButtonTheme: FilledButtonThemeData(
-            style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 18),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(9),
-              ),
-            ),
-          ),
-          outlinedButtonTheme: OutlinedButtonThemeData(
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(9),
-              ),
-            ),
-          ),
-        ),
+        theme: _buildTheme(Brightness.light),
         onGenerateRoute: (settings) {
           final uri = Uri.parse(settings.name ?? '/');
           final parts = uri.pathSegments;
@@ -127,7 +160,7 @@ class CineGoApp extends StatelessWidget {
                 screen = const SettingsScreen();
               case 'snacks':
                 protected = true;
-                screen = const SnacksScreen();
+                screen = SnacksScreen(paymentResult: uri.queryParameters['payment']);
               case 'commerce-admin':
                 protected = true;
                 admin = true;
@@ -145,6 +178,12 @@ class CineGoApp extends StatelessWidget {
                 screen = AuthScreen(
                   register: true,
                   next: uri.queryParameters['next'] ?? '/',
+                );
+              case 'forgot-password':
+                screen = const ForgotPasswordScreen();
+              case 'reset-password':
+                screen = ResetPasswordScreen(
+                  token: uri.queryParameters['token'] ?? '',
                 );
               default:
                 screen = const Empty('Trang không tồn tại.');
@@ -190,6 +229,27 @@ class Guard extends StatelessWidget {
   }
 }
 
+class _NavLink extends StatelessWidget {
+  final String label, route;
+  final bool active;
+  const _NavLink(this.label, this.route, {required this.active});
+  @override
+  Widget build(BuildContext context) => TextButton(
+    onPressed: () => go(context, route),
+    style: TextButton.styleFrom(
+      foregroundColor: active
+          ? coral
+          : Theme.of(context).colorScheme.onSurface,
+      textStyle: TextStyle(
+        fontSize: 15,
+        fontWeight: active ? FontWeight.w700 : FontWeight.w500,
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+    ),
+    child: Text(label),
+  );
+}
+
 class Shell extends StatelessWidget {
   final Widget child;
   const Shell({super.key, required this.child});
@@ -197,80 +257,89 @@ class Shell extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = AppScope.of(context);
     final wide = MediaQuery.sizeOf(context).width > 1050;
+    final current = ModalRoute.of(context)?.settings.name ?? '/';
+    bool on(String route) => route == '/'
+        ? current == '/' || current.startsWith('/?') || current.startsWith('/movies')
+        : current.startsWith(route);
+    final onSurface = Theme.of(context).colorScheme.onSurface;
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 76,
-        titleSpacing: wide ? 28 : 16,
+        toolbarHeight: 72,
+        titleSpacing: wide ? 32 : 16,
         automaticallyImplyLeading: false,
         title: InkWell(
           onTap: () => go(context, '/'),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: coral,
-                  borderRadius: BorderRadius.circular(9),
-                ),
-                child: const Icon(
-                  Icons.movie_outlined,
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
-              const SizedBox(width: 9),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'Cine',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
+          borderRadius: BorderRadius.circular(10),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 2),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const LogoMark(size: 38),
+                const SizedBox(width: 10),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Cine',
+                        style: TextStyle(color: onSurface),
                       ),
-                    ),
-                    TextSpan(
-                      text: 'Go',
-                      style: TextStyle(color: coral),
-                    ),
-                  ],
+                      const TextSpan(
+                        text: 'Go',
+                        style: TextStyle(color: coral),
+                      ),
+                    ],
+                  ),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 26,
+                    letterSpacing: -.6,
+                  ),
                 ),
-                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 27),
-              ),
-            ],
+              ],
+            ),
+            ),
           ),
         ),
         actions: [
           if (wide) ...[
-            TextButton(
-              onPressed: () => go(context, '/'),
-              child: const Text('Phim'),
-            ),
-            TextButton(
-              onPressed: () => go(context, '/cinemas'),
-              child: const Text('Hệ thống rạp'),
-            ),
-            TextButton.icon(
+            _NavLink('Phim', '/', active: on('/')),
+            _NavLink('Hệ thống rạp', '/cinemas', active: on('/cinemas')),
+            _NavLink('Bỏng nước', '/snacks', active: on('/snacks')),
+            _NavLink('Vé của tôi', '/tickets', active: on('/tickets')),
+            if (s.isAdmin) _NavLink('Quản trị', '/admin', active: on('/admin')),
+            const SizedBox(width: 12),
+            if (MediaQuery.sizeOf(context).width > 1180) OutlinedButton.icon(
               onPressed: () => go(context, '/cinemas'),
               icon: const Icon(Icons.near_me_outlined, size: 18),
               label: const Text('Tìm rạp gần bạn'),
-            ),
-            TextButton(
-              onPressed: () => go(context, '/tickets'),
-              child: const Text('Vé của tôi'),
-            ),
-            if (s.isAdmin)
-              TextButton(
-                onPressed: () => go(context, '/admin'),
-                child: const Text('Quản trị'),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                shape: const StadiumBorder(),
               ),
-            const SizedBox(width: 16),
+            ),
+            const SizedBox(width: 8),
           ],
           if (s.user == null)
-            TextButton.icon(
-              onPressed: () => go(context, '/login'),
-              icon: const Icon(Icons.person_outline, size: 18),
-              label: const Text('Đăng nhập'),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: FilledButton(
+                onPressed: () => go(context, '/login'),
+                style: FilledButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                  shape: const StadiumBorder(),
+                ),
+                child: const Text('Đăng nhập'),
+              ),
             )
           else
             IconButton(
@@ -293,28 +362,29 @@ class Shell extends StatelessWidget {
               }
             },
             itemBuilder: (context) => [
+              if (!wide) const PopupMenuItem(value: '/', child: Text('Phim')),
+              if (!wide)
+                const PopupMenuItem(
+                  value: '/cinemas',
+                  child: Text('Hệ thống rạp'),
+                ),
+              if (!wide)
+                const PopupMenuItem(value: '/snacks', child: Text('Bỏng nước')),
+              if (!wide)
+                const PopupMenuItem(
+                  value: '/tickets',
+                  child: Text('Vé của tôi'),
+                ),
+              if (!wide && s.isAdmin)
+                const PopupMenuItem(value: '/admin', child: Text('Quản trị')),
+              if (!wide) const PopupMenuDivider(),
               const PopupMenuItem(value: '/settings', child: Text('Cài đặt')),
-              const PopupMenuItem(
-                value: '/snacks',
-                child: Text('Bỏng nước & đơn của tôi'),
-              ),
               if (s.isAdmin)
                 const PopupMenuItem(
                   value: '/commerce-admin',
                   child: Text('Kho, nhận hàng & doanh thu'),
                 ),
-              const PopupMenuItem(value: '/', child: Text('Phim')),
-              const PopupMenuItem(
-                value: '/cinemas',
-                child: Text('Hệ thống rạp'),
-              ),
-              const PopupMenuItem(
-                value: '/cinemas',
-                child: Text('Tìm rạp gần bạn'),
-              ),
-              const PopupMenuItem(value: '/tickets', child: Text('Vé của tôi')),
-              if (s.isAdmin)
-                const PopupMenuItem(value: '/admin', child: Text('Quản trị')),
+              if (s.user != null) const PopupMenuDivider(),
               if (s.user != null)
                 const PopupMenuItem(value: 'logout', child: Text('Đăng xuất')),
             ],
@@ -326,5 +396,3 @@ class Shell extends StatelessWidget {
     );
   }
 }
-
-// them comment

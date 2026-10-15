@@ -51,7 +51,7 @@ export async function fixture(page, role = "customer") {
     _id: ids.cinema,
     name: "CineGo Hà Đông",
     city: "Hà Nội",
-    address: "Khu đô thị Văn Phú, Hà Đông, Hà Nội (rạp mẫu)",
+    address: "Khu đô thị Văn Phú, Hà Đông, Hà Nội",
     latitude: 20.96,
     longitude: 105.76,
     active: true,

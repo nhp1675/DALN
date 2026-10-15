@@ -1,5 +1,12 @@
 import { moderationRouter } from "./moderation.js";
 import { movieKey } from "../movie-key.js";
+import {
+  vnToday,
+  syncMovieStatuses,
+  deleteMovie,
+  hideMovie,
+  reopenMovie,
+} from "../services/movies.js";
 import { Router } from "express";
 import { z } from "zod";
 import {
@@ -74,9 +81,25 @@ const movieSchema = z
     status: z.enum(["now", "soon", "archived"]),
     poster: poster.default(""),
     trailerUrl: trailer.default(""),
-    releaseDate: z.string().date().optional(),
+    releaseDate: z.string().date().nullable().optional(),
+    endDate: z.string().date().nullable().optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((m, ctx) => {
+    if (m.releaseDate && m.endDate && m.endDate < m.releaseDate)
+      ctx.addIssue({
+        code: "custom",
+        path: ["endDate"],
+        message: "Ngày kết thúc phải cùng hoặc sau ngày khởi chiếu.",
+      });
+    if (m.status === "now" && m.endDate && m.endDate < vnToday())
+      ctx.addIssue({
+        code: "custom",
+        path: ["endDate"],
+        message:
+          "Ngày kết thúc bán vé đã qua. Hãy chọn ngày từ hôm nay trở đi hoặc chuyển phim sang trạng thái đã ẩn.",
+      });
+  });
 const cinemaSchema = z
   .object({
     name: str,
@@ -157,6 +180,10 @@ adminRouter.get(
       .max(10000)
       .parse(req.query.page || 1);
     const filter = {};
+    if (req.params.entity === "movies") {
+      filter.deletedAt = null;
+      await syncMovieStatuses(5000);
+    }
     if (req.params.entity === "seats" && req.query.roomId)
       filter.roomId = parseId(req.query.roomId);
     const [items, total] = await Promise.all([
@@ -175,7 +202,7 @@ adminRouter.get(
 async function assertMovieUnique(data, excludeId, session) {
   const key = movieKey(data);
   const query = Movie.find(
-    excludeId ? { _id: { $ne: excludeId } } : {},
+    excludeId ? { _id: { $ne: excludeId }, deletedAt: null } : { deletedAt: null },
     "title director status",
   ).lean();
   if (session) query.session(session);
@@ -225,8 +252,8 @@ for (const [name, Model, schema] of [
             { new: true, runValidators: true, session },
           );
           if (!doc) fail(404, "Không tìm thấy dữ liệu.");
-          const disabling =
-            name === "movies" ? req.data.status !== "now" : !req.data.active;
+          // Ẩn phim chỉ ngừng bán vé mới, vé đã bán và lịch chiếu cũ vẫn giữ nguyên.
+          const disabling = name === "movies" ? false : !req.data.active;
           if (
             disabling &&
             (await Showtime.exists({
@@ -249,6 +276,7 @@ for (const [name, Model, schema] of [
     "/" + name + "/:id",
     route(async (req, res) => {
       const id = parseId(req.params.id);
+      if (name === "movies") return res.json(await deleteMovie(req.user._id, id));
       res.json(
         await transaction(async (session) => {
           const filter = name === "movies" ? { movieId: id } : { cinemaId: id };
@@ -275,6 +303,21 @@ for (const [name, Model, schema] of [
     }),
   );
 }
+adminRouter.post(
+  "/movies/:id/hide",
+  route(async (req, res) =>
+    res.json(await hideMovie(req.user._id, parseId(req.params.id))),
+  ),
+);
+adminRouter.post(
+  "/movies/:id/reopen",
+  body(z.object({ endDate: z.string().date().nullable().optional() }).strict()),
+  route(async (req, res) =>
+    res.json(
+      await reopenMovie(req.user._id, parseId(req.params.id), req.data.endDate),
+    ),
+  ),
+);
 adminRouter.post(
   "/rooms",
   body(roomSchema),

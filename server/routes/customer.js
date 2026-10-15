@@ -1,4 +1,5 @@
 import {snackSelections, snackChanges} from './concessions.js';
+import { withSnackImages } from '../services/concessions.js';
 import { Router } from "express";
 import { z } from "zod";
 import { rateLimit } from "express-rate-limit";
@@ -17,6 +18,7 @@ import {
   Membership,
   Message,
   ChangeRequest,
+  SnackLine,
 } from "../models.js";
 import { requireAuth } from "../auth.js";
 import {
@@ -101,6 +103,7 @@ customerRouter.get(
       userId: req.user._id,
     }).lean();
     if (!order) fail(404, "Không tìm thấy đơn.");
+    if (order.snacks?.length) order.snacks = await withSnackImages(order.snacks);
     const items = await OrderItem.find({ orderId: order._id }).lean();
     const seats = await ShowtimeSeat.find({
       _id: { $in: items.map((i) => i.showtimeSeatId) },
@@ -168,7 +171,16 @@ customerRouter.get(
         .select("-paymentId")
         .lean(),
     ]);
-    res.json({ tickets, shows, movies, cinemas, seats, refunds });
+    const snackLines = await withSnackImages(
+      await SnackLine.find({
+        userId: req.user._id,
+        $or: [
+          { ticketId: { $in: tickets.map((t) => t._id) } },
+          { showtimeId: { $in: shows.map((s) => s._id) } },
+        ],
+      }).lean(),
+    );
+    res.json({ tickets, shows, movies, cinemas, seats, refunds, snackLines });
   }),
 );
 customerRouter.post(

@@ -203,8 +203,8 @@ class _BookingState extends State<BookingScreen> {
                   Heading(
                     'Chọn ghế ngồi',
                     eyebrow: widget.exchangeId == null
-                        ? 'VỊ TRÍ YÊU THÍCH CỦA BẠN'
-                        : 'ĐỔI VÉ · CHỌN GHẾ MỚI',
+                        ? 'Vị trí yêu thích của bạn'
+                        : 'Đổi vé, chọn ghế mới',
                   ),
                   Tag(sid(d['room']['name'])),
                   const SizedBox(height: 30),
@@ -493,6 +493,7 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
       redirecting = false,
       confirming = false;
   String orderStatus = '';
+  String orderKind = '';
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -509,7 +510,7 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
       polling = widget.result == 'success';
       if (widget.result == 'failed') {
         error =
-            'Thanh toán chưa thành công hoặc đã bị hủy. Bạn có thể thử lại khi ghế còn được giữ.';
+            'Thanh toán chưa thành công hoặc đã bị hủy. Bạn có thể thử lại khi đơn còn được giữ.';
       } else if (widget.result == 'invalid') {
         error = 'Không xác minh được kết quả thanh toán. Vui lòng thử lại.';
       }
@@ -564,6 +565,7 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
       await AppScope.of(context).api.request('/orders/${widget.id}'),
     );
     orderStatus = sid(asMap(d['order'])['status']);
+    orderKind = sid(asMap(d['order'])['kind']);
     return d;
   }
 
@@ -662,13 +664,15 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
         orderStatus = 'paid';
         await s.refresh();
         if (mounted) {
-          notice(context, 'Thanh toán mô phỏng thành công.');
+          notice(context, 'Thanh toán thành công.');
           go(context, order['kind'] == 'snack' ? '/snacks' : '/tickets');
         }
       } else if (mounted) {
         setState(() {
           error =
-              'Thanh toán thử thất bại. Vé chưa được phát hành; bạn có thể thử lại khi ghế còn được giữ.';
+              orderKind == 'snack'
+                  ? 'Thanh toán chưa thành công. Bạn có thể thử lại khi đơn còn được giữ.'
+                  : 'Thanh toán chưa thành công. Vé chưa được phát hành; bạn có thể thử lại khi ghế còn được giữ.';
           future = load();
         });
       }
@@ -684,7 +688,9 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
     final ok = await confirm(
       context,
       'Hủy đơn?',
-      'Ghế đang giữ sẽ được trả lại.',
+      orderKind == 'snack'
+          ? 'Đơn bỏng nước sẽ bị hủy.'
+          : 'Ghế đang giữ sẽ được trả lại.',
     );
     confirming = false;
     if (!ok || !mounted) return;
@@ -694,7 +700,7 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
       await AppScope.of(
         context,
       ).api.request('/orders/${widget.id}/cancel', method: 'POST');
-      if (mounted) go(context, '/tickets');
+      if (mounted) go(context, orderKind == 'snack' ? '/snacks' : '/tickets');
     } catch (e) {
       if (mounted) setState(() => error = '$e');
     } finally {
@@ -705,7 +711,6 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
   @override
   Widget build(BuildContext context) => PageBody(
     children: [
-      const Steps(2),
       DataView<Json>(
         future: future!,
         retry: () => setState(() => future = load()),
@@ -717,7 +722,11 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
             sid(o['expiresAt']),
           ).difference(DateTime.now()).inSeconds.clamp(0, 36000);
           final pending = o['status'] == 'pending' && seconds > 0;
-          return ResponsiveSplit(
+          return Column(
+            children: [
+              // Đơn chỉ có bỏng nước không đi qua các bước chọn suất/ghế.
+              if (o['kind'] != 'snack') const Steps(2),
+              ResponsiveSplit(
             left: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -727,14 +736,16 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
                       : o['kind'] == 'snack'
                       ? 'Thanh toán bỏng nước'
                       : 'Thanh toán & nhận vé',
-                  eyebrow: 'KIỂM TRA LẠI MỘT CHÚT',
+                  eyebrow: 'Kiểm tra lại một chút',
                 ),
                 Panel(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        sid(movie['title']),
+                        o['kind'] == 'snack'
+                            ? 'Đơn bỏng nước'
+                            : sid(movie['title']),
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -754,19 +765,43 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
                           seats.map((s) => s['label']).join(', '),
                         ),
                       for (final line in asList(o['snacks'] ?? []))
-                        InfoLine(
-                          sid(line['name']),
-                          '${line['quantity']} × ${money(line['price'])}',
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          child: Row(
+                            children: [
+                              SnackImage(
+                                url: sid(line['image']),
+                                name: sid(line['name']),
+                                width: 48,
+                                height: 48,
+                                radius: 8,
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  sid(line['name']),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                '${line['quantity']} × ${money(line['price'])}',
+                              ),
+                            ],
+                          ),
                         ),
                       if ((o['oldSnackTotal'] as num? ?? 0) > 0)
                         InfoLine(
                           'Bỏng nước cũ chuyển đổi',
                           money(o['oldSnackTotal']),
                         ),
-                      TextButton(
-                        onPressed: () => go(context, '/snacks'),
-                        child: const Text('Xem đơn & mã nhận bỏng nước'),
-                      ),
+                      if (o['kind'] != 'snack' &&
+                          asList(o['snacks'] ?? []).isNotEmpty)
+                        TextButton(
+                          onPressed: () => go(context, '/snacks'),
+                          child: const Text('Xem đơn & mã nhận bỏng nước'),
+                        ),
                       InfoLine('Trạng thái', status(o['status'])),
                       InfoLine('Mã đơn', widget.id),
                       if (o['status'] == 'pending')
@@ -774,8 +809,10 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
                           padding: const EdgeInsets.only(top: 16),
                           child: Tag(
                             seconds > 0
-                                ? 'Giữ ghế còn ${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}'
-                                : 'Hết thời gian giữ ghế',
+                                ? '${o['kind'] == 'snack' ? 'Giữ đơn' : 'Giữ ghế'} còn ${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}'
+                                : (o['kind'] == 'snack'
+                                      ? 'Hết thời gian giữ đơn'
+                                      : 'Hết thời gian giữ ghế'),
                             color: coral,
                           ),
                         ),
@@ -795,16 +832,13 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      if (AppScope.of(context).isDemo) ...[
-                        const Tag(
-                          'Thanh toán thử nghiệm · Không thu tiền thật',
-                          color: coral,
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Không nhập thông tin thẻ hoặc chuyển tiền thật. Chế độ này dùng để thử luồng thành công và thất bại.',
-                        ),
-                      ] else if (AppScope.of(context).isGateway) ...[
+                      if (AppScope.of(context).isDemo)
+                        Text(
+                          o['kind'] == 'snack'
+                              ? 'Xác nhận đơn hàng để hoàn tất thanh toán và nhận mã lấy bỏng nước tại rạp.'
+                              : 'Xác nhận đơn hàng để hoàn tất thanh toán và nhận vé.',
+                        )
+                      else if (AppScope.of(context).isGateway) ...[
                         SegmentedButton<String>(
                           segments: [
                             for (final m in AppScope.of(context).paymentMethods)
@@ -868,7 +902,9 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
                   ],
                   const SizedBox(height: 22),
                   Text(
-                    'Chính sách đề xuất: hủy/đổi trước ${o['policy']['changeCutoffHours']} giờ; hoàn ${o['policy']['refundPercent']}% khi hủy.',
+                    o['kind'] == 'snack'
+                        ? 'Phần chưa nhận có thể hủy và hoàn tiền trong mục Bỏng nước.'
+                        : 'Chính sách: hủy/đổi trước ${o['policy']['changeCutoffHours']} giờ; hoàn ${o['policy']['refundPercent']}% khi hủy.',
                     style: const TextStyle(color: muted, fontSize: 13),
                   ),
                   ErrorNote(error),
@@ -893,34 +929,31 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
                                     : method == 'momo'
                                     ? 'MoMo'
                                     : 'VNPay'}'
-                              : 'Xác nhận thanh toán mô phỏng',
+                              : 'Xác nhận thanh toán',
                         ),
                       ),
                     ),
                     const SizedBox(height: 12),
-                    if (AppScope.of(context).isDemo)
-                      SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: busy ? null : () => pay('failed'),
-                          child: const Text('Thử thanh toán thất bại'),
-                        ),
-                      ),
-                    const SizedBox(height: 10),
                     TextButton(
                       onPressed: busy ? null : cancel,
-                      child: const Text('Hủy đơn và trả ghế'),
+                      child: Text(o['kind'] == 'snack' ? 'Hủy đơn' : 'Hủy đơn và trả ghế'),
                     ),
                   ] else
                     FilledButton(
                       onPressed: () => go(
                         context,
-                        o['status'] == 'paid'
+                        o['kind'] == 'snack'
+                            ? '/snacks'
+                            : o['status'] == 'paid'
                             ? '/tickets'
                             : '/movies/${movie['_id']}',
                       ),
                       child: Text(
-                        o['status'] == 'paid'
+                        o['kind'] == 'snack'
+                            ? (o['status'] == 'paid'
+                                  ? 'Xem đơn bỏng nước'
+                                  : 'Đặt lại bỏng nước')
+                            : o['status'] == 'paid'
                             ? 'Xem vé của tôi'
                             : 'Chọn lại suất chiếu',
                       ),
@@ -928,6 +961,8 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
                 ],
               ),
             ),
+          ),
+            ],
           );
         },
       ),

@@ -4,7 +4,7 @@ import { requireAuth, requireAdmin } from '../auth.js';
 import { Snack, SnackLine, Cinema, Order, Ticket, Showtime, ShowtimeSeat, ChangeRequest, Payment, Refund, RevenueEntry } from '../models.js';
 import { body, objectId, parseId, route, fail, transaction, audit } from '../core.js';
 import { holdSnackOrder } from '../services/booking.js';
-import { cancelStandalone, linkedLines } from '../services/concessions.js';
+import { cancelStandalone, linkedLines, withSnackImages } from '../services/concessions.js';
 export const snackSelections = z.array(z.object({snackId:objectId,quantity:z.number().int().min(1).max(50)}).strict()).max(30).refine(a=>new Set(a.map(x=>x.snackId)).size===a.length);
 export const snackChanges = z.array(z.object({lineId:objectId,quantity:z.number().int().min(1).max(50)}).strict()).max(100).refine(a=>new Set(a.map(x=>x.lineId)).size===a.length);
 export const concessionsRouter=Router();
@@ -16,13 +16,13 @@ concessionsRouter.use(requireAuth);
 concessionsRouter.post('/snack-orders',body(z.object({cinemaId:objectId,pickupDate:z.string().date(),snacks:snackSelections.refine(a=>a.length>0),idempotencyKey:z.string().uuid()}).strict()),route(async(req,res)=>res.status(201).json(await holdSnackOrder(req.user._id,req.data))));
 concessionsRouter.get('/snack-orders',route(async(req,res)=>{
  const lines=await SnackLine.find({userId:req.user._id}).sort({createdAt:-1}).limit(500).lean();
- const cinemas=await Cinema.find({_id:{$in:lines.map(l=>l.cinemaId)}}).lean();res.json({lines,cinemas});
+ const cinemas=await Cinema.find({_id:{$in:lines.map(l=>l.cinemaId)}}).lean();res.json({lines:await withSnackImages(lines),cinemas});
 }));
 concessionsRouter.get('/tickets/:id/snacks',route(async(req,res)=>{
  const t=await Ticket.findOne({_id:parseId(req.params.id),userId:req.user._id});if(!t)fail(404,'Không tìm thấy vé.');
  const lines=await linkedLines(t,null);
  const other=await Ticket.countDocuments({orderId:t.orderId,_id:{$ne:t._id},status:'valid',showtimeId:t.showtimeId});
- res.json({lines,allRequired:other===0});
+ res.json({lines:await withSnackImages(lines),allRequired:other===0});
 }));
 concessionsRouter.post('/snack-orders/cancel',body(z.object({items:snackChanges.refine(a=>a.length>0)}).strict()),route(async(req,res)=>res.json(await cancelStandalone(req.user._id,req.data.items))));
 export const commerceAdminRouter=Router();

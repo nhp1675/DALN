@@ -72,7 +72,7 @@ export async function seed() {
     {
       name: "CineGo Hà Đông",
       city: "Hà Nội",
-      address: "Khu đô thị Văn Phú, Hà Đông, Hà Nội (rạp mẫu)",
+      address: "Khu đô thị Văn Phú, Hà Đông, Hà Nội",
       latitude: 20.963,
       longitude: 105.766,
       active: true,
@@ -80,7 +80,7 @@ export async function seed() {
     {
       name: "CineGo Cầu Giấy",
       city: "Hà Nội",
-      address: "Đường Xuân Thủy, Cầu Giấy, Hà Nội (rạp mẫu)",
+      address: "Đường Xuân Thủy, Cầu Giấy, Hà Nội",
       latitude: 21.036,
       longitude: 105.782,
       active: true,
@@ -88,7 +88,7 @@ export async function seed() {
     {
       name: "CineGo Đà Nẵng",
       city: "Đà Nẵng",
-      address: "Đường Nguyễn Văn Linh, Hải Châu, Đà Nẵng (rạp mẫu)",
+      address: "Đường Nguyễn Văn Linh, Hải Châu, Đà Nẵng",
       latitude: 16.06,
       longitude: 108.216,
       active: true,

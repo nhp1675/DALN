@@ -58,9 +58,25 @@ export const Movie = model(
     poster: { type: String, default: "" },
     trailerUrl: { type: String, default: "" },
     releaseDate: Date,
+    // Ngày cuối cùng còn bán vé (hết ngày này theo giờ Việt Nam thì phim tự chuyển sang ẩn).
+    endDate: Date,
+    // Phim đã xóa nhưng còn lịch sử vé nên chỉ ẩn khỏi hệ thống.
+    deletedAt: Date,
     revision: { type: Number, default: 0 },
   },
   [[{ title: "text", genre: "text" }, {}]],
+);
+export const PasswordReset = model(
+  "PasswordReset",
+  {
+    userId: id,
+    tokenHash: text,
+    expiresAt: { type: Date, required: true },
+  },
+  [
+    [{ expiresAt: 1 }, { expireAfterSeconds: 0 }],
+    [{ tokenHash: 1 }, { unique: true }],
+  ],
 );
 export const Cinema = model("Cinema", {
   name: text,
@@ -302,4 +318,5 @@ export const allModels = [
   Membership,
   Message,
   Audit,
+  PasswordReset,
 ];

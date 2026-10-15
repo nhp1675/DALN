@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../core/api.dart';
 import 'common.dart';
 
-const _gold = Color(0xFFE6C891);
+const _gold = gold;
 
 /// Slide giới thiệu (không phụ thuộc dữ liệu phim).
 class _InfoSlide {
@@ -22,7 +22,7 @@ class _InfoSlide {
 
 const _infoSlides = <_InfoSlide>[
   _InfoSlide(
-    eyebrow: 'KHÁM PHÁ CINEGO',
+    eyebrow: 'Khám phá CineGo',
     title: 'Chọn ghế đẹp.\nTrọn cảm xúc.',
     text:
         'Khám phá lịch chiếu, chọn ghế yêu thích và nhận vé điện tử trên CineGo.',
@@ -31,7 +31,7 @@ const _infoSlides = <_InfoSlide>[
     icon: Icons.event_seat_outlined,
   ),
   _InfoSlide(
-    eyebrow: 'BỎNG NƯỚC',
+    eyebrow: 'Bỏng nước',
     title: 'Bỏng nước,\nnhận ngay tại rạp.',
     text:
         'Đặt bỏng nước kèm vé hoặc đặt riêng, rồi nhận tại quầy bằng mã nhận hàng.',
@@ -40,7 +40,7 @@ const _infoSlides = <_InfoSlide>[
     icon: Icons.local_cafe_outlined,
   ),
   _InfoSlide(
-    eyebrow: 'KHÁM PHÁ CINEGO',
+    eyebrow: 'Khám phá CineGo',
     title: 'Hẹn nhau ở rạp.',
     text: 'Tìm rạp gần bạn và lên kế hoạch cho buổi xem phim tiếp theo.',
     cta: 'Tìm rạp gần bạn',
@@ -154,7 +154,7 @@ class _HomeCarouselState extends State<HomeCarousel> {
           onPointerCancel: (_) => touching = false,
           child: DecoratedBox(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(20),
               boxShadow: const [
                 BoxShadow(
                   color: Color(0x33000000),
@@ -164,9 +164,9 @@ class _HomeCarouselState extends State<HomeCarousel> {
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(20),
               child: SizedBox(
-                height: tall ? 470 : 410,
+                height: tall ? 480 : 440,
                 child: Stack(
                   children: [
                     Positioned.fill(
@@ -328,7 +328,7 @@ class _BannerSlide extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [const Color(0xFF111B24), tint],
+                    colors: [night, tint],
                   ),
                 ),
               ),
@@ -360,11 +360,10 @@ class _BannerSlide extends StatelessWidget {
                                 ),
                               ),
                               child: Text(
-                                m != null ? 'ĐANG CHIẾU' : info!.eyebrow,
+                                m != null ? 'Đang chiếu' : info!.eyebrow,
                                 style: const TextStyle(
                                   color: _gold,
-                                  letterSpacing: 1.6,
-                                  fontSize: 11,
+                                  fontSize: 12.5,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -375,10 +374,11 @@ class _BannerSlide extends StatelessWidget {
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
-                                fontSize: compact ? 28 : 40,
+                                fontSize: compact ? 28 : 44,
                                 color: Colors.white,
                                 fontWeight: FontWeight.w800,
-                                height: 1.12,
+                                height: 1.1,
+                                letterSpacing: -.8,
                               ),
                             ),
                             const SizedBox(height: 14),

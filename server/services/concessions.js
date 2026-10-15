@@ -116,7 +116,7 @@ export async function cancelLines(userId, selections, session, {ticket=null,requ
     await refundCredit(funds,{snackLineId:l._id},requestId||l._id,session);
     l.remaining-=x.quantity;await l.save({session});
     await Snack.updateOne({_id:l.snackId},{$inc:{stock:x.quantity}},{session});
-    await create(RevenueEntry,{cinemaId:l.cinemaId,description:'Hủy bỏng nước (hoàn mô phỏng)',orderId:l.orderId,snackNet:-amount,returned:amount},session);
+    await create(RevenueEntry,{cinemaId:l.cinemaId,description:'Hủy bỏng nước (hoàn tiền)',orderId:l.orderId,snackNet:-amount,returned:amount},session);
     total+=amount;
   }
   if(total)await User.updateOne({_id:userId},{$inc:{netSpend:-total}},{session});
@@ -129,4 +129,14 @@ export async function cancelStandalone(userId,selections) {
     const refunded=await cancelLines(userId,selections,session);
     await audit(userId,'snacks.cancelled',null,session,{refunded});return {refunded};
   });
+}
+
+// Gắn ảnh hiện tại của món vào từng dòng (SnackLine/Order không lưu ảnh).
+export async function withSnackImages(lines = []) {
+  const plain = lines.map((l) => (l?.toObject ? l.toObject() : l));
+  const ids = [...new Set(plain.map((l) => l?.snackId && String(l.snackId)).filter(Boolean))];
+  if (!ids.length) return plain;
+  const snacks = await Snack.find({ _id: { $in: ids } }, { image: 1 }).lean();
+  const images = new Map(snacks.map((s) => [String(s._id), s.image || '']));
+  return plain.map((l) => ({ ...l, image: images.get(String(l.snackId)) || '' }));
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../core/api.dart';
 import '../core/format.dart';
 import '../widgets/common.dart';
+import '../platform/browser.dart';
 
 const adminNames = {
   'movies': 'Phim',
@@ -30,6 +31,8 @@ const defaults = <String, Json>{
     'status': 'now',
     'poster': '',
     'trailerUrl': '',
+    'releaseDate': '',
+    'endDate': '',
   },
   'cinemas': {
     'name': '',
@@ -59,6 +62,8 @@ const fields = <String, List<List<String>>>{
     ['cast', 'Diễn viên'],
     ['ageRating', 'Độ tuổi', 'select', 'P,K,T13,T16,T18'],
     ['status', 'Trạng thái', 'select', 'now,soon,archived'],
+    ['releaseDate', 'Ngày khởi chiếu (để trống nếu chưa rõ)', 'day'],
+    ['endDate', 'Ngày kết thúc bán vé (để trống = không giới hạn)', 'day'],
     ['poster', 'Poster (HTTPS hoặc /posters/...)'],
     ['trailerUrl', 'Trailer (link YouTube, Facebook... bắt đầu bằng https://)'],
   ],
@@ -66,8 +71,8 @@ const fields = <String, List<List<String>>>{
     ['name', 'Tên rạp'],
     ['address', 'Địa chỉ'],
     ['city', 'Thành phố'],
-    ['latitude', 'Vĩ độ', 'number'],
-    ['longitude', 'Kinh độ', 'number'],
+    ['latitude', 'Vĩ độ (lấy từ Google Maps)', 'number'],
+    ['longitude', 'Kinh độ (lấy từ Google Maps)', 'number'],
     ['active', 'Hoạt động', 'bool'],
   ],
   'rooms': [
@@ -198,7 +203,9 @@ class _AdminState extends State<AdminScreen> {
     if (!await confirm(
       context,
       'Xác nhận thay đổi?',
-      ['movies', 'cinemas'].contains(tab)
+      tab == 'movies'
+          ? 'Xóa phim khỏi hệ thống? Chỉ xóa được khi phim không còn lịch chiếu.'
+          : tab == 'cinemas'
           ? 'Mục này sẽ được ẩn, lịch sử vẫn được giữ lại.'
           : 'Không thể xóa nếu đã có dữ liệu đặt vé liên quan.',
     )) {
@@ -214,10 +221,100 @@ class _AdminState extends State<AdminScreen> {
         refresh();
         notice(
           context,
-          ['movies', 'cinemas'].contains(tab)
+          tab == 'movies'
+              ? 'Đã xóa phim.'
+              : tab == 'cinemas'
               ? 'Đã ẩn mục thành công.'
               : 'Đã xóa mục thành công.',
         );
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => error = '$e');
+        notice(context, '$e');
+      }
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  Future<void> hideMovie(Json item) async {
+    if (!await confirm(
+      context,
+      'Ẩn phim này?',
+      'Phim sẽ ngừng bán vé và không còn hiện cho khách. Vé đã bán vẫn có hiệu lực. Bạn có thể mở bán lại sau.',
+    )) {
+      return;
+    }
+    if (!mounted) return;
+    setState(() => busy = true);
+    try {
+      await AppScope.of(
+        context,
+      ).api.request('/admin/movies/${item['_id']}/hide', method: 'POST');
+      if (mounted) {
+        refresh();
+        notice(context, 'Đã ẩn phim.');
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => error = '$e');
+        notice(context, '$e');
+      }
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  Future<void> reopenMovie(Json item) async {
+    final choice = await showDialog<String>(
+      context: context,
+      builder: (c) => AlertDialog(
+        title: const Text('Mở bán vé lại?'),
+        content: const Text(
+          'Phim sẽ hiện lại cho khách và mở bán vé. Bạn có thể đặt ngày kết thúc bán vé mới.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(c),
+            child: const Text('Hủy'),
+          ),
+          OutlinedButton(
+            onPressed: () => Navigator.pop(c, 'none'),
+            child: const Text('Không giới hạn'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(c, 'pick'),
+            child: const Text('Chọn ngày kết thúc'),
+          ),
+        ],
+      ),
+    );
+    if (choice == null || !mounted) return;
+    String? end;
+    if (choice == 'pick') {
+      final now = DateTime.now();
+      final d = await showDatePicker(
+        context: context,
+        helpText: 'Ngày kết thúc bán vé mới',
+        initialDate: now.add(const Duration(days: 14)),
+        firstDate: now,
+        lastDate: now.add(const Duration(days: 3650)),
+      );
+      if (d == null || !mounted) return;
+      end =
+          '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+    }
+    setState(() => busy = true);
+    try {
+      await AppScope.of(context).api.request(
+        '/admin/movies/${item['_id']}/reopen',
+        method: 'POST',
+        body: {'endDate': end},
+      );
+      if (mounted) {
+        refresh();
+        notice(context, 'Đã mở bán vé lại.');
       }
     } catch (e) {
       if (mounted) {
@@ -283,7 +380,13 @@ class _AdminState extends State<AdminScreen> {
 
   List<String> get headers =>
       {
-        'movies': ['Tên phim', 'Thể loại', 'Phút', 'Trạng thái'],
+        'movies': [
+          'Tên phim',
+          'Thể loại',
+          'Phút',
+          'Thời gian chiếu',
+          'Trạng thái',
+        ],
         'cinemas': ['Tên rạp', 'Thành phố', 'Địa chỉ', 'Hoạt động'],
         'rooms': ['Phòng', 'Rạp'],
         'seats': ['Ghế', 'Phòng', 'Loại', 'Hoạt động'],
@@ -320,6 +423,7 @@ class _AdminState extends State<AdminScreen> {
           sid(x['title']),
           sid(x['genre']),
           sid(x['duration']),
+          _dayRange(x),
           status(x['status']),
         ];
       case 'cinemas':
@@ -395,7 +499,7 @@ class _AdminState extends State<AdminScreen> {
     children: [
       Heading(
         'Quản trị rạp phim',
-        eyebrow: 'CINEGO MANAGEMENT',
+        eyebrow: 'Quản trị CineGo',
         action: OutlinedButton(
           onPressed: () => go(context, '/commerce-admin'),
           child: const Text('Kho, nhận hàng & doanh thu'),
@@ -596,6 +700,40 @@ class _AdminState extends State<AdminScreen> {
                                                   size: 18,
                                                 ),
                                               ),
+                                            if (tab == 'cinemas')
+                                              IconButton(
+                                                tooltip:
+                                                    'Xem vị trí theo tọa độ trên Google Maps',
+                                                onPressed: () => openExternal(
+                                                  'https://www.google.com/maps/search/?api=1&query=${x['latitude']},${x['longitude']}',
+                                                ),
+                                                icon: const Icon(
+                                                  Icons.place_outlined,
+                                                  size: 18,
+                                                ),
+                                              ),
+                                            if (tab == 'movies')
+                                              IconButton(
+                                                tooltip:
+                                                    x['status'] == 'archived'
+                                                    ? 'Mở bán lại'
+                                                    : 'Ẩn phim (ngừng bán vé)',
+                                                onPressed: busy
+                                                    ? null
+                                                    : () =>
+                                                          x['status'] ==
+                                                              'archived'
+                                                          ? reopenMovie(x)
+                                                          : hideMovie(x),
+                                                icon: Icon(
+                                                  x['status'] == 'archived'
+                                                      ? Icons
+                                                            .visibility_outlined
+                                                      : Icons
+                                                            .visibility_off_outlined,
+                                                  size: 18,
+                                                ),
+                                              ),
                                             if ([
                                               'movies',
                                               'cinemas',
@@ -603,7 +741,9 @@ class _AdminState extends State<AdminScreen> {
                                               'showtimes',
                                             ].contains(tab))
                                               IconButton(
-                                                tooltip: 'Xóa hoặc ẩn',
+                                                tooltip: tab == 'movies'
+                                                    ? 'Xóa phim'
+                                                    : 'Xóa hoặc ẩn',
                                                 onPressed: busy
                                                     ? null
                                                     : () => remove(x),
@@ -714,6 +854,8 @@ class _EditorState extends State<AdminEditor> {
               ? DateTime.parse(
                   sid(values[key]),
                 ).toLocal().toString().substring(0, 16)
+              : type == 'day' && sid(values[key]).length >= 10
+              ? sid(values[key]).substring(0, 10)
               : sid(values[key]),
         );
       }
@@ -756,6 +898,23 @@ class _EditorState extends State<AdminEditor> {
     }
   }
 
+  Future<void> chooseDay(String key) async {
+    final current = DateTime.tryParse(controllers[key]!.text);
+    final now = DateTime.now();
+    final d = await showDatePicker(
+      context: context,
+      initialDate: current ?? now,
+      firstDate: now.subtract(const Duration(days: 3650)),
+      lastDate: now.add(const Duration(days: 3650)),
+    );
+    if (d != null && mounted) {
+      setState(
+        () => controllers[key]!.text =
+            '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}',
+      );
+    }
+  }
+
   Future<void> save() async {
     if (!form.currentState!.validate()) return;
     setState(() {
@@ -768,6 +927,9 @@ class _EditorState extends State<AdminEditor> {
         final key = f[0], type = f.length > 2 ? f[2] : '';
         if (type == 'number') {
           body[key] = num.parse(controllers[key]!.text);
+        } else if (type == 'day') {
+          final t = controllers[key]!.text.trim();
+          body[key] = t.isEmpty ? null : t;
         } else if (type == 'date') {
           body[key] = DateTime.parse(
             controllers[key]!.text,
@@ -874,11 +1036,25 @@ class _EditorState extends State<AdminEditor> {
                       labelText: label,
                       suffixIcon: type == 'date'
                           ? const Icon(Icons.calendar_today)
+                          : type == 'day'
+                          ? ((controllers[key]?.text ?? '').isEmpty
+                                ? const Icon(Icons.calendar_today)
+                                : IconButton(
+                                    tooltip: 'Xóa ngày',
+                                    icon: const Icon(Icons.close),
+                                    onPressed: () => setState(
+                                      () => controllers[key]!.clear(),
+                                    ),
+                                  ))
                           : null,
                     ),
                     maxLines: type == 'textarea' ? 4 : 1,
-                    readOnly: type == 'date',
-                    onTap: type == 'date' ? () => chooseDate(key) : null,
+                    readOnly: type == 'date' || type == 'day',
+                    onTap: type == 'date'
+                        ? () => chooseDate(key)
+                        : type == 'day'
+                        ? () => chooseDay(key)
+                        : null,
                     keyboardType: type == 'number'
                         ? const TextInputType.numberWithOptions(
                             decimal: true,
@@ -889,6 +1065,7 @@ class _EditorState extends State<AdminEditor> {
                       if (['cast', 'director', 'poster'].contains(key)) {
                         return null;
                       }
+                      if (type == 'day') return null;
                       if (key == 'trailerUrl') {
                         final t = (v ?? '').trim();
                         if (t.isEmpty) return null;
@@ -930,4 +1107,16 @@ class _EditorState extends State<AdminEditor> {
       ),
     ],
   );
+}
+
+String _day(dynamic v) {
+  final s = sid(v);
+  if (s.length < 10) return '';
+  return '${s.substring(8, 10)}/${s.substring(5, 7)}/${s.substring(0, 4)}';
+}
+
+String _dayRange(Json x) {
+  final from = _day(x['releaseDate']), to = _day(x['endDate']);
+  if (from.isEmpty && to.isEmpty) return 'Không giới hạn';
+  return '${from.isEmpty ? '…' : from} – ${to.isEmpty ? 'không giới hạn' : to}';
 }
