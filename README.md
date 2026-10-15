@@ -133,9 +133,11 @@ Nếu chỉ muốn nhập phim:
 node scripts/import-current-movies.js --apply
 ```
 
-Lệnh giữ nguyên phim trùng tên, tài khoản và dữ liệu hiện có. Không chạy nhiều tiến trình nhập cùng lúc. Lịch mô phỏng sử dụng rạp CineGo Hà Đông · Demo, giá ghế thường 80.000 đồng và VIP 110.000 đồng; đây không phải lịch hoặc giá vé thương mại thực tế.
+Lệnh giữ nguyên phim trùng tên, tài khoản và dữ liệu hiện có. Không chạy nhiều tiến trình nhập cùng lúc. Lịch mô phỏng sử dụng rạp CineGo Hà Đông · Demo, tự tạo thêm phòng khi cần, giá ghế thường 80.000 đồng và VIP 110.000 đồng; đây không phải lịch hoặc giá vé thương mại thực tế.
 
 Nguồn thông tin và URL poster được ghi trong file JSON. Dữ liệu không tự cập nhật theo thị trường. Poster từ nguồn ngoài cần internet. Không cần chạy `npm run seed` khi sử dụng bộ dữ liệu này; lệnh seed cũ tạo danh mục phim hư cấu riêng.
+
+Khi thêm phim thật vào file JSON, cung cấp `source` là URL HTTPS. Mục chỉ dùng làm mẫu cần đặt `"template": true`; script sẽ hiện tên mục đó nhưng không validate, nhập vào database hoặc tạo suất chiếu cho mục này.
 
 ## Chạy dự án hằng ngày
 
