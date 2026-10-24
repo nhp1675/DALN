@@ -160,7 +160,9 @@ class CineGoApp extends StatelessWidget {
                 screen = const SettingsScreen();
               case 'snacks':
                 protected = true;
-                screen = SnacksScreen(paymentResult: uri.queryParameters['payment']);
+                screen = SnacksScreen(
+                  paymentResult: uri.queryParameters['payment'],
+                );
               case 'commerce-admin':
                 protected = true;
                 admin = true;
@@ -183,6 +185,10 @@ class CineGoApp extends StatelessWidget {
                 screen = const ForgotPasswordScreen();
               case 'reset-password':
                 screen = ResetPasswordScreen(
+                  token: uri.queryParameters['token'] ?? '',
+                );
+              case 'verify-email':
+                screen = VerifyEmailScreen(
                   token: uri.queryParameters['token'] ?? '',
                 );
               default:
@@ -237,9 +243,7 @@ class _NavLink extends StatelessWidget {
   Widget build(BuildContext context) => TextButton(
     onPressed: () => go(context, route),
     style: TextButton.styleFrom(
-      foregroundColor: active
-          ? coral
-          : Theme.of(context).colorScheme.onSurface,
+      foregroundColor: active ? coral : Theme.of(context).colorScheme.onSurface,
       textStyle: TextStyle(
         fontSize: 15,
         fontWeight: active ? FontWeight.w700 : FontWeight.w500,
@@ -259,7 +263,9 @@ class Shell extends StatelessWidget {
     final wide = MediaQuery.sizeOf(context).width > 1050;
     final current = ModalRoute.of(context)?.settings.name ?? '/';
     bool on(String route) => route == '/'
-        ? current == '/' || current.startsWith('/?') || current.startsWith('/movies')
+        ? current == '/' ||
+              current.startsWith('/?') ||
+              current.startsWith('/movies')
         : current.startsWith(route);
     final onSurface = Theme.of(context).colorScheme.onSurface;
     return Scaffold(
@@ -276,31 +282,31 @@ class Shell extends StatelessWidget {
               fit: BoxFit.scaleDown,
               alignment: Alignment.centerLeft,
               child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const LogoMark(size: 38),
-                const SizedBox(width: 10),
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Cine',
-                        style: TextStyle(color: onSurface),
-                      ),
-                      const TextSpan(
-                        text: 'Go',
-                        style: TextStyle(color: coral),
-                      ),
-                    ],
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const LogoMark(size: 38),
+                  const SizedBox(width: 10),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Cine',
+                          style: TextStyle(color: onSurface),
+                        ),
+                        const TextSpan(
+                          text: 'Go',
+                          style: TextStyle(color: coral),
+                        ),
+                      ],
+                    ),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 26,
+                      letterSpacing: -.6,
+                    ),
                   ),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 26,
-                    letterSpacing: -.6,
-                  ),
-                ),
-              ],
-            ),
+                ],
+              ),
             ),
           ),
         ),
@@ -312,18 +318,19 @@ class Shell extends StatelessWidget {
             _NavLink('Vé của tôi', '/tickets', active: on('/tickets')),
             if (s.isAdmin) _NavLink('Quản trị', '/admin', active: on('/admin')),
             const SizedBox(width: 12),
-            if (MediaQuery.sizeOf(context).width > 1180) OutlinedButton.icon(
-              onPressed: () => go(context, '/cinemas'),
-              icon: const Icon(Icons.near_me_outlined, size: 18),
-              label: const Text('Tìm rạp gần bạn'),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+            if (MediaQuery.sizeOf(context).width > 1180)
+              OutlinedButton.icon(
+                onPressed: () => go(context, '/cinemas'),
+                icon: const Icon(Icons.near_me_outlined, size: 18),
+                label: const Text('Tìm rạp gần bạn'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  shape: const StadiumBorder(),
                 ),
-                shape: const StadiumBorder(),
               ),
-            ),
             const SizedBox(width: 8),
           ],
           if (s.user == null)

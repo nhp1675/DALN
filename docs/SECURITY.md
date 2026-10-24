@@ -5,6 +5,7 @@ Không phần mềm nào có thể được cam kết “không có lỗ hổng�
 ## Biện pháp trong mã nguồn
 
 - Mật khẩu scrypt với salt ngẫu nhiên 16 byte, N=32768, r=8, p=1, output 64 byte; so sánh timing-safe. Mật khẩu 12–128 ký tự khi tạo/đổi.
+- Tài khoản đăng ký phải xác minh email bằng token dùng một lần, token chỉ lưu dạng HMAC và hết hạn sau 24 giờ. Mỗi lần đăng nhập cần thêm mã email 6 chữ số; mã chỉ lưu dạng HMAC, hết hạn sau 10 phút, tối đa 5 lần nhập sai.
 - Session ngẫu nhiên 32 byte; database chỉ lưu HMAC token. Cookie HttpOnly, SameSite=Strict, Secure khi production, thời hạn 8 giờ. Logout xóa phiên server; đổi mật khẩu/khóa khách thu hồi phiên.
 - Kiểm tra Origin trên mọi thao tác thay đổi. Phiên đăng nhập phải có CSRF token riêng. Bản build gọi API cùng origin; chế độ phát triển chỉ cho CORS đúng APP_ORIGIN với credentials, không mở CORS `*`.
 - Rate limit IP toàn API và đăng nhập; rate limit theo user cho hold/chat. Mỗi khách tối đa 3 đơn chờ còn hạn, kiểm tra trong transaction.
@@ -23,7 +24,7 @@ Không phần mềm nào có thể được cam kết “không có lỗ hổng�
 2. **External payments không nằm trong MongoDB transaction**: không gọi API thanh toán trong callback `withTransaction` vì callback có thể retry. Dùng outbox/saga, trạng thái pending và idempotency nhà cung cấp. Hoàn tiền failed cần queue retry và màn hình đối soát. Hiện demo không mô phỏng lỗi mạng ngân hàng, chargeback hoặc settlement.
 3. **HTTPS và secrets**: dùng reverse proxy HTTPS cùng domain. Đặt Origin chính xác, secrets có entropy cao; NODE_ENV=production không cho demo hoặc origin HTTP. Không tắt các guard để cố chạy thanh toán giả trên production.
 4. **Proxy và scale**: mã mặc định không `trust proxy`. Nếu sau reverse proxy, cấu hình trusted proxy IP chính xác; không đặt trust proxy=true tùy tiện. Rate limiter hiện dùng memory mỗi process, cần store chung khi nhiều instance và chống bot ở edge.
-5. **Quản trị**: bổ sung MFA cho admin, phân quyền chi tiết nếu nhiều nhân viên/rạp, theo dõi login bất thường, quy trình khôi phục tài khoản đã xác minh. Hiện chỉ có customer/admin theo báo cáo.
+5. **Quản trị**: bổ sung phân quyền chi tiết nếu nhiều nhân viên/rạp, theo dõi login bất thường, quy trình khôi phục tài khoản đã xác minh. Hiện chỉ có customer/admin theo báo cáo.
 6. **Vận hành database**: dùng phiên bản MongoDB được hỗ trợ, TLS/allowlist, index migration, backup mã hóa, kiểm tra restore, giám sát transaction error và replica health. Compose chỉ dành local, chưa được thử trên máy người dùng.
 7. **Dữ liệu cá nhân**: bổ sung thời hạn lưu tin nhắn, lịch sử, audit; quy trình xuất/xóa dữ liệu và thông báo quyền riêng tư phù hợp nơi triển khai. Chưa có API self-delete.
 8. **Kiểm định**: chạy toàn bộ integration test, browser test, load test (p95, đồng thời giữ cùng ghế), audit dependencies, review/pentest độc lập. `npm audit` sạch không chứng minh code không có lỗi.

@@ -56,6 +56,13 @@ if (
   throw Error(
     "Production requires HTTPS, random session secret, and a real payment integration. Demo payments are prohibited.",
   );
+if (
+  env.NODE_ENV === "production" &&
+  (!env.SMTP_HOST || !(env.MAIL_FROM || env.SMTP_USER))
+)
+  throw Error(
+    "Production requires SMTP_HOST and either MAIL_FROM or SMTP_USER for account verification and login MFA.",
+  );
 const vnpayOn = !!(
   env.VNP_TMN_CODE &&
   env.VNP_HASH_SECRET &&

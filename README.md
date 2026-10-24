@@ -101,6 +101,26 @@ Chép kết quả vào `.env`. Không đưa `.env`, mật khẩu hoặc chuỗi 
 
 Nếu dự án đã kết nối thành công và có dữ liệu, giữ nguyên `.env` hiện có. Không tự đổi tên database trong URI: thay tên sẽ khiến ứng dụng đọc một database khác.
 
+### Email kích hoạt tài khoản và MFA
+
+Đăng ký tạo tài khoản ở trạng thái chờ xác minh. Liên kết kích hoạt có hiệu lực 24 giờ; đăng nhập chỉ hoàn tất sau khi nhập mã 6 chữ số gửi đến email, có hiệu lực 10 phút và tối đa 5 lần nhập sai cho mỗi mã.
+
+Để dùng Gmail SMTP, bật Xác minh 2 bước cho tài khoản Google, sau đó tạo App Password trong phần bảo mật tài khoản Google. App Password chỉ hiển thị khi tạo và dùng thay cho mật khẩu Gmail thông thường. Không gửi hoặc commit App Password.
+
+Điền cấu hình sau vào file `.env` ở thư mục gốc (không sửa `.env.example` để chứa bí mật):
+
+```env
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-address@gmail.com
+SMTP_PASS=your-google-app-password
+MAIL_FROM=CineGo <your-address@gmail.com>
+```
+
+Thay `your-address@gmail.com` và `your-google-app-password` bằng thông tin của bạn. Cổng 587 dùng STARTTLS. Sau khi lưu `.env`, khởi động lại backend bằng `npm run dev`; đăng ký thử để xác nhận email kích hoạt và mã MFA được gửi tới hộp thư.
+
+Trong development, để trống các biến SMTP vẫn cho phép thử nghiệm: liên kết kích hoạt và mã MFA sẽ được ghi vào terminal backend. Không dùng cách này trong production. Server production yêu cầu `SMTP_HOST` và `MAIL_FROM` hoặc `SMTP_USER`. Tài khoản đã tồn tại trước tính năng xác minh được giữ trạng thái đã xác minh để không làm gián đoạn người dùng hiện tại.
+
 ### 3. Tạo tài khoản quản trị
 
 Chỉ thực hiện khi chưa có tài khoản admin:
@@ -256,7 +276,7 @@ Kiểm thử tích hợp cần môi trường có thể chạy MongoDB replica s
 
 ## Phạm vi hiện tại
 
-Thanh toán và hoàn tiền đang ở chế độ thử nghiệm, chưa kết nối cổng thanh toán thật. Điểm tích lũy chưa được dùng để giảm giá. Hệ thống chưa có gửi email/SMS hoặc khôi phục mật khẩu tự động.
+Thanh toán và hoàn tiền đang ở chế độ thử nghiệm, chưa kết nối cổng thanh toán thật. Điểm tích lũy chưa được dùng để giảm giá. Email được dùng cho xác minh tài khoản, MFA và đặt lại mật khẩu; hệ thống chưa gửi SMS hoặc thông báo vận hành khác.
 
 Các điều kiện giữ ghế, hủy, đổi và hoàn tiền hiện là cấu hình mô phỏng. Trước khi triển khai thực tế cần tích hợp thanh toán, xác định chính sách vận hành, cấu hình HTTPS và sao lưu, đồng thời kiểm thử đầy đủ các luồng giao dịch và bảo mật.
 

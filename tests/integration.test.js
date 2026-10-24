@@ -30,19 +30,65 @@ async function call(agent, method, url, body, expected = 200) {
   assert.equal(r.status, expected, JSON.stringify(r.body));
   return r.body;
 }
+async function captureMail(action) {
+  const original = console.log;
+  let output = "";
+  console.log = (...args) => {
+    output += `${args.join(" ")}\n`;
+  };
+  try {
+    await action();
+    return output;
+  } finally {
+    console.log = original;
+  }
+}
 async function register(email) {
   const client = request.agent(app);
-  const r = await client
-    .post("/api/auth/register")
+  let response;
+  const activationMail = await captureMail(async () => {
+    response = await client
+      .post("/api/auth/register")
+      .set("Origin", origin)
+      .send({
+        email,
+        name: email.split("@")[0],
+        password: "Long-test-password-123",
+        phone: "",
+      });
+  });
+  assert.equal(response.status, 202, JSON.stringify(response.body));
+  const activationToken = activationMail.match(
+    /#\/verify-email\?token=([A-Za-z0-9_-]+)/,
+  )?.[1];
+  assert.ok(activationToken, activationMail);
+  const activation = await client
+    .post("/api/auth/verify-email")
     .set("Origin", origin)
-    .send({
-      email,
-      name: email.split("@")[0],
-      password: "Long-test-password-123",
-      phone: "",
-    });
-  assert.equal(r.status, 200, JSON.stringify(r.body));
-  return { client, csrf: r.body.csrf, user: r.body.user };
+    .send({ token: activationToken });
+  assert.equal(activation.status, 200, JSON.stringify(activation.body));
+
+  let login;
+  const otpMail = await captureMail(async () => {
+    login = await client
+      .post("/api/auth/login")
+      .set("Origin", origin)
+      .send({ email, password: "Long-test-password-123" });
+  });
+  assert.equal(login.status, 202, JSON.stringify(login.body));
+  const code = otpMail.match(/Mã xác thực đăng nhập của bạn là: (\d{6})/)?.[1];
+  assert.ok(code, otpMail);
+  const verified = await client
+    .post("/api/auth/verify-login")
+    .set("Origin", origin)
+    .send({ challengeId: login.body.challengeId, code });
+  assert.equal(verified.status, 200, JSON.stringify(verified.body));
+  return {
+    client,
+    csrf: verified.body.csrf,
+    user: verified.body.user,
+    email,
+  };
 }
 before(
   async () => {
@@ -104,6 +150,89 @@ before(
 after(async () => {
   await mongoose.disconnect();
   await repl?.stop();
+});
+test("Registration requires email activation and login requires a one-time email code", async () => {
+  const client = request.agent(app);
+  let registration;
+  const activationMail = await captureMail(async () => {
+    registration = await client
+      .post("/api/auth/register")
+      .set("Origin", origin)
+      .send({
+        email: "activation-mfa@example.test",
+        name: "Activation MFA",
+        password: "Long-test-password-123",
+        phone: "",
+      });
+  });
+  assert.equal(registration.status, 202, JSON.stringify(registration.body));
+  assert.equal((await client.get("/api/auth/me")).status, 401);
+  assert.equal(
+    (
+      await client
+        .post("/api/auth/login")
+        .set("Origin", origin)
+        .send({
+          email: "activation-mfa@example.test",
+          password: "Long-test-password-123",
+        })
+    ).status,
+    403,
+  );
+  const activationToken = activationMail.match(
+    /#\/verify-email\?token=([A-Za-z0-9_-]+)/,
+  )?.[1];
+  assert.ok(activationToken);
+  assert.equal(
+    (
+      await client
+        .post("/api/auth/verify-email")
+        .set("Origin", origin)
+        .send({ token: activationToken })
+    ).status,
+    200,
+  );
+
+  let login;
+  const otpMail = await captureMail(async () => {
+    login = await client
+      .post("/api/auth/login")
+      .set("Origin", origin)
+      .send({
+        email: "activation-mfa@example.test",
+        password: "Long-test-password-123",
+      });
+  });
+  assert.equal(login.status, 202);
+  assert.equal((await client.get("/api/auth/me")).status, 401);
+  const code = otpMail.match(/Mã xác thực đăng nhập của bạn là: (\d{6})/)?.[1];
+  assert.ok(code);
+  const incorrectCode = code === "000000" ? "000001" : "000000";
+  assert.equal(
+    (
+      await client
+        .post("/api/auth/verify-login")
+        .set("Origin", origin)
+        .send({ challengeId: login.body.challengeId, code: incorrectCode })
+    ).status,
+    401,
+  );
+  const verified = await client
+    .post("/api/auth/verify-login")
+    .set("Origin", origin)
+    .send({ challengeId: login.body.challengeId, code });
+  assert.equal(verified.status, 200, JSON.stringify(verified.body));
+  assert.equal((await client.get("/api/auth/me")).status, 200);
+  assert.equal(
+    (
+      await client
+        .post("/api/auth/verify-login")
+        .set("Origin", origin)
+        .set("x-csrf-token", verified.body.csrf)
+        .send({ challengeId: login.body.challengeId, code })
+    ).status,
+    401,
+  );
 });
 test("Reject missing origin, forged CSRF, unauthorized admin and NoSQL objects", async () => {
   assert.equal((await A.client.post("/api/orders").send({})).status, 403);

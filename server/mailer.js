@@ -1,12 +1,10 @@
 import { config } from "./config.js";
 
-// Gửi email. Chưa cấu hình SMTP (môi trường phát triển) thì in nội dung ra console
-// để vẫn lấy được liên kết đặt lại mật khẩu khi chạy thử.
+// Development logs are intentionally used for local verification and MFA testing.
 export async function sendMail({ to, subject, text }) {
   if (!config.SMTP_HOST) {
     if (config.NODE_ENV === "production") {
-      console.warn("Chưa cấu hình SMTP_HOST nên không gửi được email.");
-      return;
+      throw Error("SMTP_HOST is required to send authentication email.");
     }
     console.log(`\n[EMAIL - chưa cấu hình SMTP] Tới: ${to}\nTiêu đề: ${subject}\n${text}\n`);
     return;

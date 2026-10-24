@@ -18,6 +18,7 @@ export const User = model(
   {
     name: text,
     email: { ...text, lowercase: true },
+    emailVerified: { type: Boolean, default: true },
     phone: { type: String, default: "" },
     passwordHash: text,
     role: { type: String, enum: ["customer", "admin"], default: "customer" },
@@ -76,6 +77,32 @@ export const PasswordReset = model(
   [
     [{ expiresAt: 1 }, { expireAfterSeconds: 0 }],
     [{ tokenHash: 1 }, { unique: true }],
+  ],
+);
+export const EmailVerification = model(
+  "EmailVerification",
+  {
+    userId: id,
+    tokenHash: text,
+    expiresAt: { type: Date, required: true },
+  },
+  [
+    [{ tokenHash: 1 }, { unique: true }],
+    [{ expiresAt: 1 }, { expireAfterSeconds: 0 }],
+  ],
+);
+export const LoginChallenge = model(
+  "LoginChallenge",
+  {
+    userId: id,
+    tokenHash: text,
+    codeHash: text,
+    attempts: { type: Number, default: 0 },
+    expiresAt: { type: Date, required: true },
+  },
+  [
+    [{ tokenHash: 1 }, { unique: true }],
+    [{ expiresAt: 1 }, { expireAfterSeconds: 0 }],
   ],
 );
 export const Cinema = model("Cinema", {
@@ -319,4 +346,6 @@ export const allModels = [
   Message,
   Audit,
   PasswordReset,
+  EmailVerification,
+  LoginChallenge,
 ];

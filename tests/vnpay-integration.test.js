@@ -32,17 +32,64 @@ let repl, app, M, booking, vnpay, momo, admin, seats, n = 0;
 
 async function register(email) {
   const client = request.agent(app);
-  const r = await client
-    .post("/api/auth/register")
+  const originalLog = console.log;
+  let activationMail = "";
+  console.log = (...args) => {
+    activationMail += `${args.join(" ")}\n`;
+  };
+  let registered;
+  try {
+    registered = await client
+      .post("/api/auth/register")
+      .set("Origin", origin)
+      .send({
+        email,
+        name: email.split("@")[0],
+        password: "Long-test-password-123",
+        phone: "",
+      });
+  } finally {
+    console.log = originalLog;
+  }
+  assert.equal(registered.status, 202, JSON.stringify(registered.body));
+  const activationToken = activationMail.match(
+    /#\/verify-email\?token=([A-Za-z0-9_-]+)/,
+  )?.[1];
+  assert.ok(activationToken, activationMail);
+  const activation = await client
+    .post("/api/auth/verify-email")
     .set("Origin", origin)
-    .send({
-      email,
-      name: email.split("@")[0],
-      password: "Long-test-password-123",
-      phone: "",
-    });
-  assert.equal(r.status, 200, JSON.stringify(r.body));
-  return { client, csrf: r.body.csrf, user: r.body.user };
+    .send({ token: activationToken });
+  assert.equal(activation.status, 200, JSON.stringify(activation.body));
+
+  const originalOtpLog = console.log;
+  let otpMail = "";
+  console.log = (...args) => {
+    otpMail += `${args.join(" ")}\n`;
+  };
+  let login;
+  try {
+    login = await client
+      .post("/api/auth/login")
+      .set("Origin", origin)
+      .send({ email, password: "Long-test-password-123" });
+  } finally {
+    console.log = originalOtpLog;
+  }
+  assert.equal(login.status, 202, JSON.stringify(login.body));
+  const code = otpMail.match(/Mã xác thực đăng nhập của bạn là: (\d{6})/)?.[1];
+  assert.ok(code, otpMail);
+  const verified = await client
+    .post("/api/auth/verify-login")
+    .set("Origin", origin)
+    .send({ challengeId: login.body.challengeId, code });
+  assert.equal(verified.status, 200, JSON.stringify(verified.body));
+  return {
+    client,
+    csrf: verified.body.csrf,
+    user: verified.body.user,
+    email,
+  };
 }
 async function call(agent, method, url, body, expected = 200) {
   const r = await agent.client[method]("/api" + url)

@@ -15,6 +15,7 @@ class Session extends ChangeNotifier {
     final m = config['paymentMethods'];
     return m is List ? m.map((e) => '$e').toList() : <String>[];
   }
+
   Json get policy => config['policy'] is Map ? asMap(config['policy']) : {};
   Future<void> initialize() async {
     try {
@@ -43,7 +44,7 @@ class Session extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> authenticate(Json body, {bool register = false}) async {
+  Future<Json> authenticate(Json body, {bool register = false}) async {
     final data = asMap(
       await api.request(
         '/auth/${register ? 'register' : 'login'}',
@@ -51,10 +52,43 @@ class Session extends ChangeNotifier {
         body: body,
       ),
     );
+    if (data['user'] is Map) {
+      user = asMap(data['user']);
+      api.csrf = sid(data['csrf']);
+      startupError = null;
+      notifyListeners();
+    }
+    return data;
+  }
+
+  Future<void> verifyLogin(String challengeId, String code) async {
+    final data = asMap(
+      await api.request(
+        '/auth/verify-login',
+        method: 'POST',
+        body: {'challengeId': challengeId, 'code': code},
+      ),
+    );
     user = asMap(data['user']);
     api.csrf = sid(data['csrf']);
     startupError = null;
     notifyListeners();
+  }
+
+  Future<void> verifyEmail(String token) async {
+    await api.request(
+      '/auth/verify-email',
+      method: 'POST',
+      body: {'token': token},
+    );
+  }
+
+  Future<void> resendVerification(String email) async {
+    await api.request(
+      '/auth/resend-verification',
+      method: 'POST',
+      body: {'email': email},
+    );
   }
 
   Future<void> logout() async {
