@@ -23,6 +23,7 @@ import {
   Payment,
   Refund,
   Audit,
+  LoginChallenge,
 } from "../models.js";
 import { requireAuth, requireAdmin } from "../auth.js";
 import {
@@ -391,13 +392,30 @@ adminRouter.patch(
   route(async (req, res) => {
     const id = parseId(req.params.id);
     if (same(id, req.user._id)) fail(400, "Không thể tự khóa tài khoản.");
+    const target = await User.findById(id).select("role").lean();
+    if (!target) fail(404, "Không tìm thấy tài khoản.");
+    if (target.role === "admin" && !req.data.active)
+      fail(403, "Không thể khóa admin khác từ trang quản trị.");
     const user = await User.findOneAndUpdate(
-      { _id: id, role: "customer" },
-      { $set: req.data },
+      {
+        _id: id,
+        role: req.data.active ? { $in: ["customer", "admin"] } : "customer",
+      },
+      {
+        $set: {
+          ...req.data,
+          ...(req.data.active ? { failedOtpAttempts: 0 } : {}),
+        },
+      },
       { new: true },
     ).select("-passwordHash");
-    if (!user) fail(404, "Không tìm thấy khách hàng.");
-    if (!req.data.active) await Session.deleteMany({ userId: id });
+    if (!user) fail(404, "Không tìm thấy tài khoản.");
+    if (!req.data.active) {
+      await Promise.all([
+        Session.deleteMany({ userId: id }),
+        LoginChallenge.deleteMany({ userId: id }),
+      ]);
+    }
     await Audit.create({
       userId: req.user._id,
       action: "user.status",

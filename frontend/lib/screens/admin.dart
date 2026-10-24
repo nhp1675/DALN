@@ -12,7 +12,7 @@ const adminNames = {
   'seats': 'Ghế',
   'showtimes': 'Suất chiếu & giá',
   'orders': 'Đơn đặt vé',
-  'users': 'Khách hàng',
+  'users': 'Tài khoản',
   'payments': 'Thanh toán',
   'refunds': 'Hoàn tiền',
   'audits': 'Nhật ký',
@@ -327,12 +327,15 @@ class _AdminState extends State<AdminScreen> {
   }
 
   Future<void> toggleUser(Json item) async {
+    final isAdmin = item['role'] == 'admin';
     if (!await confirm(
       context,
-      item['active'] == true ? 'Khóa khách hàng?' : 'Mở khóa khách hàng?',
+      item['active'] == true ? 'Khóa tài khoản?' : 'Mở khóa tài khoản?',
       item['active'] == true
           ? 'Các phiên đăng nhập sẽ bị thu hồi.'
-          : 'Khách có thể đăng nhập trở lại.',
+          : isAdmin
+          ? 'Admin khác có thể đăng nhập trở lại.'
+          : 'Khách hàng có thể đăng nhập trở lại.',
     )) {
       return;
     }
@@ -405,7 +408,7 @@ class _AdminState extends State<AdminScreen> {
           'Trạng thái',
           'Thời gian',
         ],
-        'users': ['Họ tên', 'Email', 'Vai trò', 'Hoạt động'],
+        'users': ['Họ tên', 'Email', 'Vai trò', 'Trạng thái', 'OTP sai'],
         'payments': ['Giao dịch', 'Đơn', 'Số tiền', 'Trạng thái', 'Cổng'],
         'refunds': ['Vé', 'Giao dịch gốc', 'Số tiền', 'Trạng thái'],
         'audits': ['Hành động', 'Đối tượng', 'Người thực hiện', 'Thời gian'],
@@ -464,7 +467,8 @@ class _AdminState extends State<AdminScreen> {
           sid(x['name']),
           sid(x['email']),
           status(x['role']),
-          x['active'] == true ? 'Có' : 'Không',
+          x['active'] == true ? 'Đang hoạt động' : 'Đã khóa',
+          sid(x['failedOtpAttempts'] ?? 0),
         ];
       case 'payments':
         return [
@@ -754,7 +758,12 @@ class _AdminState extends State<AdminScreen> {
                                                 ),
                                               ),
                                             if (tab == 'users' &&
-                                                x['role'] == 'customer')
+                                                x['_id'] !=
+                                                    AppScope.of(
+                                                      context,
+                                                    ).user?['id'] &&
+                                                (x['role'] != 'admin' ||
+                                                    x['active'] != true))
                                               TextButton(
                                                 onPressed: busy
                                                     ? null
@@ -765,6 +774,12 @@ class _AdminState extends State<AdminScreen> {
                                                       : 'Mở khóa',
                                                 ),
                                               ),
+                                            if (tab == 'users' &&
+                                                x['_id'] ==
+                                                    AppScope.of(
+                                                      context,
+                                                    ).user?['id'])
+                                              const Text('—'),
                                             if (!fields.containsKey(tab) &&
                                                 tab != 'users')
                                               const Text('—'),

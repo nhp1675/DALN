@@ -52,6 +52,8 @@ test("Non-admin role cannot pass authorization middleware", () => {
 test("HTTP headers prevent framing and disable sniffing", async () => {
   const r = await request(app).get("/api/health");
   assert.equal(r.status, 200);
+  assert.equal(r.body.adminOtpRecovery, true);
+  assert.equal(r.body.legacyAdminOtpRecovery, true);
   assert.equal(r.headers["x-content-type-options"], "nosniff");
   assert(
     r.headers["content-security-policy"].includes("frame-ancestors 'none'"),

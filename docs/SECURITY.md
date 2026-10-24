@@ -5,7 +5,7 @@ Không phần mềm nào có thể được cam kết “không có lỗ hổng�
 ## Biện pháp trong mã nguồn
 
 - Mật khẩu scrypt với salt ngẫu nhiên 16 byte, N=32768, r=8, p=1, output 64 byte; so sánh timing-safe. Mật khẩu 12–128 ký tự khi tạo/đổi.
-- Tài khoản đăng ký phải xác minh email bằng token dùng một lần, token chỉ lưu dạng HMAC và hết hạn sau 24 giờ. Mỗi lần đăng nhập cần thêm mã email 6 chữ số; mã chỉ lưu dạng HMAC, hết hạn sau 10 phút, tối đa 5 lần nhập sai.
+- Tài khoản đăng ký phải xác minh email bằng token dùng một lần, token chỉ lưu dạng HMAC và hết hạn sau 24 giờ. Mỗi lần đăng nhập cần thêm mã email 6 chữ số; mã chỉ lưu dạng HMAC, hết hạn sau 10 phút. Tài khoản khách hoặc admin bị khóa sau 5 lần nhập sai OTP; admin khác mới có quyền mở khóa admin. Admin không thể khóa thủ công admin khác đang hoạt động.
 - Session ngẫu nhiên 32 byte; database chỉ lưu HMAC token. Cookie HttpOnly, SameSite=Strict, Secure khi production, thời hạn 8 giờ. Logout xóa phiên server; đổi mật khẩu/khóa khách thu hồi phiên.
 - Kiểm tra Origin trên mọi thao tác thay đổi. Phiên đăng nhập phải có CSRF token riêng. Bản build gọi API cùng origin; chế độ phát triển chỉ cho CORS đúng APP_ORIGIN với credentials, không mở CORS `*`.
 - Rate limit IP toàn API và đăng nhập; rate limit theo user cho hold/chat. Mỗi khách tối đa 3 đơn chờ còn hạn, kiểm tra trong transaction.

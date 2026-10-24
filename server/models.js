@@ -23,6 +23,7 @@ export const User = model(
     passwordHash: text,
     role: { type: String, enum: ["customer", "admin"], default: "customer" },
     active: { type: Boolean, default: true },
+    failedOtpAttempts: { type: Number, default: 0 },
     netSpend: { type: Number, default: 0 },
     bookingRevision: { type: Number, default: 0 },
   },

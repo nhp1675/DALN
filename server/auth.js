@@ -242,7 +242,11 @@ authRouter.post(
     if (!valid) fail(401, "Email hoặc mật khẩu không đúng.");
     if (!user.emailVerified)
       fail(403, "Vui lòng xác minh email trước khi đăng nhập.");
-    if (!user.active) fail(403, "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.");
+    if (!user.active)
+      fail(
+        403,
+        "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.",
+      );
     if (req.session) {
       await Session.deleteOne({ _id: req.session._id });
       res.clearCookie("cinego_session", cookieOptions);
@@ -302,6 +306,36 @@ authRouter.post(
       );
       if (!updated || updated.attempts >= 5)
         await LoginChallenge.deleteOne({ _id: challenge._id });
+      const user = await User.findOneAndUpdate(
+        {
+          _id: challenge.userId,
+          role: { $in: ["customer", "admin"] },
+          active: true,
+        },
+        { $inc: { failedOtpAttempts: 1 } },
+        { new: true },
+      );
+      if (user?.failedOtpAttempts >= 5) {
+        const locked = await User.findOneAndUpdate(
+          {
+            _id: user._id,
+            role: { $in: ["customer", "admin"] },
+            active: true,
+            failedOtpAttempts: { $gte: 5 },
+          },
+          { $set: { active: false } },
+        );
+        if (locked) {
+          await Promise.all([
+            Session.deleteMany({ userId: user._id }),
+            LoginChallenge.deleteMany({ userId: user._id }),
+          ]);
+          fail(
+            403,
+            "Tài khoản đã bị khóa do nhập sai mã OTP 5 lần. Vui lòng liên hệ quản trị viên.",
+          );
+        }
+      }
       fail(401, "Mã xác thực không hợp lệ hoặc đã hết hạn.");
     }
     const claimed = await LoginChallenge.findOneAndDelete({
@@ -311,11 +345,33 @@ authRouter.post(
       attempts: { $lt: 5 },
     });
     if (!claimed) fail(401, "Mã xác thực không hợp lệ hoặc đã hết hạn.");
-    const user = await User.findOne({
-      _id: claimed.userId,
-      active: true,
-      emailVerified: true,
-    });
+    const user = await User.findOneAndUpdate(
+      {
+        _id: claimed.userId,
+        $and: [
+          {
+            $or: [
+              { emailVerified: true },
+              { emailVerified: { $exists: false } },
+            ],
+          },
+          {
+            $or: [
+              { active: true },
+              { active: { $exists: false } },
+            ],
+          },
+        ],
+      },
+      {
+        $set: {
+          active: true,
+          emailVerified: true,
+          failedOtpAttempts: 0,
+        },
+      },
+      { new: true },
+    );
     if (!user) fail(403, "Tài khoản không còn khả dụng.");
     await loginSession(user, req, res);
   }),

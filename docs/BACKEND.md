@@ -70,7 +70,7 @@ Mọi API trả JSON; lỗi `{message: string}`. Mutating request từ trình du
 | GET | /cinemas | Rạp hoạt động |
 | GET | /showtimes?movieId=&cinemaId=&date= | Lịch chiếu tương lai; date theo UTC+7 |
 | GET | /showtimes/:id/seats | Sơ đồ ghế; không lộ chủ đơn hoặc QR |
-| POST | /auth/register, /auth/login | Đăng ký/đăng nhập có rate limit |
+| POST | /auth/register, /auth/login | Đăng ký/đăng nhập có rate limit; khóa khách hoặc admin sau 5 lần nhập sai OTP |
 | GET | /auth/me | Hồ sơ và CSRF của phiên |
 | POST | /auth/logout, /auth/password | Thu hồi phiên; đổi mật khẩu thu hồi tất cả phiên |
 | PATCH | /auth/profile | Sửa tên và điện thoại |
@@ -85,12 +85,12 @@ Mọi API trả JSON; lỗi `{message: string}`. Mutating request từ trình du
 | DELETE | /chat/:showtimeId/membership | Rời phòng |
 | GET / POST | /chat/:showtimeId/messages | 100 tin gần nhất / `{body}` tối đa 1000 ký tự |
 | GET | /admin/overview | Thống kê đơn giản |
-| GET | /admin/data/:entity?page= | Phân trang 50 bản ghi; entities giới hạn danh sách trắng |
+| GET | /admin/data/:entity?page= | Phân trang 50 bản ghi; danh sách `users` gồm khách hàng và admin, có trạng thái khóa/số lần sai OTP |
 | POST / PUT / DELETE | /admin/movies, /admin/cinemas | Tạo; PUT/DELETE thêm /:id; DELETE ẩn để giữ lịch sử |
 | POST / PUT / DELETE | /admin/rooms | Tạo sơ đồ; sửa/xóa khi chưa có lịch |
 | PATCH | /admin/seats/:id | Loại ghế và active; chặn sửa phòng có lịch tương lai |
 | POST / PUT / DELETE | /admin/showtimes | Lịch/giá, kiểm tra xung đột và đơn |
-| PATCH | /admin/users/:id | `{active: boolean}`; chỉ khách, không tự khóa admin |
+| PATCH | /admin/users/:id | `{active: boolean}`; admin có thể khóa khách và mở khóa khách/admin khác, nhưng không thể khóa admin khác đang hoạt động hoặc tự khóa/mở khóa; mở khóa đặt lại bộ đếm OTP sai |
 | POST | /admin/check-in | `{qr}`; dùng vé một lần |
 
 `orders` và `tickets` khách hàng giới hạn 100 bản ghi gần nhất; chat 100 tin gần nhất; phim 100; lịch 500. Cần thêm pagination nếu vận hành với dữ liệu lớn. Trang admin đã có pagination.

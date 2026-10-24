@@ -69,7 +69,13 @@ app.use("/api", authenticate, csrf, (req, res, next) => {
   res.set("Cache-Control", "no-store");
   next();
 });
-app.get("/api/health", (req, res) => res.json({ ok: true }));
+app.get("/api/health", (req, res) =>
+  res.json({
+    ok: true,
+    adminOtpRecovery: true,
+    legacyAdminOtpRecovery: true,
+  }),
+);
 app.use("/api/auth", authRouter);
 app.use("/api", publicRouter);
 app.use("/api/admin", adminRouter);

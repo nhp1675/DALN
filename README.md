@@ -103,7 +103,7 @@ Nếu dự án đã kết nối thành công và có dữ liệu, giữ nguyên 
 
 ### Email kích hoạt tài khoản và MFA
 
-Đăng ký tạo tài khoản ở trạng thái chờ xác minh. Liên kết kích hoạt có hiệu lực 24 giờ; đăng nhập chỉ hoàn tất sau khi nhập mã 6 chữ số gửi đến email, có hiệu lực 10 phút và tối đa 5 lần nhập sai cho mỗi mã.
+Đăng ký tạo tài khoản ở trạng thái chờ xác minh. Liên kết kích hoạt có hiệu lực 24 giờ; đăng nhập chỉ hoàn tất sau khi nhập mã 6 chữ số gửi đến email, có hiệu lực 10 phút. Tài khoản khách hàng hoặc admin bị khóa sau 5 lần nhập sai OTP; một admin khác phải mở khóa admin bị khóa. Admin không thể khóa thủ công admin khác đang hoạt động.
 
 Để dùng Gmail SMTP, bật Xác minh 2 bước cho tài khoản Google, sau đó tạo App Password trong phần bảo mật tài khoản Google. App Password chỉ hiển thị khi tạo và dùng thay cho mật khẩu Gmail thông thường. Không gửi hoặc commit App Password.
 

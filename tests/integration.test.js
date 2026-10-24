@@ -222,6 +222,11 @@ test("Registration requires email activation and login requires a one-time email
     .set("Origin", origin)
     .send({ challengeId: login.body.challengeId, code });
   assert.equal(verified.status, 200, JSON.stringify(verified.body));
+  assert.equal(
+    (await M.User.findOne({ email: "activation-mfa@example.test" }))
+      .failedOtpAttempts,
+    0,
+  );
   assert.equal((await client.get("/api/auth/me")).status, 200);
   assert.equal(
     (
@@ -233,6 +238,163 @@ test("Registration requires email activation and login requires a one-time email
     ).status,
     401,
   );
+});
+test("Five incorrect login codes lock the customer until an admin unlocks them", async () => {
+  const customer = await register("otp-lock@example.test");
+  const otpClient = request.agent(app);
+  let login;
+  const otpMail = await captureMail(async () => {
+    login = await otpClient
+      .post("/api/auth/login")
+      .set("Origin", origin)
+      .send({
+        email: customer.email,
+        password: "Long-test-password-123",
+      });
+  });
+  assert.equal(login.status, 202, JSON.stringify(login.body));
+  const code = otpMail.match(/Mã xác thực đăng nhập của bạn là: (\d{6})/)?.[1];
+  assert.ok(code, otpMail);
+  const wrongCode = code === "000000" ? "000001" : "000000";
+
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    const response = await otpClient
+      .post("/api/auth/verify-login")
+      .set("Origin", origin)
+      .send({ challengeId: login.body.challengeId, code: wrongCode });
+    assert.equal(response.status, attempt === 5 ? 403 : 401);
+  }
+
+  const locked = await M.User.findOne({ email: customer.email });
+  assert.equal(locked.active, false);
+  assert.equal(locked.failedOtpAttempts, 5);
+  assert.equal((await M.Session.countDocuments({ userId: locked._id })), 0);
+
+  const listing = await call(admin, "get", "/admin/data/users");
+  assert.ok(listing.items.some((item) => item.role === "admin"));
+  const listed = listing.items.find(
+    (item) => String(item._id) === String(locked._id),
+  );
+  assert.equal(listed.active, false);
+  assert.equal(listed.failedOtpAttempts, 5);
+
+  const unlocked = await call(admin, "patch", `/admin/users/${locked._id}`, {
+    active: true,
+  });
+  assert.equal(unlocked.active, true);
+  assert.equal(unlocked.failedOtpAttempts, 0);
+
+  const relogin = await otpClient
+    .post("/api/auth/login")
+    .set("Origin", origin)
+    .send({ email: customer.email, password: "Long-test-password-123" });
+  assert.equal(relogin.status, 202, JSON.stringify(relogin.body));
+});
+test("Five incorrect admin OTPs lock the account until another admin unlocks it", async () => {
+  const lockedAdmin = await register("locked-admin@example.test");
+  await M.User.updateOne(
+    { _id: lockedAdmin.user.id },
+    { $set: { role: "admin" } },
+  );
+  const otpClient = request.agent(app);
+  let login;
+  const otpMail = await captureMail(async () => {
+    login = await otpClient
+      .post("/api/auth/login")
+      .set("Origin", origin)
+      .send({
+        email: lockedAdmin.email,
+        password: "Long-test-password-123",
+      });
+  });
+  assert.equal(login.status, 202, JSON.stringify(login.body));
+  const code = otpMail.match(/Mã xác thực đăng nhập của bạn là: (\d{6})/)?.[1];
+  assert.ok(code, otpMail);
+  const wrongCode = code === "000000" ? "000001" : "000000";
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    const response = await otpClient
+      .post("/api/auth/verify-login")
+      .set("Origin", origin)
+      .send({ challengeId: login.body.challengeId, code: wrongCode });
+    assert.equal(response.status, attempt === 5 ? 403 : 401);
+  }
+  const locked = await M.User.findById(lockedAdmin.user.id);
+  assert.equal(locked.active, false);
+  assert.equal(locked.failedOtpAttempts, 5);
+  assert.equal(
+    await M.Session.countDocuments({ userId: lockedAdmin.user.id }),
+    0,
+  );
+  const deniedLogin = await otpClient
+    .post("/api/auth/login")
+    .set("Origin", origin)
+    .send({
+      email: lockedAdmin.email,
+      password: "Long-test-password-123",
+    });
+  assert.equal(deniedLogin.status, 403);
+
+  const listing = await call(admin, "get", "/admin/data/users");
+  const listed = listing.items.find(
+    (item) => String(item._id) === String(lockedAdmin.user.id),
+  );
+  assert.equal(listed.role, "admin");
+  assert.equal(listed.active, false);
+  assert.equal(listed.failedOtpAttempts, 5);
+
+  const unlocked = await call(
+    admin,
+    "patch",
+    `/admin/users/${lockedAdmin.user.id}`,
+    { active: true },
+  );
+  assert.equal(unlocked.role, "admin");
+  assert.equal(unlocked.active, true);
+  assert.equal(unlocked.failedOtpAttempts, 0);
+
+  await call(
+    admin,
+    "patch",
+    `/admin/users/${lockedAdmin.user.id}`,
+    { active: false },
+    403,
+  );
+  await call(
+    admin,
+    "patch",
+    `/admin/users/${admin.user.id}`,
+    { active: true },
+    400,
+  );
+});
+test("Legacy admin with defaulted email verification fields can complete OTP login", async () => {
+  const adminUser = await M.User.findById(admin.user.id);
+  await M.User.updateOne(
+    { _id: adminUser._id },
+    { $unset: { emailVerified: 1, failedOtpAttempts: 1 } },
+  );
+  const client = request.agent(app);
+  let login;
+  const otpMail = await captureMail(async () => {
+    login = await client
+      .post("/api/auth/login")
+      .set("Origin", origin)
+      .send({
+        email: admin.email,
+        password: "Long-test-password-123",
+      });
+  });
+  assert.equal(login.status, 202, JSON.stringify(login.body));
+  const code = otpMail.match(/Mã xác thực đăng nhập của bạn là: (\d{6})/)?.[1];
+  assert.ok(code, otpMail);
+  const verified = await client
+    .post("/api/auth/verify-login")
+    .set("Origin", origin)
+    .send({ challengeId: login.body.challengeId, code });
+  assert.equal(verified.status, 200, JSON.stringify(verified.body));
+  const persisted = await M.User.findById(adminUser._id).lean();
+  assert.equal(persisted.emailVerified, true);
+  assert.equal(persisted.failedOtpAttempts, 0);
 });
 test("Reject missing origin, forged CSRF, unauthorized admin and NoSQL objects", async () => {
   assert.equal((await A.client.post("/api/orders").send({})).status, 403);
