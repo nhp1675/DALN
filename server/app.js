@@ -1,3 +1,4 @@
+import {reviewsRouter, reviewAdminRouter} from './routes/reviews.js';
 import {concessionsRouter, commerceAdminRouter} from './routes/concessions.js';
 import express from "express";
 import helmet from "helmet";
@@ -78,6 +79,8 @@ app.get("/api/health", (req, res) =>
 );
 app.use("/api/auth", authRouter);
 app.use("/api", publicRouter);
+app.use("/api", reviewsRouter);
+app.use("/api/admin", reviewAdminRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api", concessionsRouter);
 app.use("/api/admin", commerceAdminRouter);

@@ -1,7 +1,12 @@
+import '../core/cinema_groups.dart';
+import 'tickets.dart' show groupTicketsByShowtime;
+
 import 'dart:async';
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../core/api.dart';
 import '../core/format.dart';
 import '../widgets/common.dart';
@@ -79,17 +84,13 @@ class _CinemasState extends State<CinemasScreen> {
           label: Text(locating ? 'Đang định vị…' : 'Tìm rạp gần tôi'),
         ),
       ),
-      const Text(
-        'Vị trí chỉ được tính trên thiết bị, không gửi lên máy chủ CineGo.',
-        style: TextStyle(color: muted),
-      ),
       ErrorNote(error),
       const SizedBox(height: 22),
       DataView<List<Json>>(
         future: future!,
         retry: () => setState(() => future = load()),
         builder: (all) {
-          final cities = all.map((c) => sid(c['city'])).toSet();
+          final cities = groupCinemasByCity(all).keys;
           final list =
               all
                   .map(
@@ -107,7 +108,7 @@ class _CinemasState extends State<CinemasScreen> {
                   )
                   .where(
                     (c) =>
-                        (city.isEmpty || c['city'] == city) &&
+                        (city.isEmpty || cinemaCity(c) == city) &&
                         (position == null ||
                             (c['distance'] as double) <= radius),
                   )
@@ -130,6 +131,7 @@ class _CinemasState extends State<CinemasScreen> {
                     child: DropdownButtonFormField<String>(
                       initialValue: city,
                       decoration: const InputDecoration(labelText: 'Thành phố'),
+                      isExpanded: true,
                       items: [
                         const DropdownMenuItem(
                           value: '',
@@ -172,123 +174,298 @@ class _CinemasState extends State<CinemasScreen> {
               if (list.isEmpty)
                 const Empty('Không tìm thấy rạp trong phạm vi đã chọn.')
               else
-                LayoutBuilder(
-                  builder: (context, c) {
-                    final count = c.maxWidth > 900
-                        ? 3
-                        : c.maxWidth > 600
-                        ? 2
-                        : 1;
-                    final width = (c.maxWidth - 22 * (count - 1)) / count;
-                    return Wrap(
-                      spacing: 22,
-                      runSpacing: 22,
-                      children: list
-                          .map(
-                            (r) => SizedBox(
-                              width: width,
-                              child: Panel(
-                                padding: EdgeInsets.zero,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Builder(
-                                      builder: (context) {
-                                        final dark =
-                                            Theme.of(context).brightness ==
-                                            Brightness.dark;
-                                        return Container(
-                                          height: 160,
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            color: dark
-                                                ? const Color(0xFF1E2833)
-                                                : const Color(0xFFE9E3D6),
-                                            borderRadius:
-                                                const BorderRadius.vertical(
-                                                  top: Radius.circular(13),
-                                                ),
-                                          ),
-                                          child: Center(
-                                            child: Icon(
-                                              Icons.theaters_outlined,
-                                              size: 80,
-                                              color: dark
-                                                  ? const Color(0xFF8EA0B2)
-                                                  : const Color(0xFF7C887A),
+                ...groupCinemasByCity(list).entries.map(
+                  (group) => Padding(
+                    padding: const EdgeInsets.only(bottom: 32),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          group.key,
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        LayoutBuilder(
+                          builder: (context, c) {
+                            final count = c.maxWidth > 900
+                                ? 3
+                                : c.maxWidth > 600
+                                ? 2
+                                : 1;
+                            final width =
+                                (c.maxWidth - 22 * (count - 1)) / count;
+                            return Wrap(
+                              spacing: 22,
+                              runSpacing: 22,
+                              children: group.value
+                                  .map(
+                                    (r) => SizedBox(
+                                      width: width,
+                                      child: Panel(
+                                        padding: EdgeInsets.zero,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Builder(
+                                              builder: (context) {
+                                                final dark =
+                                                    Theme.of(context)
+                                                        .brightness ==
+                                                    Brightness.dark;
+                                                return Container(
+                                                  height: 160,
+                                                  width: double.infinity,
+                                                  decoration: BoxDecoration(
+                                                    color: dark
+                                                        ? const Color(
+                                                            0xFF1E2833,
+                                                          )
+                                                        : const Color(
+                                                            0xFFE9E3D6,
+                                                          ),
+                                                    borderRadius:
+                                                        const BorderRadius.vertical(
+                                                          top: Radius.circular(
+                                                            13,
+                                                          ),
+                                                        ),
+                                                  ),
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons.theaters_outlined,
+                                                      size: 80,
+                                                      color: dark
+                                                          ? const Color(
+                                                              0xFF8EA0B2,
+                                                            )
+                                                          : const Color(
+                                                              0xFF7C887A,
+                                                            ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
                                             ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(22),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            position == null
-                                                ? sid(r['city'])
-                                                : '${(r['distance'] as double).toStringAsFixed(1)} km từ bạn',
-                                            style: const TextStyle(
-                                              color: muted,
-                                              fontSize: 13,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 12),
-                                          Text(
-                                            sid(r['name']),
-                                            style: const TextStyle(
-                                              fontSize: 23,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 12),
-                                          Text(
-                                            sid(r['address']),
-                                            style: const TextStyle(
-                                              color: muted,
-                                              fontSize: 14,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 22),
-                                          Wrap(
-                                            spacing: 8,
-                                            runSpacing: 10,
-                                            children: [
-                                              FilledButton(
-                                                onPressed: () => go(
-                                                  context,
-                                                  '/?cinema=${r['_id']}',
-                                                ),
-                                                child: const Text('Chọn phim'),
+                                            Padding(
+                                              padding: const EdgeInsets.all(22),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    position == null
+                                                        ? cinemaCity(r)
+                                                        : '${(r['distance'] as double).toStringAsFixed(1)} km từ bạn',
+                                                    style: const TextStyle(
+                                                      color: muted,
+                                                      fontSize: 13,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 12),
+                                                  Text(
+                                                    sid(r['name']),
+                                                    style: const TextStyle(
+                                                      fontSize: 23,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 12),
+                                                  Text(
+                                                    sid(r['address']),
+                                                    style: const TextStyle(
+                                                      color: muted,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 22),
+                                                  Wrap(
+                                                    spacing: 8,
+                                                    runSpacing: 10,
+                                                    children: [
+                                                      FilledButton(
+                                                        onPressed: () => go(
+                                                          context,
+                                                          '/?cinema=${r['_id']}',
+                                                        ),
+                                                        child: const Text(
+                                                          'Chọn phim',
+                                                        ),
+                                                      ),
+                                                      OutlinedButton.icon(
+                                                        onPressed: () =>
+                                                            openExternal(
+                                                              directionsUrl(
+                                                                r,
+                                                                position,
+                                                              ),
+                                                            ),
+                                                        icon: const Icon(
+                                                          Icons.directions,
+                                                          size: 16,
+                                                        ),
+                                                        label: const Text(
+                                                          'Chỉ đường',
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
                                               ),
-                                              OutlinedButton.icon(
-                                                onPressed: () => openExternal(
-                                                  directionsUrl(r, position),
-                                                ),
-                                                icon: const Icon(
-                                                  Icons.directions,
-                                                  size: 16,
-                                                ),
-                                                label: const Text('Chỉ đường'),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-                    );
-                  },
+                                  )
+                                  .toList(),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
             ],
+          );
+        },
+      ),
+    ],
+  );
+}
+
+class ChatRoomsScreen extends StatefulWidget {
+  const ChatRoomsScreen({super.key});
+  @override
+  State<ChatRoomsScreen> createState() => _ChatRoomsState();
+}
+
+class _ChatRoomsState extends State<ChatRoomsScreen> {
+  Future<Json>? future;
+  bool busy = false;
+  String? error;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    future ??= load();
+  }
+
+  Future<Json> load() async =>
+      asMap(await AppScope.of(context).api.request('/tickets'));
+
+  void refresh() => setState(() => future = load());
+
+  Future<void> enter(String showtimeId) async {
+    if (busy) return;
+    setState(() {
+      busy = true;
+      error = null;
+    });
+    try {
+      // Join là idempotent: tạo membership nếu chưa có, dùng lại nếu đã tham gia.
+      await AppScope.of(context).api
+          .request('/chat/$showtimeId/join', method: 'POST');
+      if (mounted) go(context, '/chat/$showtimeId');
+    } catch (e) {
+      if (mounted) setState(() => error = '$e');
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => PageBody(
+    children: [
+      Heading(
+        'Phòng chat',
+        eyebrow: 'Cùng suất chiếu, cùng đam mê',
+        action: OutlinedButton.icon(
+          onPressed: busy ? null : refresh,
+          icon: const Icon(Icons.refresh, size: 18),
+          label: const Text('Làm mới'),
+        ),
+      ),
+      const SizedBox(height: 16),
+      ErrorNote(error),
+      DataView<Json>(
+        future: future!,
+        retry: refresh,
+        builder: (data) {
+          final shows = asList(data['shows']);
+          final movies = asList(data['movies']);
+          final cinemas = asList(data['cinemas']);
+          final seats = asList(data['seats']);
+          final now = DateTime.now();
+          final eligible = asList(data['tickets']).where((ticket) {
+            final show = byId(shows, ticket['showtimeId']);
+            return ticket['status'] == 'valid' &&
+                show?['status'] == 'active' &&
+                (DateTime.tryParse(sid(show?['endAt']))?.isAfter(now) ?? false);
+          }).toList();
+          final groups = groupTicketsByShowtime(eligible);
+          if (groups.isEmpty) {
+            return Column(
+              children: [
+                const Empty('Chưa có phòng chat.'),
+                OutlinedButton(
+                  onPressed: () => go(context, '/'),
+                  child: const Text('Khám phá phim'),
+                ),
+              ],
+            );
+          }
+          return Column(
+            children: groups.map((group) {
+              final first = group.first;
+              final show = byId(shows, first['showtimeId']) ?? {};
+              final movie = byId(movies, show['movieId']) ?? {};
+              final cinema = byId(cinemas, show['cinemaId']) ?? {};
+              final labels = group
+                  .map(
+                    (ticket) =>
+                        sid(byId(seats, ticket['showtimeSeatId'])?['label']),
+                  )
+                  .toList();
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: Panel(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        sid(movie['title']),
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(sid(cinema['name'])),
+                      const SizedBox(height: 8),
+                      Text(dateTime(show['startAt'])),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Ghế ${labels.join(', ')} · ${group.length} vé còn hiệu lực',
+                        style: const TextStyle(color: muted),
+                      ),
+                      const SizedBox(height: 16),
+                      FilledButton.icon(
+                        onPressed: busy
+                            ? null
+                            : () => enter(sid(first['showtimeId'])),
+                        icon: const Icon(Icons.chat_bubble_outline, size: 18),
+                        label: const Text('Vào phòng chat'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }).toList(),
           );
         },
       ),
@@ -384,171 +561,203 @@ class _ChatState extends State<ChatScreen> {
     }
   }
 
-  Future<void> leave() async {
-    try {
-      await AppScope.of(
-        context,
-      ).api.request('/chat/${widget.id}/membership', method: 'DELETE');
-      if (mounted) go(context, '/tickets');
-    } catch (e) {
-      if (mounted) setState(() => error = '$e');
-    }
-  }
+  void back() => Navigator.of(context).pushReplacementNamed('/chat');
 
   @override
   Widget build(BuildContext context) {
     final user = AppScope.of(context).user!;
-    return PageBody(
-      width: 900,
-      children: [
-        Heading(
-          'Phòng trò chuyện',
-          eyebrow: 'Cùng suất chiếu, cùng đam mê',
-          action: OutlinedButton(
-            onPressed: leave,
-            child: const Text('Rời phòng'),
-          ),
-        ),
-        const Text(
-          'Trò chuyện lịch sự, tránh tiết lộ nội dung phim và thông tin cá nhân. Phòng đóng khi suất chiếu kết thúc. Quản trị viên có thể xem và kiểm duyệt nội dung.',
-          style: TextStyle(color: muted, fontSize: 14),
-        ),
-        ErrorNote(error),
-        const SizedBox(height: 16),
-        Container(
-          height: 420,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark
-                ? nightRaised
-                : const Color(0xFFF0EFE8),
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: loading
-              ? const Center(child: CircularProgressIndicator())
-              : messages.isEmpty
-              ? const Empty('Hãy bắt đầu cuộc trò chuyện.')
-              : ListView.separated(
-                  controller: scroll,
-                  itemCount: messages.length,
-                  separatorBuilder: (c, i) => const SizedBox(height: 14),
-                  itemBuilder: (c, i) {
-                    final m = messages[i], mine = m['userId'] == user['id'];
-                    return Align(
-                      alignment: mine
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 520),
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: mine
-                                ? (Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? const Color(0xFF4A2620)
-                                      : const Color(0xFFFFE3D8))
-                                : Theme.of(
-                                    context,
-                                  ).colorScheme.surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                sid(m['name']),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                  color: muted,
-                                ),
-                              ),
-                              const SizedBox(height: 7),
-                              Text(sid(m['body'])),
-                              const SizedBox(height: 6),
-                              Text(
-                                time(m['createdAt']),
-                                style: const TextStyle(
-                                  fontSize: 11,
-                                  color: muted,
-                                ),
-                              ),
-                            ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final small = constraints.maxWidth < 600;
+        final compact = constraints.maxHeight < 400;
+        return Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1000),
+            child: Padding(
+              padding: EdgeInsets.all(small || compact ? 12.0 : 24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                        tooltip: 'Quay lại danh sách phòng chat',
+                        onPressed: back,
+                        icon: const Icon(Icons.arrow_back),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Phòng trò chuyện',
+                          style: TextStyle(
+                            fontSize: small ? 22 : 30,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                    );
-                  },
-                ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Focus(
-                onKeyEvent: (node, event) {
-                  final enter =
-                      event.logicalKey == LogicalKeyboardKey.enter ||
-                      event.logicalKey == LogicalKeyboardKey.numpadEnter;
-                  if (!enter ||
-                      HardwareKeyboard.instance.isControlPressed ||
-                      HardwareKeyboard.instance.isAltPressed ||
-                      HardwareKeyboard.instance.isMetaPressed ||
-                      !text.value.composing.isCollapsed) {
-                    return KeyEventResult.ignored;
-                  }
-                  // Handle repeat/up too so a held Enter cannot send twice.
-                  if (event is KeyDownEvent) {
-                    if (HardwareKeyboard.instance.isShiftPressed) {
-                      final old = text.value;
-                      final selection = old.selection.isValid
-                          ? old.selection
-                          : TextSelection.collapsed(offset: old.text.length);
-                      final next = TextEditingValue(
-                        text: old.text.replaceRange(
-                          selection.start,
-                          selection.end,
-                          '\n',
-                        ),
-                        selection: TextSelection.collapsed(
-                          offset: selection.start + 1,
-                        ),
-                      );
-                      text.value = LengthLimitingTextInputFormatter(
-                        1000,
-                      ).formatEditUpdate(old, next);
-                    } else {
-                      send();
-                    }
-                  }
-                  return KeyEventResult.handled;
-                },
-                child: TextField(
-                  controller: text,
-                  maxLength: 1000,
-                  minLines: 1,
-                  maxLines: 4,
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.newline,
-                  decoration: const InputDecoration(
-                    hintText: 'Chia sẻ cảm nhận của bạn…',
-                    labelText: 'Nội dung tin nhắn',
-                    helperText: 'Enter để gửi · Shift+Enter để xuống dòng',
-                    helperMaxLines: 2,
+                    ],
                   ),
-                ),
+                  const SizedBox(height: 8),
+                  if (error != null)
+                    Text(
+                      error!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: coral),
+                    ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? nightRaised
+                            : const Color(0xFFF0EFE8),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: loading
+                          ? const Center(child: CircularProgressIndicator())
+                          : messages.isEmpty
+                          ? const Center(
+                              child: Text(
+                                'Hãy bắt đầu cuộc trò chuyện.',
+                                textAlign: TextAlign.center,
+                              ),
+                            )
+                          : ListView.separated(
+                              controller: scroll,
+                              itemCount: messages.length,
+                              separatorBuilder: (c, i) =>
+                                  const SizedBox(height: 14),
+                              itemBuilder: (c, i) {
+                                final m = messages[i],
+                                    mine = m['userId'] == user['id'];
+                                return Align(
+                                  alignment: mine
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
+                                  child: ConstrainedBox(
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 520,
+                                    ),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: mine
+                                            ? (Theme.of(context).brightness ==
+                                                      Brightness.dark
+                                                  ? const Color(0xFF4A2620)
+                                                  : const Color(0xFFFFE3D8))
+                                            : Theme.of(context)
+                                                  .colorScheme
+                                                  .surfaceContainerHighest,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            sid(m['name']),
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w700,
+                                              color: muted,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 7),
+                                          Text(sid(m['body'])),
+                                          const SizedBox(height: 6),
+                                          Text(
+                                            time(m['createdAt']),
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                              color: muted,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Focus(
+                          onKeyEvent: (node, event) {
+                            final enter =
+                                event.logicalKey == LogicalKeyboardKey.enter ||
+                                event.logicalKey ==
+                                    LogicalKeyboardKey.numpadEnter;
+                            if (!enter ||
+                                HardwareKeyboard.instance.isControlPressed ||
+                                HardwareKeyboard.instance.isAltPressed ||
+                                HardwareKeyboard.instance.isMetaPressed ||
+                                !text.value.composing.isCollapsed) {
+                              return KeyEventResult.ignored;
+                            }
+                            // Handle repeat/up too so a held Enter cannot send twice.
+                            if (event is KeyDownEvent) {
+                              if (HardwareKeyboard.instance.isShiftPressed) {
+                                final old = text.value;
+                                final selection = old.selection.isValid
+                                    ? old.selection
+                                    : TextSelection.collapsed(
+                                        offset: old.text.length,
+                                      );
+                                final next = TextEditingValue(
+                                  text: old.text.replaceRange(
+                                    selection.start,
+                                    selection.end,
+                                    '\n',
+                                  ),
+                                  selection: TextSelection.collapsed(
+                                    offset: selection.start + 1,
+                                  ),
+                                );
+                                text.value = LengthLimitingTextInputFormatter(
+                                  1000,
+                                ).formatEditUpdate(old, next);
+                              } else {
+                                send();
+                              }
+                            }
+                            return KeyEventResult.handled;
+                          },
+                          child: TextField(
+                            controller: text,
+                            maxLength: 1000,
+                            minLines: 1,
+                            maxLines: compact ? 2 : 4,
+                            keyboardType: TextInputType.multiline,
+                            textInputAction: TextInputAction.newline,
+                            decoration: InputDecoration(
+                              counterText: compact ? '' : null,
+                              hintText: 'Chia sẻ cảm nhận của bạn…',
+                              labelText: 'Nội dung tin nhắn',
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      FilledButton(
+                        onPressed: busy ? null : send,
+                        child: const Icon(Icons.send, size: 20),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            const SizedBox(width: 12),
-            FilledButton(
-              onPressed: busy ? null : send,
-              child: const Icon(Icons.send, size: 20),
-            ),
-          ],
-        ),
-      ],
+          ),
+        );
+      },
     );
   }
 }

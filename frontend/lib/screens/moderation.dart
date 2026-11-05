@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../core/api.dart';
 import '../core/format.dart';
 import '../widgets/common.dart';
@@ -324,13 +325,7 @@ class _ReasonDialogState extends State<_ReasonDialog> {
         maxLines: 4,
         validator: (v) =>
             (v?.trim().length ?? 0) < 3 ? 'Nhập lý do ít nhất 3 ký tự.' : null,
-        decoration: InputDecoration(
-          labelText: 'Lý do',
-          helperText: widget.destructive
-              ? 'Không thể khôi phục tin đã xóa. Thao tác được ghi nhật ký.'
-              : 'Thao tác được ghi vào nhật ký quản trị.',
-          helperMaxLines: 3,
-        ),
+        decoration: InputDecoration(labelText: 'Lý do'),
       ),
     ),
     actions: [

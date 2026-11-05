@@ -1,5 +1,9 @@
+import '../core/cinema_groups.dart';
+import '../widgets/movie_reviews.dart';
 import '../widgets/trailer.dart';
+
 import 'package:flutter/material.dart';
+
 import '../core/api.dart';
 import '../core/format.dart';
 import '../widgets/common.dart';
@@ -171,7 +175,11 @@ class _MovieCardState extends State<_MovieCard> {
                     Positioned(
                       top: 10,
                       left: 10,
-                      child: _AgeBadge(sid(m['ageRating'])),
+                      child: _AgeBadge(
+                        m['ageRating'] == 'NO'
+                            ? 'Chưa PL'
+                            : sid(m['ageRating']),
+                      ),
                     ),
                   ],
                 ),
@@ -193,7 +201,7 @@ class _MovieCardState extends State<_MovieCard> {
             ),
             const SizedBox(height: 4),
             Text(
-              '${sid(m['genre'])} · ${m['duration']} phút',
+              "${sid(m['genre'])} · ${m['duration'] == null ? 'Chưa có thời lượng' : '${m['duration']} phút'}",
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(color: muted, fontSize: 13),
@@ -258,12 +266,7 @@ class MovieScreen extends StatefulWidget {
 class _MovieState extends State<MovieScreen> {
   Future<Json>? future;
   Future<List<Json>>? shows;
-  String cinema = '', day = '';
-  @override
-  void initState() {
-    super.initState();
-    cinema = widget.initialCinema ?? '';
-  }
+  String city = '', day = '';
 
   @override
   void didChangeDependencies() {
@@ -282,24 +285,154 @@ class _MovieState extends State<MovieScreen> {
   }
 
   Future<List<Json>> loadShows() async => asList(
-    await AppScope.of(context).api.request(
-      '/showtimes?movieId=${widget.id}${cinema.isEmpty ? '' : '&cinemaId=$cinema'}${day.isEmpty ? '' : '&date=$day'}',
-    ),
+    await AppScope.of(context).api.request('/showtimes?movieId=${widget.id}'),
   );
-  Future<void> chooseDay() async {
-    final d = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 1)),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
-    if (d != null && mounted) {
-      setState(() {
-        day =
-            '${d.year}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
-        shows = loadShows();
-      });
+
+  Widget schedule(List<Json> cinemas, List<Json> list) {
+    final cities = groupCinemasByCity(cinemas);
+    final dates = groupShowtimesByDate(list)..remove('');
+    if (dates.isEmpty || cities.isEmpty) {
+      return const Empty('Chưa có lịch chiếu.');
     }
+    final initialCinema = byId(cinemas, widget.initialCinema);
+    final initialCity = initialCinema == null ? '' : cinemaCity(initialCinema);
+    final preferredDates = dates.entries.where(
+      (entry) => entry.value.any(
+        (show) =>
+            widget.initialCinema != null &&
+            show['cinemaId'] == widget.initialCinema,
+      ),
+    );
+    final selectedDay = dates.containsKey(day)
+        ? day
+        : preferredDates.isNotEmpty
+        ? preferredDates.first.key
+        : dates.keys.first;
+    final dayShows = dates[selectedDay]!;
+    final availableCities = cities.entries.where(
+      (entry) => entry.value.any(
+        (cinema) => dayShows.any((show) => show['cinemaId'] == cinema['_id']),
+      ),
+    );
+    final selectedCity = cities.containsKey(city)
+        ? city
+        : cities.containsKey(initialCity)
+        ? initialCity
+        : availableCities.isNotEmpty
+        ? availableCities.first.key
+        : cities.keys.first;
+    final cinemaIds = dayShows.map((show) => show['cinemaId']).toSet();
+    final venues = cities[selectedCity]!
+        .where((cinema) => cinemaIds.contains(cinema['_id']))
+        .toList();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        LayoutBuilder(
+          builder: (context, box) {
+            final buttons = [
+              for (final date in dates.keys)
+                _ShowDateTile(
+                  date: date,
+                  selected: date == selectedDay,
+                  onTap: () => setState(() {
+                    day = date;
+                    city = selectedCity;
+                  }),
+                ),
+            ];
+            if (box.maxWidth < 600) {
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (final button in buttons)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 6),
+                        child: button,
+                      ),
+                  ],
+                ),
+              );
+            }
+            return Wrap(spacing: 6, runSpacing: 6, children: buttons);
+          },
+        ),
+        const SizedBox(height: 14),
+        const Divider(),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final name in cities.keys)
+              ChoiceChip(
+                label: Text(name),
+                selected: name == selectedCity,
+                onSelected: (_) => setState(() {
+                  city = name;
+                  day = selectedDay;
+                }),
+              ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        const Divider(),
+        if (venues.isEmpty)
+          const Empty('Không có suất chiếu.')
+        else ...[
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Tag('2D', color: coral),
+          ),
+          const Divider(),
+          for (final cinema in venues) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    sid(cinema['name']),
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    sid(cinema['address']),
+                    style: const TextStyle(color: muted, fontSize: 13),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      for (final show in dayShows.where(
+                        (show) => show['cinemaId'] == cinema['_id'],
+                      ))
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 10,
+                            ),
+                          ),
+                          onPressed: () =>
+                              go(context, '/booking/${show['_id']}'),
+                          child: Text(time(show['startAt'])),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Divider(),
+          ],
+        ],
+      ],
+    );
   }
 
   @override
@@ -346,9 +479,16 @@ class _MovieState extends State<MovieScreen> {
                         runSpacing: 8,
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          Tag(sid(movie['ageRating']), color: Colors.white),
+                          Tag(
+                            movie['ageRating'] == 'NO'
+                                ? 'Chưa phân loại'
+                                : sid(movie['ageRating']),
+                            color: Colors.white,
+                          ),
                           Text(
-                            '${movie['duration']} phút',
+                            movie['duration'] == null
+                                ? 'Chưa có thời lượng'
+                                : '${movie['duration']} phút',
                             style: const TextStyle(color: soft),
                           ),
                           Text(
@@ -387,16 +527,20 @@ class _MovieState extends State<MovieScreen> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.all(small ? 18 : 32),
-                      child: Row(
+                      child: Flex(
+                        direction: small ? Axis.vertical : Axis.horizontal,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Poster(
                             movie,
-                            width: small ? 95 : 240,
-                            height: small ? 142 : 360,
+                            width: small ? 120 : 240,
+                            height: small ? 180 : 360,
                           ),
-                          SizedBox(width: small ? 18 : 36),
-                          Expanded(child: info),
+                          SizedBox(
+                            width: small ? 0 : 36,
+                            height: small ? 16 : 0,
+                          ),
+                          if (small) info else Expanded(child: info),
                           if (trailer != null && threeCols) ...[
                             const SizedBox(width: 32),
                             SizedBox(
@@ -435,134 +579,14 @@ class _MovieState extends State<MovieScreen> {
               ],
               const SizedBox(height: 40),
               const Heading('Lịch chiếu', eyebrow: 'Giờ Việt Nam (UTC+7)'),
-              Wrap(
-                spacing: 14,
-                runSpacing: 14,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 260,
-                    child: DropdownButtonFormField<String>(
-                      initialValue: cinema,
-                      decoration: const InputDecoration(labelText: 'Rạp chiếu'),
-                      isExpanded: true,
-                      items: [
-                        const DropdownMenuItem(
-                          value: '',
-                          child: Text('Tất cả rạp'),
-                        ),
-                        ...cinemas.map(
-                          (c) => DropdownMenuItem(
-                            value: sid(c['_id']),
-                            child: Text(sid(c['name'])),
-                          ),
-                        ),
-                      ],
-                      onChanged: (v) => setState(() {
-                        cinema = v ?? '';
-                        shows = loadShows();
-                      }),
-                    ),
-                  ),
-                  OutlinedButton.icon(
-                    onPressed: chooseDay,
-                    icon: const Icon(Icons.calendar_today, size: 18),
-                    label: Text(day.isEmpty ? 'Chọn ngày' : day),
-                  ),
-                  TextButton(
-                    onPressed: () => setState(() {
-                      day = '';
-                      shows = loadShows();
-                    }),
-                    child: const Text('Tất cả ngày'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
               DataView<List<Json>>(
                 future: shows!,
                 retry: () => setState(() => shows = loadShows()),
-                builder: (list) {
-                  if (list.isEmpty) {
-                    return const Empty(
-                      'Chưa có lịch chiếu phù hợp. Vui lòng chọn ngày hoặc rạp khác.',
-                    );
-                  }
-                  return Column(
-                    children: cinemas
-                        .where(
-                          (c) => list.any((s) => s['cinemaId'] == c['_id']),
-                        )
-                        .map(
-                          (c) => Padding(
-                            padding: const EdgeInsets.only(bottom: 18),
-                            child: Panel(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    sid(c['name']),
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    sid(c['address']),
-                                    style: const TextStyle(
-                                      color: muted,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Wrap(
-                                    spacing: 12,
-                                    runSpacing: 12,
-                                    children: list
-                                        .where((s) => s['cinemaId'] == c['_id'])
-                                        .map(
-                                          (s) => OutlinedButton(
-                                            onPressed: () => go(
-                                              context,
-                                              '/booking/${s['_id']}',
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  time(s['startAt']),
-                                                  style: const TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  shortDate(s['startAt']),
-                                                  style: const TextStyle(
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'Từ ${money(s['standardPrice'])}',
-                                                  style: const TextStyle(
-                                                    fontSize: 12,
-                                                    color: muted,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  );
-                },
+                builder: (list) => schedule(cinemas, list),
+              ),
+              MovieReviews(
+                key: ValueKey('reviews-${widget.id}'),
+                movieId: widget.id,
               ),
             ],
           );
@@ -570,6 +594,75 @@ class _MovieState extends State<MovieScreen> {
       ),
     ],
   );
+}
+
+class _ShowDateTile extends StatelessWidget {
+  final String date;
+  final bool selected;
+  final VoidCallback onTap;
+  const _ShowDateTile({
+    required this.date,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final d = DateTime.parse(date);
+    const weekdays = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+    final colors = Theme.of(context).colorScheme;
+    final radius = BorderRadius.circular(8);
+    return Semantics(
+      label: showDateLabel(date),
+      selected: selected,
+      button: true,
+      child: Material(
+        color: selected ? colors.primaryContainer : colors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: radius,
+          side: BorderSide(
+            color: selected ? colors.primary : colors.outlineVariant,
+            width: selected ? 2 : 1,
+          ),
+        ),
+        child: InkWell(
+          borderRadius: radius,
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            child: ExcludeSemantics(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        d.month.toString().padLeft(2, '0'),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      Text(
+                        weekdays[d.weekday - 1],
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    d.day.toString().padLeft(2, '0'),
+                    style: const TextStyle(
+                      fontSize: 29,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _HeroFact extends StatelessWidget {

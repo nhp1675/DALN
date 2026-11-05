@@ -1,0 +1,57 @@
+[
+  {
+    "path": "server/models.js",
+    "before": "duration: { type: Number, required: true, min: 1 },",
+    "after": "duration: { type: Number, default: null, min: 1 },"
+  },
+  {
+    "path": "server/models.js",
+    "before": "enum: [\"P\", \"K\", \"T13\", \"T16\", \"T18\"],",
+    "after": "enum: [\"P\", \"K\", \"T13\", \"T16\", \"T18\", \"NO\"],"
+  },
+  {
+    "path": "server/routes/admin.js",
+    "before": "duration: z.number().int().min(1).max(400),",
+    "after": "duration: z.number().int().min(1).max(400).nullable(),"
+  },
+  {
+    "path": "server/routes/admin.js",
+    "before": "ageRating: z.enum([\"P\", \"K\", \"T13\", \"T16\", \"T18\"]),",
+    "after": "ageRating: z.enum([\"P\", \"K\", \"T13\", \"T16\", \"T18\", \"NO\"]),"
+  },
+  {
+    "path": "server/services/catalog.js",
+    "before": "if (!movie || !cinema) fail(400, \"Phim hoặc rạp không hoạt động.\");",
+    "after": "if (!movie || !cinema) fail(400, \"Phim hoặc rạp không hoạt động.\");\n    if (!Number.isInteger(movie.duration) || movie.duration < 1 || movie.ageRating === \"NO\")\n      fail(400, \"Cần cập nhật thời lượng và phân loại tuổi chính thức trước khi tạo suất chiếu.\");"
+  },
+  {
+    "path": "frontend/lib/screens/catalog.dart",
+    "before": "'${sid(m['genre'])} · ${m['duration']} phút'",
+    "after": "\"${sid(m['genre'])} · ${m['duration'] == null ? 'Chưa có thời lượng' : '${m['duration']} phút'}\""
+  },
+  {
+    "path": "frontend/lib/screens/catalog.dart",
+    "before": "'${movie['duration']} phút'",
+    "after": "movie['duration'] == null ? 'Chưa có thời lượng' : '${movie['duration']} phút'"
+  },
+  {
+    "path": "frontend/lib/screens/catalog.dart",
+    "before": "child: _AgeBadge(sid(m['ageRating'])),",
+    "after": "child: _AgeBadge(m['ageRating'] == 'NO' ? 'Chưa PL' : sid(m['ageRating'])),"
+  },
+  {
+    "path": "frontend/lib/screens/catalog.dart",
+    "before": "Tag(sid(movie['ageRating']), color: Colors.white),",
+    "after": "Tag(movie['ageRating'] == 'NO' ? 'Chưa phân loại' : sid(movie['ageRating']), color: Colors.white),"
+  },
+  {
+    "path": "frontend/lib/screens/admin.dart",
+    "before": "'P,K,T13,T16,T18'",
+    "after": "'P,K,T13,T16,T18,NO'"
+  },
+  {
+    "path": "scripts/seed.js",
+    "before": "import mongoose from \"mongoose\";\nimport { config } from \"../server/config.js\";\nimport { allModels, Movie, Cinema, Showtime } from \"../server/models.js\";\nimport { saveRoom, saveShowtime } from \"../server/services/catalog.js\";\nexport async function seed() {\n  await Promise.all(allModels.map((m) => m.init()));\n  if (await Movie.countDocuments())\n    return console.log(\"Seed skipped: movies already exist. No data deleted.\");\n  const movies = await Movie.create([\n    {\n      title: \"Quỹ đạo cuối cùng\",\n      genre: \"Khoa học viễn tưởng\",\n      duration: 128,\n      synopsis:\n        \"Một tín hiệu từ rìa vũ trụ đưa phi hành gia trẻ đến hành tinh nơi thời gian dường như đã dừng lại. Giữa khoảng không vô tận, cô phải chọn giữa hành trình trở về và bí mật có thể thay đổi nhân loại.\",\n      cast: \"Minh Anh, Hoàng Nam\",\n      director: \"Trần Hải\",\n      ageRating: \"T13\",\n      poster: \"/posters/orbit.svg\",\n      status: \"now\",\n    },\n    {\n      title: \"Mùa hè bên em\",\n      genre: \"Tình cảm · Thanh xuân\",\n      duration: 106,\n      synopsis:\n        \"Hai người bạn gặp lại ở thị trấn ven biển, cùng viết tiếp mùa hè còn dang dở của tuổi hai mươi. Một câu chuyện nhỏ về những điều chưa kịp nói và lòng can đảm để bắt đầu lại.\",\n      cast: \"Lan Chi, Khánh Duy\",\n      director: \"Nguyễn An\",\n      ageRating: \"T13\",\n      poster: \"/posters/summer.svg\",\n      status: \"now\",\n    },\n    {\n      title: \"Thành phố không ngủ\",\n      genre: \"Hành động · Trinh thám\",\n      duration: 115,\n      synopsis:\n        \"Giữa những con phố ngập ánh đèn, một thám tử lần theo bí mật đằng sau vụ mất tích lúc nửa đêm. Mỗi manh mối đưa anh đến gần hơn với một sự thật không ai muốn nhắc lại.\",\n      cast: \"Quốc Bảo, Mai Linh\",\n      director: \"Lê Minh\",\n      ageRating: \"T16\",\n      poster: \"/posters/city.svg\",\n      status: \"now\",\n    },\n    {\n      title: \"Khu vườn trên mây\",\n      genre: \"Hoạt hình · Gia đình\",\n      duration: 92,\n      synopsis:\n        \"Một hạt mầm biết nói dẫn cô bé Mi đến khu vườn lơ lửng trên mây. Cùng những người bạn kỳ lạ, Mi học cách chăm sóc điều nhỏ bé để làm nên phép màu.\",\n      cast: \"Lồng tiếng: Bảo Ngọc, Hải Đăng\",\n      director: \"Vũ Bình\",\n      ageRating: \"P\",\n      poster: \"/posters/garden.svg\",\n      status: \"now\",\n    },\n    {\n      title: \"Phía bên kia bình minh\",\n      genre: \"Phiêu lưu\",\n      duration: 120,\n      synopsis:\n        \"Ba người bạn lên đường tìm ngọn hải đăng cuối cùng. Chuyến đi xuyên qua núi rừng giúp họ khám phá điều mình thực sự tìm kiếm.\",\n      cast: \"Thanh Hằng, Đức Anh\",\n      director: \"Phạm Sơn\",\n      ageRating: \"K\",\n      poster: \"/posters/dawn.svg\",\n      status: \"soon\",\n    },\n  ]);\n  const cinemas = await Cinema.create([\n    {\n      name: \"CineGo Hà Đông\",\n      city: \"Hà Nội\",\n      address: \"Khu đô thị Văn Phú, Hà Đông, Hà Nội\",\n      latitude: 20.963,\n      longitude: 105.766,\n      active: true,\n    },\n    {\n      name: \"CineGo Cầu Giấy\",\n      city: \"Hà Nội\",\n      address: \"Đường Xuân Thủy, Cầu Giấy, Hà Nội\",\n      latitude: 21.036,\n      longitude: 105.782,\n      active: true,\n    },\n    {\n      name: \"CineGo Đà Nẵng\",\n      city: \"Đà Nẵng\",\n      address: \"Đường Nguyễn Văn Linh, Hải Châu, Đà Nẵng\",\n      latitude: 16.06,\n      longitude: 108.216,\n      active: true,\n    },\n  ]);\n  for (const cinema of cinemas) {\n    const room = await saveRoom(undefined, {\n      cinemaId: String(cinema._id),\n      name: \"Phòng 01 · 2D\",\n      rows: 7,\n      columns: 10,\n    });\n    for (let d = 1; d <= 7; d++) {\n      const date = new Date(Date.now() + d * 86400000)\n        .toISOString()\n        .slice(0, 10);\n      for (let m = 0; m < 4; m++)\n        await saveShowtime(undefined, {\n          movieId: String(movies[m]._id),\n          roomId: String(room._id),\n          startAt: `${date}T${String(10 + m * 3).padStart(2, \"0\")}:00:00+07:00`,\n          standardPrice: 80000 + (d % 2) * 10000,\n          vipPrice: 110000 + (d % 2) * 10000,\n        });\n    }\n  }\n  console.log(\n    \"Seeded fictional movies, cinemas, seats and 7 days of showtimes. No preset user passwords.\",\n  );\n}\nif (process.argv[1]?.endsWith(\"seed.js\")) {\n  await mongoose.connect(config.MONGODB_URI);\n  await seed();\n  await mongoose.disconnect();\n}\n",
+    "after": "export async function seed() {\n  throw new Error(\"Đã tắt seed demo. Dùng scripts/cgv-database.js theo HUONG-DAN.md.\");\n}\nif (process.argv[1]?.endsWith(\"seed.js\")) await seed();\n"
+  }
+]

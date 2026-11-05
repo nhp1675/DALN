@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import '../core/api.dart';
 import '../core/session.dart';
 
 // Bảng màu CineGo.
 const coral = Color(0xFFE23B2B); // đỏ thương hiệu
 const ink = Color(0xFF16202A); // xanh đêm (chữ, chân trang)
-const muted = Color(0xFF6C7782); // chữ phụ (đủ tương phản trên cả nền sáng và tối)
+const muted = Color(
+  0xFF6C7782,
+); // chữ phụ (đủ tương phản trên cả nền sáng và tối)
 const gold = Color(0xFFE6C891); // vàng ánh kim, điểm nhấn trên nền tối
 const paper = Color(0xFFFAF8F5); // nền giao diện sáng
 const night = Color(0xFF0A0E13); // nền giao diện tối
@@ -41,15 +44,19 @@ class LogoMark extends StatelessWidget {
       color: coral,
       borderRadius: BorderRadius.circular(size * .3),
     ),
-    child: Icon(Icons.play_arrow_rounded, color: Colors.white, size: size * .68),
+    child: Icon(
+      Icons.play_arrow_rounded,
+      color: Colors.white,
+      size: size * .68,
+    ),
   );
 }
 
 void go(BuildContext context, String route) =>
     Navigator.of(context).pushNamed(route);
-void notice(BuildContext context, String message) => ScaffoldMessenger.of(
-  context,
-).showSnackBar(SnackBar(content: Text(message)));
+void notice(BuildContext context, String message) =>
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
 
 class PageBody extends StatelessWidget {
   final List<Widget> children;
@@ -71,7 +78,7 @@ class PageBody extends StatelessWidget {
                 constraints: BoxConstraints(maxWidth: width),
                 child: Padding(
                   padding: EdgeInsets.all(
-                    MediaQuery.sizeOf(context).width < 600 ? 20 : 32,
+                    MediaQuery.sizeOf(context).width < 600 ? 12.0 : 32.0,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,7 +340,11 @@ class Panel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     width: double.infinity,
-    padding: padding,
+    padding:
+        MediaQuery.sizeOf(context).width < 600 &&
+            padding == const EdgeInsets.all(24)
+        ? const EdgeInsets.all(12)
+        : padding,
     decoration: BoxDecoration(
       color: Theme.of(context).brightness == Brightness.dark
           ? nightRaised
@@ -362,31 +373,36 @@ class Heading extends StatelessWidget {
       spacing: 20,
       runSpacing: 16,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (eyebrow.isNotEmpty) ...[
+        SizedBox(
+          width: MediaQuery.sizeOf(context).width < 600
+              ? MediaQuery.sizeOf(context).width - 48
+              : null,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (eyebrow.isNotEmpty) ...[
+                Text(
+                  eyebrow,
+                  style: const TextStyle(
+                    color: coral,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
               Text(
-                eyebrow,
-                style: const TextStyle(
-                  color: coral,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
+                title,
+                style: TextStyle(
+                  fontSize: MediaQuery.sizeOf(context).width < 600 ? 27 : 34,
+                  fontWeight: FontWeight.w800,
+                  height: 1.15,
+                  letterSpacing: -.5,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(height: 8),
             ],
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: MediaQuery.sizeOf(context).width < 600 ? 27 : 34,
-                fontWeight: FontWeight.w800,
-                height: 1.15,
-                letterSpacing: -.5,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-          ],
+          ),
         ),
         ?action,
       ],
@@ -509,10 +525,8 @@ class SnackImage extends StatelessWidget {
     return 'snack';
   }
 
-  Widget _fallback() => SvgPicture.asset(
-    'assets/snacks/${kind(name)}.svg',
-    fit: BoxFit.cover,
-  );
+  Widget _fallback() =>
+      SvgPicture.asset('assets/snacks/${kind(name)}.svg', fit: BoxFit.cover);
 
   @override
   Widget build(BuildContext context) {
@@ -542,11 +556,15 @@ class Poster extends StatelessWidget {
     final url = sid(movie['poster']);
     Widget image;
     if (url.startsWith('/posters/')) {
-      image = SvgPicture.asset(
-        'assets/posters/${url.split('/').last}',
-        key: ValueKey(url),
-        fit: BoxFit.cover,
-      );
+      final asset = 'assets/posters/${url.split('/').last}';
+      image = url.toLowerCase().endsWith('.svg')
+          ? SvgPicture.asset(asset, key: ValueKey(url), fit: BoxFit.cover)
+          : Image.asset(
+              asset,
+              key: ValueKey(url),
+              fit: BoxFit.cover,
+              errorBuilder: (c, e, s) => _fallback(),
+            );
     } else if (url.startsWith('https://')) {
       // key theo địa chỉ ảnh: đổi phim thì tạo lại ảnh, tránh hiện nhầm poster cũ.
       image = Image.network(

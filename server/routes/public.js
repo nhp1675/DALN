@@ -77,7 +77,8 @@ publicRouter.get(
     if (f.movieId) {
       if (!open.some((x) => String(x) === String(f.movieId))) return res.json([]);
     } else f.movieId = { $in: open };
-    res.json(await Showtime.find(f).sort({ startAt: 1 }).limit(500).lean());
+    // Five cinemas and a full month can exceed the former 500-show ceiling.
+    res.json(await Showtime.find(f).sort({ startAt: 1, _id: 1 }).limit(10000).lean());
   }),
 );
 publicRouter.get(

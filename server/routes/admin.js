@@ -74,11 +74,11 @@ const movieSchema = z
   .object({
     title: str,
     genre: str,
-    duration: z.number().int().min(1).max(400),
+    duration: z.number().int().min(1).max(400).nullable(),
     synopsis: z.string().trim().min(1).max(5000),
     cast: z.string().max(1000).default(""),
     director: z.string().max(200).default(""),
-    ageRating: z.enum(["P", "K", "T13", "T16", "T18"]),
+    ageRating: z.enum(["P", "K", "T13", "T16", "T18", "NO"]),
     status: z.enum(["now", "soon", "archived"]),
     poster: poster.default(""),
     trailerUrl: trailer.default(""),

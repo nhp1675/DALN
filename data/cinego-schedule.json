@@ -1,0 +1,34 @@
+{
+  "startDate": "2026-10-26",
+  "days": 30,
+  "openHour": 9,
+  "closeHour": 23,
+  "breakMinutes": 20,
+  "standardPrice": 80000,
+  "vipPrice": 110000,
+  "cinema": {
+    "name": "CineGo",
+    "city": "Chưa cấu hình",
+    "address": "Chưa cấu hình địa chỉ rạp",
+    "latitude": 0,
+    "longitude": 0,
+    "active": true
+  },
+  "rooms": [
+    {
+      "name": "Phòng 01 - 2D",
+      "rows": 8,
+      "columns": 10
+    },
+    {
+      "name": "Phòng 02 - 2D",
+      "rows": 8,
+      "columns": 10
+    },
+    {
+      "name": "Phòng 03 - 2D",
+      "rows": 8,
+      "columns": 10
+    }
+  ]
+}

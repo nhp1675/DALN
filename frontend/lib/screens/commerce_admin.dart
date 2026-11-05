@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
+
 import '../core/api.dart';
 import '../core/format.dart';
 import '../platform/browser.dart';
@@ -171,9 +173,6 @@ class _CommerceAdminState extends State<CommerceAdminScreen> {
                 'Báo cáo thanh toán',
                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
               ),
-              const Text(
-                'Giao dịch trùng hoặc chưa phát hành vé được tách riêng.',
-              ),
               const SizedBox(height: 12),
               Wrap(
                 spacing: 12,
@@ -277,17 +276,22 @@ class _CommerceAdminState extends State<CommerceAdminScreen> {
               for (final x in days)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(width: 100, child: Text(sid(x['day']))),
-                      Expanded(
-                        child: LinearProgressIndicator(
-                          value: (x['received'] as num) / peak,
-                          minHeight: 12,
-                        ),
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 4,
+                        children: [
+                          Text(sid(x['day'])),
+                          Text(money(x['received'])),
+                        ],
                       ),
-                      const SizedBox(width: 12),
-                      SizedBox(width: 130, child: Text(money(x['received']))),
+                      const SizedBox(height: 4),
+                      LinearProgressIndicator(
+                        value: (x['received'] as num) / peak,
+                        minHeight: 12,
+                      ),
                     ],
                   ),
                 ),
@@ -444,8 +448,6 @@ class _ProductFormState extends State<_ProductForm> {
                 onChanged: (_) => setState(() {}),
                 decoration: const InputDecoration(
                   labelText: 'Link ảnh (https://…)',
-                  helperText:
-                      'Để trống sẽ dùng ảnh minh họa mặc định theo tên món.',
                 ),
               ),
               const SizedBox(height: 10),

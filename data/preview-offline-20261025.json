@@ -1,0 +1,4550 @@
+{
+  "note": "Lịch dự kiến từ danh sách đã gửi; lệnh preview sẽ đối chiếu DB thật",
+  "total": 568,
+  "shows": [
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-10-26T02:00:00.000Z",
+      "endAt": "2026-10-26T03:41:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-10-26T04:01:00.000Z",
+      "endAt": "2026-10-26T05:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-10-26T05:57:00.000Z",
+      "endAt": "2026-10-26T08:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-10-26T08:21:00.000Z",
+      "endAt": "2026-10-26T11:24:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-10-26T11:44:00.000Z",
+      "endAt": "2026-10-26T13:04:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-10-26T13:24:00.000Z",
+      "endAt": "2026-10-26T15:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-10-26T02:00:00.000Z",
+      "endAt": "2026-10-26T04:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-10-26T04:27:00.000Z",
+      "endAt": "2026-10-26T06:13:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-10-26T06:33:00.000Z",
+      "endAt": "2026-10-26T08:12:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-10-26T08:32:00.000Z",
+      "endAt": "2026-10-26T10:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-10-26T11:10:00.000Z",
+      "endAt": "2026-10-26T12:39:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-10-26T12:59:00.000Z",
+      "endAt": "2026-10-26T14:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-10-26T02:00:00.000Z",
+      "endAt": "2026-10-26T04:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-10-26T04:22:00.000Z",
+      "endAt": "2026-10-26T05:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-10-26T06:13:00.000Z",
+      "endAt": "2026-10-26T07:46:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-10-26T08:06:00.000Z",
+      "endAt": "2026-10-26T09:44:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-10-26T10:04:00.000Z",
+      "endAt": "2026-10-26T11:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-10-26T11:40:00.000Z",
+      "endAt": "2026-10-26T13:39:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-10-26T13:59:00.000Z",
+      "endAt": "2026-10-26T15:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-10-27T02:00:00.000Z",
+      "endAt": "2026-10-27T03:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-10-27T03:40:00.000Z",
+      "endAt": "2026-10-27T05:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-10-27T05:21:00.000Z",
+      "endAt": "2026-10-27T08:14:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-10-27T08:34:00.000Z",
+      "endAt": "2026-10-27T10:49:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-10-27T11:09:00.000Z",
+      "endAt": "2026-10-27T12:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-10-27T13:10:00.000Z",
+      "endAt": "2026-10-27T15:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-10-27T02:00:00.000Z",
+      "endAt": "2026-10-27T03:34:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-10-27T03:54:00.000Z",
+      "endAt": "2026-10-27T05:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-10-27T05:55:00.000Z",
+      "endAt": "2026-10-27T07:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-10-27T07:51:00.000Z",
+      "endAt": "2026-10-27T09:55:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-10-27T10:15:00.000Z",
+      "endAt": "2026-10-27T13:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-10-27T13:38:00.000Z",
+      "endAt": "2026-10-27T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-10-27T02:00:00.000Z",
+      "endAt": "2026-10-27T04:24:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-10-27T04:44:00.000Z",
+      "endAt": "2026-10-27T06:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-10-27T07:11:00.000Z",
+      "endAt": "2026-10-27T08:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-10-27T09:17:00.000Z",
+      "endAt": "2026-10-27T10:56:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-10-27T11:16:00.000Z",
+      "endAt": "2026-10-27T13:34:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-10-27T13:54:00.000Z",
+      "endAt": "2026-10-27T15:23:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-10-28T02:00:00.000Z",
+      "endAt": "2026-10-28T03:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-10-28T04:11:00.000Z",
+      "endAt": "2026-10-28T06:13:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-10-28T06:33:00.000Z",
+      "endAt": "2026-10-28T08:04:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-10-28T08:24:00.000Z",
+      "endAt": "2026-10-28T09:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-10-28T10:17:00.000Z",
+      "endAt": "2026-10-28T11:55:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-10-28T12:15:00.000Z",
+      "endAt": "2026-10-28T13:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-10-28T13:51:00.000Z",
+      "endAt": "2026-10-28T15:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-10-28T02:00:00.000Z",
+      "endAt": "2026-10-28T03:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-10-28T04:11:00.000Z",
+      "endAt": "2026-10-28T05:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-10-28T05:51:00.000Z",
+      "endAt": "2026-10-28T07:12:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-10-28T07:32:00.000Z",
+      "endAt": "2026-10-28T10:25:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-10-28T10:45:00.000Z",
+      "endAt": "2026-10-28T13:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-10-28T13:20:00.000Z",
+      "endAt": "2026-10-28T15:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-10-28T02:00:00.000Z",
+      "endAt": "2026-10-28T03:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-10-28T04:17:00.000Z",
+      "endAt": "2026-10-28T05:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-10-28T06:11:00.000Z",
+      "endAt": "2026-10-28T07:52:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-10-28T08:12:00.000Z",
+      "endAt": "2026-10-28T09:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-10-28T10:08:00.000Z",
+      "endAt": "2026-10-28T12:12:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-10-28T12:32:00.000Z",
+      "endAt": "2026-10-28T15:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-10-29T02:00:00.000Z",
+      "endAt": "2026-10-29T03:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-10-29T03:40:00.000Z",
+      "endAt": "2026-10-29T06:04:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-10-29T06:24:00.000Z",
+      "endAt": "2026-10-29T08:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-10-29T08:51:00.000Z",
+      "endAt": "2026-10-29T10:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-10-29T10:57:00.000Z",
+      "endAt": "2026-10-29T12:36:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-10-29T12:56:00.000Z",
+      "endAt": "2026-10-29T15:14:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-10-29T02:00:00.000Z",
+      "endAt": "2026-10-29T03:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-10-29T03:49:00.000Z",
+      "endAt": "2026-10-29T05:40:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-10-29T06:00:00.000Z",
+      "endAt": "2026-10-29T08:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-10-29T08:22:00.000Z",
+      "endAt": "2026-10-29T09:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-10-29T10:13:00.000Z",
+      "endAt": "2026-10-29T11:46:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-10-29T12:06:00.000Z",
+      "endAt": "2026-10-29T13:44:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-10-29T14:04:00.000Z",
+      "endAt": "2026-10-29T15:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-10-29T02:00:00.000Z",
+      "endAt": "2026-10-29T03:59:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-10-29T04:19:00.000Z",
+      "endAt": "2026-10-29T06:10:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-10-29T06:30:00.000Z",
+      "endAt": "2026-10-29T07:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-10-29T08:10:00.000Z",
+      "endAt": "2026-10-29T09:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-10-29T09:51:00.000Z",
+      "endAt": "2026-10-29T12:44:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-10-29T13:04:00.000Z",
+      "endAt": "2026-10-29T15:19:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-10-30T02:00:00.000Z",
+      "endAt": "2026-10-30T04:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-10-30T04:22:00.000Z",
+      "endAt": "2026-10-30T06:10:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-10-30T06:30:00.000Z",
+      "endAt": "2026-10-30T07:59:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-10-30T08:19:00.000Z",
+      "endAt": "2026-10-30T09:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-10-30T10:17:00.000Z",
+      "endAt": "2026-10-30T12:19:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-10-30T12:39:00.000Z",
+      "endAt": "2026-10-30T14:27:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-10-30T02:00:00.000Z",
+      "endAt": "2026-10-30T03:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-10-30T03:49:00.000Z",
+      "endAt": "2026-10-30T05:27:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-10-30T05:47:00.000Z",
+      "endAt": "2026-10-30T07:49:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-10-30T08:09:00.000Z",
+      "endAt": "2026-10-30T09:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-10-30T10:17:00.000Z",
+      "endAt": "2026-10-30T11:46:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-10-30T12:06:00.000Z",
+      "endAt": "2026-10-30T13:44:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-10-30T14:04:00.000Z",
+      "endAt": "2026-10-30T15:45:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-10-30T02:00:00.000Z",
+      "endAt": "2026-10-30T03:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-10-30T04:17:00.000Z",
+      "endAt": "2026-10-30T05:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-10-30T06:11:00.000Z",
+      "endAt": "2026-10-30T07:52:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-10-30T08:12:00.000Z",
+      "endAt": "2026-10-30T09:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-10-30T10:08:00.000Z",
+      "endAt": "2026-10-30T12:12:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-10-30T12:32:00.000Z",
+      "endAt": "2026-10-30T15:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-10-31T02:00:00.000Z",
+      "endAt": "2026-10-31T03:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-10-31T03:40:00.000Z",
+      "endAt": "2026-10-31T06:04:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-10-31T06:24:00.000Z",
+      "endAt": "2026-10-31T08:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-10-31T08:51:00.000Z",
+      "endAt": "2026-10-31T10:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-10-31T10:57:00.000Z",
+      "endAt": "2026-10-31T12:59:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-10-31T13:19:00.000Z",
+      "endAt": "2026-10-31T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-10-31T02:00:00.000Z",
+      "endAt": "2026-10-31T04:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-10-31T04:38:00.000Z",
+      "endAt": "2026-10-31T06:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-10-31T06:46:00.000Z",
+      "endAt": "2026-10-31T08:15:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-10-31T08:35:00.000Z",
+      "endAt": "2026-10-31T10:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-10-31T10:46:00.000Z",
+      "endAt": "2026-10-31T12:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-10-31T13:08:00.000Z",
+      "endAt": "2026-10-31T14:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-10-31T02:00:00.000Z",
+      "endAt": "2026-10-31T03:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-10-31T03:51:00.000Z",
+      "endAt": "2026-10-31T05:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-10-31T05:49:00.000Z",
+      "endAt": "2026-10-31T07:22:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-10-31T07:42:00.000Z",
+      "endAt": "2026-10-31T09:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-10-31T09:40:00.000Z",
+      "endAt": "2026-10-31T10:56:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-10-31T11:16:00.000Z",
+      "endAt": "2026-10-31T13:15:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-10-31T13:35:00.000Z",
+      "endAt": "2026-10-31T15:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-01T02:00:00.000Z",
+      "endAt": "2026-11-01T03:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-01T03:40:00.000Z",
+      "endAt": "2026-11-01T05:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-01T05:21:00.000Z",
+      "endAt": "2026-11-01T08:14:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-01T08:34:00.000Z",
+      "endAt": "2026-11-01T10:49:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-01T11:09:00.000Z",
+      "endAt": "2026-11-01T12:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-01T13:10:00.000Z",
+      "endAt": "2026-11-01T15:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-01T02:00:00.000Z",
+      "endAt": "2026-11-01T03:34:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-01T03:54:00.000Z",
+      "endAt": "2026-11-01T05:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-01T05:55:00.000Z",
+      "endAt": "2026-11-01T07:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-01T07:51:00.000Z",
+      "endAt": "2026-11-01T09:55:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-01T10:15:00.000Z",
+      "endAt": "2026-11-01T13:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-01T13:38:00.000Z",
+      "endAt": "2026-11-01T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-01T02:00:00.000Z",
+      "endAt": "2026-11-01T04:24:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-01T04:44:00.000Z",
+      "endAt": "2026-11-01T06:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-01T07:11:00.000Z",
+      "endAt": "2026-11-01T08:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-01T09:17:00.000Z",
+      "endAt": "2026-11-01T11:19:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-01T11:39:00.000Z",
+      "endAt": "2026-11-01T13:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-01T13:38:00.000Z",
+      "endAt": "2026-11-01T15:56:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-02T02:00:00.000Z",
+      "endAt": "2026-11-02T03:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-02T04:08:00.000Z",
+      "endAt": "2026-11-02T05:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-02T05:57:00.000Z",
+      "endAt": "2026-11-02T07:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-02T08:08:00.000Z",
+      "endAt": "2026-11-02T10:10:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-02T10:30:00.000Z",
+      "endAt": "2026-11-02T11:59:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-02T12:19:00.000Z",
+      "endAt": "2026-11-02T13:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-02T14:10:00.000Z",
+      "endAt": "2026-11-02T15:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-02T02:00:00.000Z",
+      "endAt": "2026-11-02T03:33:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-02T03:53:00.000Z",
+      "endAt": "2026-11-02T05:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-02T05:51:00.000Z",
+      "endAt": "2026-11-02T07:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-02T07:27:00.000Z",
+      "endAt": "2026-11-02T09:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-02T09:46:00.000Z",
+      "endAt": "2026-11-02T11:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-02T11:57:00.000Z",
+      "endAt": "2026-11-02T13:17:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-02T13:37:00.000Z",
+      "endAt": "2026-11-02T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-02T02:00:00.000Z",
+      "endAt": "2026-11-02T04:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-02T05:13:00.000Z",
+      "endAt": "2026-11-02T07:28:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-02T07:48:00.000Z",
+      "endAt": "2026-11-02T09:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-02T09:49:00.000Z",
+      "endAt": "2026-11-02T11:46:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-02T12:06:00.000Z",
+      "endAt": "2026-11-02T13:40:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-02T14:00:00.000Z",
+      "endAt": "2026-11-02T15:41:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-03T02:00:00.000Z",
+      "endAt": "2026-11-03T03:36:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-03T03:56:00.000Z",
+      "endAt": "2026-11-03T06:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-03T06:20:00.000Z",
+      "endAt": "2026-11-03T09:23:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-03T09:43:00.000Z",
+      "endAt": "2026-11-03T11:03:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-03T11:23:00.000Z",
+      "endAt": "2026-11-03T13:47:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-03T14:07:00.000Z",
+      "endAt": "2026-11-03T15:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-03T02:00:00.000Z",
+      "endAt": "2026-11-03T04:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-03T04:27:00.000Z",
+      "endAt": "2026-11-03T06:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-03T06:49:00.000Z",
+      "endAt": "2026-11-03T08:28:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-03T08:48:00.000Z",
+      "endAt": "2026-11-03T11:06:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-03T11:26:00.000Z",
+      "endAt": "2026-11-03T13:14:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-03T13:34:00.000Z",
+      "endAt": "2026-11-03T15:03:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-03T02:00:00.000Z",
+      "endAt": "2026-11-03T03:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-03T04:11:00.000Z",
+      "endAt": "2026-11-03T06:13:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-03T06:33:00.000Z",
+      "endAt": "2026-11-03T08:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-03T08:22:00.000Z",
+      "endAt": "2026-11-03T09:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-03T10:13:00.000Z",
+      "endAt": "2026-11-03T11:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-03T12:11:00.000Z",
+      "endAt": "2026-11-03T13:44:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-03T14:04:00.000Z",
+      "endAt": "2026-11-03T15:42:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-04T02:00:00.000Z",
+      "endAt": "2026-11-04T03:16:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-04T03:36:00.000Z",
+      "endAt": "2026-11-04T05:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-04T05:55:00.000Z",
+      "endAt": "2026-11-04T07:46:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-04T08:06:00.000Z",
+      "endAt": "2026-11-04T09:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-04T09:46:00.000Z",
+      "endAt": "2026-11-04T11:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-04T11:27:00.000Z",
+      "endAt": "2026-11-04T14:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-04T14:40:00.000Z",
+      "endAt": "2026-11-04T16:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-04T02:00:00.000Z",
+      "endAt": "2026-11-04T04:15:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-04T04:35:00.000Z",
+      "endAt": "2026-11-04T06:16:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-04T06:36:00.000Z",
+      "endAt": "2026-11-04T08:33:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-04T08:53:00.000Z",
+      "endAt": "2026-11-04T10:27:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-04T10:47:00.000Z",
+      "endAt": "2026-11-04T12:28:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-04T12:48:00.000Z",
+      "endAt": "2026-11-04T14:24:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-04T14:44:00.000Z",
+      "endAt": "2026-11-04T16:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-04T02:00:00.000Z",
+      "endAt": "2026-11-04T04:04:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-04T04:24:00.000Z",
+      "endAt": "2026-11-04T07:27:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-04T07:47:00.000Z",
+      "endAt": "2026-11-04T10:11:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-04T10:31:00.000Z",
+      "endAt": "2026-11-04T12:38:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-04T12:58:00.000Z",
+      "endAt": "2026-11-04T14:44:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-05T02:00:00.000Z",
+      "endAt": "2026-11-05T04:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-05T04:22:00.000Z",
+      "endAt": "2026-11-05T06:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-05T06:21:00.000Z",
+      "endAt": "2026-11-05T08:39:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-05T08:59:00.000Z",
+      "endAt": "2026-11-05T10:47:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-05T11:07:00.000Z",
+      "endAt": "2026-11-05T12:36:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-05T12:56:00.000Z",
+      "endAt": "2026-11-05T14:47:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-05T02:00:00.000Z",
+      "endAt": "2026-11-05T04:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-05T04:22:00.000Z",
+      "endAt": "2026-11-05T05:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-05T06:11:00.000Z",
+      "endAt": "2026-11-05T07:42:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-05T08:02:00.000Z",
+      "endAt": "2026-11-05T09:40:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-05T10:00:00.000Z",
+      "endAt": "2026-11-05T11:33:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-05T11:53:00.000Z",
+      "endAt": "2026-11-05T13:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-05T13:51:00.000Z",
+      "endAt": "2026-11-05T15:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-05T02:00:00.000Z",
+      "endAt": "2026-11-05T03:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-05T04:11:00.000Z",
+      "endAt": "2026-11-05T05:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-05T05:51:00.000Z",
+      "endAt": "2026-11-05T07:12:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-05T07:32:00.000Z",
+      "endAt": "2026-11-05T10:25:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-05T10:45:00.000Z",
+      "endAt": "2026-11-05T13:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-05T13:20:00.000Z",
+      "endAt": "2026-11-05T15:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-06T02:00:00.000Z",
+      "endAt": "2026-11-06T03:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-06T04:17:00.000Z",
+      "endAt": "2026-11-06T05:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-06T06:11:00.000Z",
+      "endAt": "2026-11-06T07:52:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-06T08:12:00.000Z",
+      "endAt": "2026-11-06T09:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-06T10:08:00.000Z",
+      "endAt": "2026-11-06T12:12:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-06T12:32:00.000Z",
+      "endAt": "2026-11-06T15:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-06T02:00:00.000Z",
+      "endAt": "2026-11-06T03:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-06T03:40:00.000Z",
+      "endAt": "2026-11-06T06:04:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-06T06:24:00.000Z",
+      "endAt": "2026-11-06T08:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-06T08:51:00.000Z",
+      "endAt": "2026-11-06T10:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-06T10:57:00.000Z",
+      "endAt": "2026-11-06T12:59:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-06T13:19:00.000Z",
+      "endAt": "2026-11-06T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-06T02:00:00.000Z",
+      "endAt": "2026-11-06T04:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-06T04:38:00.000Z",
+      "endAt": "2026-11-06T06:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-06T06:46:00.000Z",
+      "endAt": "2026-11-06T08:15:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-06T08:35:00.000Z",
+      "endAt": "2026-11-06T10:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-06T10:46:00.000Z",
+      "endAt": "2026-11-06T12:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-06T13:08:00.000Z",
+      "endAt": "2026-11-06T14:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-07T02:00:00.000Z",
+      "endAt": "2026-11-07T03:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-07T03:51:00.000Z",
+      "endAt": "2026-11-07T05:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-07T05:49:00.000Z",
+      "endAt": "2026-11-07T07:22:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-07T07:42:00.000Z",
+      "endAt": "2026-11-07T09:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-07T09:40:00.000Z",
+      "endAt": "2026-11-07T10:56:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-07T11:16:00.000Z",
+      "endAt": "2026-11-07T13:15:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-07T13:35:00.000Z",
+      "endAt": "2026-11-07T15:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-07T02:00:00.000Z",
+      "endAt": "2026-11-07T03:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-07T03:40:00.000Z",
+      "endAt": "2026-11-07T05:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-07T05:21:00.000Z",
+      "endAt": "2026-11-07T08:14:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-07T08:34:00.000Z",
+      "endAt": "2026-11-07T10:49:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-07T11:09:00.000Z",
+      "endAt": "2026-11-07T12:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-07T13:10:00.000Z",
+      "endAt": "2026-11-07T15:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-07T02:00:00.000Z",
+      "endAt": "2026-11-07T03:34:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-07T03:54:00.000Z",
+      "endAt": "2026-11-07T05:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-07T05:55:00.000Z",
+      "endAt": "2026-11-07T07:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-07T07:51:00.000Z",
+      "endAt": "2026-11-07T09:55:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-07T10:15:00.000Z",
+      "endAt": "2026-11-07T13:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-07T13:38:00.000Z",
+      "endAt": "2026-11-07T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-08T02:00:00.000Z",
+      "endAt": "2026-11-08T04:24:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-08T04:44:00.000Z",
+      "endAt": "2026-11-08T06:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-08T07:11:00.000Z",
+      "endAt": "2026-11-08T08:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-08T09:17:00.000Z",
+      "endAt": "2026-11-08T11:19:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-08T11:39:00.000Z",
+      "endAt": "2026-11-08T13:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-08T13:38:00.000Z",
+      "endAt": "2026-11-08T15:56:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-08T02:00:00.000Z",
+      "endAt": "2026-11-08T03:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-08T04:08:00.000Z",
+      "endAt": "2026-11-08T05:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-08T05:57:00.000Z",
+      "endAt": "2026-11-08T07:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-08T08:08:00.000Z",
+      "endAt": "2026-11-08T10:10:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-08T10:30:00.000Z",
+      "endAt": "2026-11-08T11:59:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-08T12:19:00.000Z",
+      "endAt": "2026-11-08T13:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-08T14:10:00.000Z",
+      "endAt": "2026-11-08T15:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-08T02:00:00.000Z",
+      "endAt": "2026-11-08T03:33:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-08T03:53:00.000Z",
+      "endAt": "2026-11-08T05:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-08T05:51:00.000Z",
+      "endAt": "2026-11-08T07:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-08T07:27:00.000Z",
+      "endAt": "2026-11-08T09:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-08T09:46:00.000Z",
+      "endAt": "2026-11-08T11:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-08T11:57:00.000Z",
+      "endAt": "2026-11-08T13:17:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-08T13:37:00.000Z",
+      "endAt": "2026-11-08T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-09T02:00:00.000Z",
+      "endAt": "2026-11-09T04:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-09T05:13:00.000Z",
+      "endAt": "2026-11-09T07:28:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-09T07:48:00.000Z",
+      "endAt": "2026-11-09T09:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-09T09:49:00.000Z",
+      "endAt": "2026-11-09T11:46:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-09T12:06:00.000Z",
+      "endAt": "2026-11-09T13:40:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-09T14:00:00.000Z",
+      "endAt": "2026-11-09T15:41:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-09T02:00:00.000Z",
+      "endAt": "2026-11-09T03:36:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-09T03:56:00.000Z",
+      "endAt": "2026-11-09T06:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-09T06:20:00.000Z",
+      "endAt": "2026-11-09T09:23:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-09T09:43:00.000Z",
+      "endAt": "2026-11-09T11:03:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-09T11:23:00.000Z",
+      "endAt": "2026-11-09T13:47:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-09T14:07:00.000Z",
+      "endAt": "2026-11-09T15:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-09T02:00:00.000Z",
+      "endAt": "2026-11-09T04:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-09T04:27:00.000Z",
+      "endAt": "2026-11-09T06:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-09T06:49:00.000Z",
+      "endAt": "2026-11-09T08:28:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-09T08:48:00.000Z",
+      "endAt": "2026-11-09T11:06:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-09T11:26:00.000Z",
+      "endAt": "2026-11-09T13:14:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-09T13:34:00.000Z",
+      "endAt": "2026-11-09T15:03:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-10T02:00:00.000Z",
+      "endAt": "2026-11-10T03:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-10T04:11:00.000Z",
+      "endAt": "2026-11-10T06:13:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-10T06:33:00.000Z",
+      "endAt": "2026-11-10T08:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-10T08:22:00.000Z",
+      "endAt": "2026-11-10T09:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-10T10:13:00.000Z",
+      "endAt": "2026-11-10T11:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-10T12:11:00.000Z",
+      "endAt": "2026-11-10T13:44:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-10T14:04:00.000Z",
+      "endAt": "2026-11-10T15:42:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-10T02:00:00.000Z",
+      "endAt": "2026-11-10T03:16:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-10T03:36:00.000Z",
+      "endAt": "2026-11-10T05:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-10T05:55:00.000Z",
+      "endAt": "2026-11-10T07:46:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-10T08:06:00.000Z",
+      "endAt": "2026-11-10T09:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-10T09:46:00.000Z",
+      "endAt": "2026-11-10T11:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-10T11:27:00.000Z",
+      "endAt": "2026-11-10T14:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-10T14:40:00.000Z",
+      "endAt": "2026-11-10T16:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-10T02:00:00.000Z",
+      "endAt": "2026-11-10T04:15:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-10T04:35:00.000Z",
+      "endAt": "2026-11-10T06:16:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-10T06:36:00.000Z",
+      "endAt": "2026-11-10T08:33:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-10T08:53:00.000Z",
+      "endAt": "2026-11-10T10:27:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-10T10:47:00.000Z",
+      "endAt": "2026-11-10T12:28:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-10T12:48:00.000Z",
+      "endAt": "2026-11-10T14:24:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-10T14:44:00.000Z",
+      "endAt": "2026-11-10T16:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-11T02:00:00.000Z",
+      "endAt": "2026-11-11T04:04:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-11T04:24:00.000Z",
+      "endAt": "2026-11-11T07:27:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-11T07:47:00.000Z",
+      "endAt": "2026-11-11T10:11:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-11T10:31:00.000Z",
+      "endAt": "2026-11-11T12:38:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-11T12:58:00.000Z",
+      "endAt": "2026-11-11T14:44:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-11T02:00:00.000Z",
+      "endAt": "2026-11-11T04:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-11T04:22:00.000Z",
+      "endAt": "2026-11-11T06:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-11T06:21:00.000Z",
+      "endAt": "2026-11-11T08:39:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-11T08:59:00.000Z",
+      "endAt": "2026-11-11T10:47:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-11T11:07:00.000Z",
+      "endAt": "2026-11-11T12:36:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-11T12:56:00.000Z",
+      "endAt": "2026-11-11T14:47:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-11T02:00:00.000Z",
+      "endAt": "2026-11-11T04:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-11T04:22:00.000Z",
+      "endAt": "2026-11-11T05:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-11T06:11:00.000Z",
+      "endAt": "2026-11-11T07:42:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-11T08:02:00.000Z",
+      "endAt": "2026-11-11T09:40:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-11T10:00:00.000Z",
+      "endAt": "2026-11-11T11:33:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-11T11:53:00.000Z",
+      "endAt": "2026-11-11T13:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-11T13:51:00.000Z",
+      "endAt": "2026-11-11T15:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-12T02:00:00.000Z",
+      "endAt": "2026-11-12T03:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-12T04:11:00.000Z",
+      "endAt": "2026-11-12T05:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-12T05:51:00.000Z",
+      "endAt": "2026-11-12T07:12:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-12T07:32:00.000Z",
+      "endAt": "2026-11-12T10:25:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-12T10:45:00.000Z",
+      "endAt": "2026-11-12T13:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-12T13:20:00.000Z",
+      "endAt": "2026-11-12T15:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-12T02:00:00.000Z",
+      "endAt": "2026-11-12T03:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-12T04:17:00.000Z",
+      "endAt": "2026-11-12T05:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-12T06:11:00.000Z",
+      "endAt": "2026-11-12T07:52:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-12T08:12:00.000Z",
+      "endAt": "2026-11-12T09:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-12T10:08:00.000Z",
+      "endAt": "2026-11-12T12:12:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-12T12:32:00.000Z",
+      "endAt": "2026-11-12T15:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-12T02:00:00.000Z",
+      "endAt": "2026-11-12T03:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-12T03:40:00.000Z",
+      "endAt": "2026-11-12T06:04:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-12T06:24:00.000Z",
+      "endAt": "2026-11-12T08:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-12T08:51:00.000Z",
+      "endAt": "2026-11-12T10:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-12T10:57:00.000Z",
+      "endAt": "2026-11-12T12:59:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-12T13:19:00.000Z",
+      "endAt": "2026-11-12T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-13T02:00:00.000Z",
+      "endAt": "2026-11-13T04:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-13T04:38:00.000Z",
+      "endAt": "2026-11-13T06:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-13T06:46:00.000Z",
+      "endAt": "2026-11-13T08:15:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-13T08:35:00.000Z",
+      "endAt": "2026-11-13T10:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-13T10:46:00.000Z",
+      "endAt": "2026-11-13T12:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-13T13:08:00.000Z",
+      "endAt": "2026-11-13T14:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-13T02:00:00.000Z",
+      "endAt": "2026-11-13T03:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-13T03:51:00.000Z",
+      "endAt": "2026-11-13T05:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-13T05:49:00.000Z",
+      "endAt": "2026-11-13T07:22:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-13T07:42:00.000Z",
+      "endAt": "2026-11-13T09:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-13T09:40:00.000Z",
+      "endAt": "2026-11-13T10:56:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-13T11:16:00.000Z",
+      "endAt": "2026-11-13T13:15:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-13T13:35:00.000Z",
+      "endAt": "2026-11-13T15:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-13T02:00:00.000Z",
+      "endAt": "2026-11-13T03:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-13T03:40:00.000Z",
+      "endAt": "2026-11-13T05:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-13T05:21:00.000Z",
+      "endAt": "2026-11-13T08:14:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-13T08:34:00.000Z",
+      "endAt": "2026-11-13T10:49:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-13T11:09:00.000Z",
+      "endAt": "2026-11-13T12:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-13T13:10:00.000Z",
+      "endAt": "2026-11-13T15:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-14T02:00:00.000Z",
+      "endAt": "2026-11-14T03:34:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-14T03:54:00.000Z",
+      "endAt": "2026-11-14T05:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-14T05:55:00.000Z",
+      "endAt": "2026-11-14T07:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-14T07:51:00.000Z",
+      "endAt": "2026-11-14T09:55:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-14T10:15:00.000Z",
+      "endAt": "2026-11-14T13:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-14T13:38:00.000Z",
+      "endAt": "2026-11-14T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-14T02:00:00.000Z",
+      "endAt": "2026-11-14T04:24:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-14T04:44:00.000Z",
+      "endAt": "2026-11-14T06:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-14T07:11:00.000Z",
+      "endAt": "2026-11-14T08:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-14T09:17:00.000Z",
+      "endAt": "2026-11-14T11:19:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-14T11:39:00.000Z",
+      "endAt": "2026-11-14T13:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-14T13:38:00.000Z",
+      "endAt": "2026-11-14T15:56:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-14T02:00:00.000Z",
+      "endAt": "2026-11-14T03:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-14T04:08:00.000Z",
+      "endAt": "2026-11-14T05:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-14T05:57:00.000Z",
+      "endAt": "2026-11-14T07:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-14T08:08:00.000Z",
+      "endAt": "2026-11-14T10:10:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-14T10:30:00.000Z",
+      "endAt": "2026-11-14T11:59:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-14T12:19:00.000Z",
+      "endAt": "2026-11-14T13:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-14T14:10:00.000Z",
+      "endAt": "2026-11-14T15:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-15T02:00:00.000Z",
+      "endAt": "2026-11-15T03:33:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-15T03:53:00.000Z",
+      "endAt": "2026-11-15T05:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-15T05:51:00.000Z",
+      "endAt": "2026-11-15T07:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-15T07:27:00.000Z",
+      "endAt": "2026-11-15T09:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-15T09:46:00.000Z",
+      "endAt": "2026-11-15T11:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-15T11:57:00.000Z",
+      "endAt": "2026-11-15T13:17:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-15T13:37:00.000Z",
+      "endAt": "2026-11-15T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-15T02:00:00.000Z",
+      "endAt": "2026-11-15T04:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-15T05:13:00.000Z",
+      "endAt": "2026-11-15T07:28:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-15T07:48:00.000Z",
+      "endAt": "2026-11-15T09:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-15T09:49:00.000Z",
+      "endAt": "2026-11-15T11:46:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-15T12:06:00.000Z",
+      "endAt": "2026-11-15T13:40:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-15T14:00:00.000Z",
+      "endAt": "2026-11-15T15:41:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-15T02:00:00.000Z",
+      "endAt": "2026-11-15T03:36:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-15T03:56:00.000Z",
+      "endAt": "2026-11-15T06:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-15T06:20:00.000Z",
+      "endAt": "2026-11-15T09:23:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-15T09:43:00.000Z",
+      "endAt": "2026-11-15T11:03:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-15T11:23:00.000Z",
+      "endAt": "2026-11-15T13:47:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-15T14:07:00.000Z",
+      "endAt": "2026-11-15T15:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-16T02:00:00.000Z",
+      "endAt": "2026-11-16T04:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-16T04:27:00.000Z",
+      "endAt": "2026-11-16T06:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-16T06:49:00.000Z",
+      "endAt": "2026-11-16T08:28:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-16T08:48:00.000Z",
+      "endAt": "2026-11-16T11:06:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-16T11:26:00.000Z",
+      "endAt": "2026-11-16T13:14:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-16T13:34:00.000Z",
+      "endAt": "2026-11-16T15:03:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-16T02:00:00.000Z",
+      "endAt": "2026-11-16T03:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-16T04:11:00.000Z",
+      "endAt": "2026-11-16T06:13:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-16T06:33:00.000Z",
+      "endAt": "2026-11-16T08:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-16T08:22:00.000Z",
+      "endAt": "2026-11-16T09:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-16T10:13:00.000Z",
+      "endAt": "2026-11-16T11:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-16T12:11:00.000Z",
+      "endAt": "2026-11-16T13:44:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-16T14:04:00.000Z",
+      "endAt": "2026-11-16T15:42:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-16T02:00:00.000Z",
+      "endAt": "2026-11-16T03:16:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-16T03:36:00.000Z",
+      "endAt": "2026-11-16T05:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-16T05:55:00.000Z",
+      "endAt": "2026-11-16T07:46:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-16T08:06:00.000Z",
+      "endAt": "2026-11-16T09:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-16T09:46:00.000Z",
+      "endAt": "2026-11-16T11:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-16T11:27:00.000Z",
+      "endAt": "2026-11-16T14:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-16T14:40:00.000Z",
+      "endAt": "2026-11-16T16:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-17T02:00:00.000Z",
+      "endAt": "2026-11-17T04:15:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-17T04:35:00.000Z",
+      "endAt": "2026-11-17T06:16:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-17T06:36:00.000Z",
+      "endAt": "2026-11-17T08:33:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-17T08:53:00.000Z",
+      "endAt": "2026-11-17T10:27:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-17T10:47:00.000Z",
+      "endAt": "2026-11-17T12:28:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-17T12:48:00.000Z",
+      "endAt": "2026-11-17T14:24:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-17T14:44:00.000Z",
+      "endAt": "2026-11-17T16:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-17T02:00:00.000Z",
+      "endAt": "2026-11-17T04:04:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-17T04:24:00.000Z",
+      "endAt": "2026-11-17T07:27:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-17T07:47:00.000Z",
+      "endAt": "2026-11-17T10:11:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-17T10:31:00.000Z",
+      "endAt": "2026-11-17T12:38:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-17T12:58:00.000Z",
+      "endAt": "2026-11-17T14:44:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-17T02:00:00.000Z",
+      "endAt": "2026-11-17T04:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-17T04:22:00.000Z",
+      "endAt": "2026-11-17T06:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-17T06:21:00.000Z",
+      "endAt": "2026-11-17T08:39:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-17T08:59:00.000Z",
+      "endAt": "2026-11-17T10:47:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-17T11:07:00.000Z",
+      "endAt": "2026-11-17T12:36:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-17T12:56:00.000Z",
+      "endAt": "2026-11-17T14:47:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-18T02:00:00.000Z",
+      "endAt": "2026-11-18T04:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-18T04:22:00.000Z",
+      "endAt": "2026-11-18T05:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-18T06:11:00.000Z",
+      "endAt": "2026-11-18T07:42:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-18T08:02:00.000Z",
+      "endAt": "2026-11-18T09:40:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-18T10:00:00.000Z",
+      "endAt": "2026-11-18T11:33:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-18T11:53:00.000Z",
+      "endAt": "2026-11-18T13:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-18T13:51:00.000Z",
+      "endAt": "2026-11-18T15:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-18T02:00:00.000Z",
+      "endAt": "2026-11-18T03:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-18T04:11:00.000Z",
+      "endAt": "2026-11-18T05:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-18T05:51:00.000Z",
+      "endAt": "2026-11-18T07:12:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-18T07:32:00.000Z",
+      "endAt": "2026-11-18T10:25:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-18T10:45:00.000Z",
+      "endAt": "2026-11-18T13:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-18T13:20:00.000Z",
+      "endAt": "2026-11-18T15:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-18T02:00:00.000Z",
+      "endAt": "2026-11-18T03:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-18T04:17:00.000Z",
+      "endAt": "2026-11-18T05:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-18T06:11:00.000Z",
+      "endAt": "2026-11-18T07:52:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-18T08:12:00.000Z",
+      "endAt": "2026-11-18T09:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-18T10:08:00.000Z",
+      "endAt": "2026-11-18T12:12:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-18T12:32:00.000Z",
+      "endAt": "2026-11-18T15:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-19T02:00:00.000Z",
+      "endAt": "2026-11-19T03:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-19T03:40:00.000Z",
+      "endAt": "2026-11-19T06:04:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-19T06:24:00.000Z",
+      "endAt": "2026-11-19T08:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-19T08:51:00.000Z",
+      "endAt": "2026-11-19T10:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-19T10:57:00.000Z",
+      "endAt": "2026-11-19T12:59:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-19T13:19:00.000Z",
+      "endAt": "2026-11-19T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-19T02:00:00.000Z",
+      "endAt": "2026-11-19T04:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-19T04:38:00.000Z",
+      "endAt": "2026-11-19T06:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-19T06:46:00.000Z",
+      "endAt": "2026-11-19T08:15:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-19T08:35:00.000Z",
+      "endAt": "2026-11-19T10:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-19T10:46:00.000Z",
+      "endAt": "2026-11-19T12:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-19T13:08:00.000Z",
+      "endAt": "2026-11-19T14:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-19T02:00:00.000Z",
+      "endAt": "2026-11-19T03:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-19T03:51:00.000Z",
+      "endAt": "2026-11-19T05:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-19T05:49:00.000Z",
+      "endAt": "2026-11-19T07:22:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-19T07:42:00.000Z",
+      "endAt": "2026-11-19T09:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-19T09:40:00.000Z",
+      "endAt": "2026-11-19T10:56:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-19T11:16:00.000Z",
+      "endAt": "2026-11-19T13:15:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-19T13:35:00.000Z",
+      "endAt": "2026-11-19T15:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-20T02:00:00.000Z",
+      "endAt": "2026-11-20T03:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-20T03:40:00.000Z",
+      "endAt": "2026-11-20T05:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-20T05:21:00.000Z",
+      "endAt": "2026-11-20T08:14:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-20T08:34:00.000Z",
+      "endAt": "2026-11-20T10:49:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-20T11:09:00.000Z",
+      "endAt": "2026-11-20T12:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-20T13:10:00.000Z",
+      "endAt": "2026-11-20T15:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-20T02:00:00.000Z",
+      "endAt": "2026-11-20T03:34:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-20T03:54:00.000Z",
+      "endAt": "2026-11-20T05:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-20T05:55:00.000Z",
+      "endAt": "2026-11-20T07:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-20T07:51:00.000Z",
+      "endAt": "2026-11-20T09:55:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-20T10:15:00.000Z",
+      "endAt": "2026-11-20T13:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-20T13:38:00.000Z",
+      "endAt": "2026-11-20T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-20T02:00:00.000Z",
+      "endAt": "2026-11-20T04:24:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-20T04:44:00.000Z",
+      "endAt": "2026-11-20T06:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-20T07:11:00.000Z",
+      "endAt": "2026-11-20T08:57:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-20T09:17:00.000Z",
+      "endAt": "2026-11-20T11:19:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-20T11:39:00.000Z",
+      "endAt": "2026-11-20T13:18:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-20T13:38:00.000Z",
+      "endAt": "2026-11-20T15:56:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-21T02:00:00.000Z",
+      "endAt": "2026-11-21T03:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-21T04:08:00.000Z",
+      "endAt": "2026-11-21T05:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-21T05:57:00.000Z",
+      "endAt": "2026-11-21T07:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-21T08:08:00.000Z",
+      "endAt": "2026-11-21T10:10:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-21T10:30:00.000Z",
+      "endAt": "2026-11-21T11:59:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-21T12:19:00.000Z",
+      "endAt": "2026-11-21T13:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-21T14:10:00.000Z",
+      "endAt": "2026-11-21T15:48:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-21T02:00:00.000Z",
+      "endAt": "2026-11-21T03:33:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-21T03:53:00.000Z",
+      "endAt": "2026-11-21T05:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-21T05:51:00.000Z",
+      "endAt": "2026-11-21T07:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-21T07:27:00.000Z",
+      "endAt": "2026-11-21T09:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-21T09:46:00.000Z",
+      "endAt": "2026-11-21T11:37:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-21T11:57:00.000Z",
+      "endAt": "2026-11-21T13:17:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-21T13:37:00.000Z",
+      "endAt": "2026-11-21T14:58:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-21T02:00:00.000Z",
+      "endAt": "2026-11-21T04:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-21T05:13:00.000Z",
+      "endAt": "2026-11-21T07:28:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-21T07:48:00.000Z",
+      "endAt": "2026-11-21T09:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-21T09:49:00.000Z",
+      "endAt": "2026-11-21T11:46:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-21T12:06:00.000Z",
+      "endAt": "2026-11-21T13:40:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-21T14:00:00.000Z",
+      "endAt": "2026-11-21T15:41:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-22T02:00:00.000Z",
+      "endAt": "2026-11-22T03:36:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-22T03:56:00.000Z",
+      "endAt": "2026-11-22T06:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-22T06:20:00.000Z",
+      "endAt": "2026-11-22T09:23:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-22T09:43:00.000Z",
+      "endAt": "2026-11-22T11:03:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-22T11:23:00.000Z",
+      "endAt": "2026-11-22T13:47:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-22T14:07:00.000Z",
+      "endAt": "2026-11-22T15:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-22T02:00:00.000Z",
+      "endAt": "2026-11-22T04:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-22T04:27:00.000Z",
+      "endAt": "2026-11-22T06:29:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-22T06:49:00.000Z",
+      "endAt": "2026-11-22T08:28:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-22T08:48:00.000Z",
+      "endAt": "2026-11-22T11:06:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-22T11:26:00.000Z",
+      "endAt": "2026-11-22T13:14:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-22T13:34:00.000Z",
+      "endAt": "2026-11-22T15:03:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-22T02:00:00.000Z",
+      "endAt": "2026-11-22T03:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-22T04:11:00.000Z",
+      "endAt": "2026-11-22T06:13:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-22T06:33:00.000Z",
+      "endAt": "2026-11-22T08:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-22T08:22:00.000Z",
+      "endAt": "2026-11-22T09:53:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-22T10:13:00.000Z",
+      "endAt": "2026-11-22T11:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-22T12:11:00.000Z",
+      "endAt": "2026-11-22T13:44:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-22T14:04:00.000Z",
+      "endAt": "2026-11-22T15:42:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-23T02:00:00.000Z",
+      "endAt": "2026-11-23T03:16:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-23T03:36:00.000Z",
+      "endAt": "2026-11-23T05:35:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-23T05:55:00.000Z",
+      "endAt": "2026-11-23T07:46:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-23T08:06:00.000Z",
+      "endAt": "2026-11-23T09:26:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-23T09:46:00.000Z",
+      "endAt": "2026-11-23T11:07:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-23T11:27:00.000Z",
+      "endAt": "2026-11-23T14:20:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "BAMBI: LÃNH ĐỊA SĂN MỒI",
+      "startAt": "2026-11-23T14:40:00.000Z",
+      "endAt": "2026-11-23T16:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-23T02:00:00.000Z",
+      "endAt": "2026-11-23T04:15:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-23T04:35:00.000Z",
+      "endAt": "2026-11-23T06:16:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "VERITY: BÍ MẬT BỊ CHÔN VÙI",
+      "startAt": "2026-11-23T06:36:00.000Z",
+      "endAt": "2026-11-23T08:33:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "VÙNG ĐẤT QUỶ DỮ",
+      "startAt": "2026-11-23T08:53:00.000Z",
+      "endAt": "2026-11-23T10:27:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "[RERUN] PHIM SHIN – CẬU BÉ BÚT CHÌ: KỲ KỲ QUÁI QUÁI! KỲ NGHỈ YÊU QUÁI CỦA TỚ",
+      "startAt": "2026-11-23T10:47:00.000Z",
+      "endAt": "2026-11-23T12:28:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "ÁN MẠNG KARAOKE",
+      "startAt": "2026-11-23T12:48:00.000Z",
+      "endAt": "2026-11-23T14:24:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHÁO HOA LÚC BÌNH MINH",
+      "startAt": "2026-11-23T14:44:00.000Z",
+      "endAt": "2026-11-23T16:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "ÁN MẠNG XÉM HOÀN HẢO",
+      "startAt": "2026-11-23T02:00:00.000Z",
+      "endAt": "2026-11-23T04:04:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "AVENGERS: HỒI KẾT - PHIÊN BẢN ĐẶC BIỆT (CHIẾU LẠI)",
+      "startAt": "2026-11-23T04:24:00.000Z",
+      "endAt": "2026-11-23T07:27:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BÁT TIÊN ! TRUY TÌM LƯU LY ĐĂNG",
+      "startAt": "2026-11-23T07:47:00.000Z",
+      "endAt": "2026-11-23T10:11:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "BLUE LOCK: CUỘC CHIẾN CỦA NHỮNG TIỀN ĐẠO",
+      "startAt": "2026-11-23T10:31:00.000Z",
+      "endAt": "2026-11-23T12:38:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "CÁ VOI NUỐT CHỬNG",
+      "startAt": "2026-11-23T12:58:00.000Z",
+      "endAt": "2026-11-23T14:44:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHỊ CHỊ EM EM 3",
+      "startAt": "2026-11-24T02:00:00.000Z",
+      "endAt": "2026-11-24T04:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHIIKAWA: BÍ MẬT ĐẢO NGƯỜI CÁ",
+      "startAt": "2026-11-24T04:22:00.000Z",
+      "endAt": "2026-11-24T06:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CHUYỆN CÔNG CHÚA KAGUYA",
+      "startAt": "2026-11-24T06:21:00.000Z",
+      "endAt": "2026-11-24T08:39:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CLAYFACE",
+      "startAt": "2026-11-24T08:59:00.000Z",
+      "endAt": "2026-11-24T10:47:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "CÕI NGUYỀN",
+      "startAt": "2026-11-24T11:07:00.000Z",
+      "endAt": "2026-11-24T12:36:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 01 - 2D",
+      "movieTitle": "GIA ĐÌNH x ĐIỆP VIÊN MÃ: TRẮNG (CHIẾU LẠI)",
+      "startAt": "2026-11-24T12:56:00.000Z",
+      "endAt": "2026-11-24T14:47:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "KHÓA CHẶT CỬA NÀO SUZUME",
+      "startAt": "2026-11-24T02:00:00.000Z",
+      "endAt": "2026-11-24T04:02:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "MỘ ĐOM ĐÓM (CHIẾU LẠI)",
+      "startAt": "2026-11-24T04:22:00.000Z",
+      "endAt": "2026-11-24T05:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỌN ĐỒI HOA HỒNG ANH",
+      "startAt": "2026-11-24T06:11:00.000Z",
+      "endAt": "2026-11-24T07:42:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGỰ MIÊU PHÁ ÁN",
+      "startAt": "2026-11-24T08:02:00.000Z",
+      "endAt": "2026-11-24T09:40:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "NGƯỜI MẸ KHÁC",
+      "startAt": "2026-11-24T10:00:00.000Z",
+      "endAt": "2026-11-24T11:33:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "OÁN LINH ĐÒI MẠNG",
+      "startAt": "2026-11-24T11:53:00.000Z",
+      "endAt": "2026-11-24T13:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 02 - 2D",
+      "movieTitle": "PHIM STREET FIGHTER",
+      "startAt": "2026-11-24T13:51:00.000Z",
+      "endAt": "2026-11-24T15:50:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "QUỶ ĂN TẠNG 4: HỔ TINH",
+      "startAt": "2026-11-24T02:00:00.000Z",
+      "endAt": "2026-11-24T03:51:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "SCOTTY: GIẢI CỨU HOÀNG THƯỢNG",
+      "startAt": "2026-11-24T04:11:00.000Z",
+      "endAt": "2026-11-24T05:31:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "SHAUN THE SHEEP: “QUÁI LẠ” GHÉ NHÀ",
+      "startAt": "2026-11-24T05:51:00.000Z",
+      "endAt": "2026-11-24T07:12:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "THE ODYSSEY",
+      "startAt": "2026-11-24T07:32:00.000Z",
+      "endAt": "2026-11-24T10:25:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRẠI BUÔN NGƯỜI",
+      "startAt": "2026-11-24T10:45:00.000Z",
+      "endAt": "2026-11-24T13:00:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    },
+    {
+      "roomName": "Phòng 03 - 2D",
+      "movieTitle": "TRÁI TIM QUÁI THÚ",
+      "startAt": "2026-11-24T13:20:00.000Z",
+      "endAt": "2026-11-24T15:01:00.000Z",
+      "standardPrice": 80000,
+      "vipPrice": 110000
+    }
+  ]
+}

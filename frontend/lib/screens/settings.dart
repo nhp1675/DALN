@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../platform/browser.dart';
 import '../widgets/common.dart';
 
@@ -46,10 +47,6 @@ class SettingsScreen extends StatelessWidget {
                     ),
                 ],
               ),
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Theo hệ thống sẽ tự đổi theo giao diện của thiết bị. Lựa chọn được lưu trên trình duyệt này.',
             ),
           ],
         ),

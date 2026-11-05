@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../core/api.dart';
 import '../widgets/common.dart';
 
@@ -212,7 +213,7 @@ class _AuthState extends State<AuthScreen> {
                 ),
               ] else if (challengeId != null) ...[
                 const Text(
-                  'Nhập mã 6 chữ số vừa được gửi đến email của bạn. Mã có hiệu lực trong 10 phút.',
+                  'Mã xác thực đã gửi qua email.',
                   style: TextStyle(height: 1.6),
                 ),
                 const SizedBox(height: 20),
@@ -592,15 +593,7 @@ class _ProfileState extends State<ProfileScreen> {
                 style: const TextStyle(color: Colors.white70),
               ),
               const SizedBox(height: 14),
-              Text(
-                '1 điểm / ${s.policy['pointsPerVnd'] ?? 10000} đ chi tiêu ròng. Hoàn tiền sẽ giảm chi tiêu tích điểm.',
-                style: const TextStyle(color: Colors.white70),
-              ),
               const SizedBox(height: 6),
-              const Text(
-                'Chưa có chương trình đổi điểm/ưu đãi được xác nhận.',
-                style: TextStyle(color: Colors.white70, fontSize: 12),
-              ),
             ],
           ),
         ),
@@ -782,10 +775,6 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Nhập email đã đăng ký, chúng tôi sẽ gửi liên kết để bạn đặt mật khẩu mới.',
-                style: TextStyle(color: muted, height: 1.6),
-              ),
               const SizedBox(height: 20),
               ErrorNote(error),
               TextFormField(

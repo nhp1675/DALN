@@ -53,6 +53,8 @@ export async function saveShowtime(userId, data, id) {
       { new: true, session },
     );
     if (!movie || !cinema) fail(400, "Phim hoặc rạp không hoạt động.");
+    if (!Number.isInteger(movie.duration) || movie.duration < 1 || movie.ageRating === "NO")
+      fail(400, "Cần cập nhật thời lượng và phân loại tuổi chính thức trước khi tạo suất chiếu.");
     const startAt = new Date(data.startAt),
       endAt = new Date(startAt.getTime() + movie.duration * 60000);
     if (startAt <= new Date()) fail(400, "Giờ chiếu phải ở tương lai.");

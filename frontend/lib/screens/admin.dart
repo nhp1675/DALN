@@ -1,5 +1,9 @@
+import '../core/cinema_groups.dart';
+import '../widgets/movie_reviews.dart';
 import 'moderation.dart';
+
 import 'package:flutter/material.dart';
+
 import '../core/api.dart';
 import '../core/format.dart';
 import '../widgets/common.dart';
@@ -18,6 +22,7 @@ const adminNames = {
   'audits': 'Nhật ký',
   'checkin': 'Soát vé QR',
   'chat': 'Phòng chat',
+  'reviews': 'Đánh giá phim',
 };
 const defaults = <String, Json>{
   'movies': {
@@ -60,7 +65,7 @@ const fields = <String, List<List<String>>>{
     ['synopsis', 'Nội dung', 'textarea'],
     ['director', 'Đạo diễn'],
     ['cast', 'Diễn viên'],
-    ['ageRating', 'Độ tuổi', 'select', 'P,K,T13,T16,T18'],
+    ['ageRating', 'Độ tuổi', 'select', 'P,K,T13,T16,T18,NO'],
     ['status', 'Trạng thái', 'select', 'now,soon,archived'],
     ['releaseDate', 'Ngày khởi chiếu (để trống nếu chưa rõ)', 'day'],
     ['endDate', 'Ngày kết thúc bán vé (để trống = không giới hạn)', 'day'],
@@ -127,7 +132,7 @@ class _AdminState extends State<AdminScreen> {
   }
 
   Future<Json> load() async {
-    if (tab == 'checkin' || tab == 'chat') {
+    if (tab == 'checkin' || tab == 'chat' || tab == 'reviews') {
       return {'items': [], 'pages': 1, 'total': 0};
     }
     return asMap(
@@ -181,6 +186,11 @@ class _AdminState extends State<AdminScreen> {
         id,
   );
   Future<void> edit([Json? item]) async {
+    if (tab == 'showtimes' && lookups.isEmpty) {
+      final entity = tab;
+      await loadLookups();
+      if (!mounted || tab != entity || lookups.isEmpty) return;
+    }
     final result = await showDialog<bool>(
       context: context,
       builder: (c) => AdminEditor(
@@ -214,9 +224,8 @@ class _AdminState extends State<AdminScreen> {
     if (!mounted) return;
     setState(() => busy = true);
     try {
-      await AppScope.of(
-        context,
-      ).api.request('/admin/$tab/${item['_id']}', method: 'DELETE');
+      await AppScope.of(context).api
+          .request('/admin/$tab/${item['_id']}', method: 'DELETE');
       if (mounted) {
         refresh();
         notice(
@@ -249,9 +258,8 @@ class _AdminState extends State<AdminScreen> {
     if (!mounted) return;
     setState(() => busy = true);
     try {
-      await AppScope.of(
-        context,
-      ).api.request('/admin/movies/${item['_id']}/hide', method: 'POST');
+      await AppScope.of(context).api
+          .request('/admin/movies/${item['_id']}/hide', method: 'POST');
       if (mounted) {
         refresh();
         notice(context, 'Đã ẩn phim.');
@@ -513,7 +521,11 @@ class _AdminState extends State<AdminScreen> {
         future: overview!,
         builder: (v) => LayoutBuilder(
           builder: (context, c) {
-            final cols = c.maxWidth < 700 ? 2 : 4;
+            final cols = c.maxWidth < 420
+                ? 1
+                : c.maxWidth < 700
+                ? 2
+                : 4;
             final w = (c.maxWidth - 16 * (cols - 1)) / cols;
             return Wrap(
               spacing: 16,
@@ -604,7 +616,7 @@ class _AdminState extends State<AdminScreen> {
                     icon: const Icon(Icons.add, size: 18),
                     label: const Text('Thêm mới'),
                   ),
-                if (tab != 'checkin' && tab != 'chat')
+                if (tab != 'checkin' && tab != 'chat' && tab != 'reviews')
                   OutlinedButton.icon(
                     onPressed: busy ? null : refresh,
                     icon: const Icon(Icons.refresh, size: 17),
@@ -614,15 +626,14 @@ class _AdminState extends State<AdminScreen> {
             ),
             ErrorNote(error),
             const SizedBox(height: 20),
-            if (tab == 'chat')
+            if (tab == 'reviews')
+              const ReviewModerationPanel()
+            else if (tab == 'chat')
               const ModerationPanel()
             else if (tab == 'checkin')
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Dùng máy quét QR nhập mã vào ô dưới. Chỉ soát từ 60 phút trước giờ chiếu đến hết phim.',
-                  ),
                   const SizedBox(height: 18),
                   TextField(
                     controller: qr,
@@ -663,9 +674,9 @@ class _AdminState extends State<AdminScreen> {
                           scrollDirection: Axis.horizontal,
                           child: DataTable(
                             headingRowColor: WidgetStateProperty.all(
-                              Theme.of(
-                                context,
-                              ).colorScheme.surfaceContainerHighest,
+                              Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest,
                             ),
                             columns: [
                               ...headers.map((h) => DataColumn(label: Text(h))),
@@ -706,8 +717,7 @@ class _AdminState extends State<AdminScreen> {
                                               ),
                                             if (tab == 'cinemas')
                                               IconButton(
-                                                tooltip:
-                                                    'Xem vị trí theo tọa độ trên Google Maps',
+                                                tooltip: 'Xem vị trí theo tọa độ trên Google Maps',
                                                 onPressed: () => openExternal(
                                                   'https://www.google.com/maps/search/?api=1&query=${x['latitude']},${x['longitude']}',
                                                 ),
@@ -759,9 +769,8 @@ class _AdminState extends State<AdminScreen> {
                                               ),
                                             if (tab == 'users' &&
                                                 x['_id'] !=
-                                                    AppScope.of(
-                                                      context,
-                                                    ).user?['id'] &&
+                                                    AppScope.of(context)
+                                                        .user?['id'] &&
                                                 (x['role'] != 'admin' ||
                                                     x['active'] != true))
                                               TextButton(
@@ -776,9 +785,8 @@ class _AdminState extends State<AdminScreen> {
                                               ),
                                             if (tab == 'users' &&
                                                 x['_id'] ==
-                                                    AppScope.of(
-                                                      context,
-                                                    ).user?['id'])
+                                                    AppScope.of(context)
+                                                        .user?['id'])
                                               const Text('—'),
                                             if (!fields.containsKey(tab) &&
                                                 tab != 'users')
@@ -852,6 +860,13 @@ class _EditorState extends State<AdminEditor> {
   final form = GlobalKey<FormState>();
   final controllers = <String, TextEditingController>{};
   late Json values;
+  String? showtimeCity;
+  String? showtimeCinemaId;
+
+  List<Json> related(String entity) => widget.lookups[entity] is List
+      ? asList(widget.lookups[entity])
+      : <Json>[];
+
   bool busy = false;
   String? error;
   final errorKey = GlobalKey();
@@ -866,13 +881,22 @@ class _EditorState extends State<AdminEditor> {
       if (!['relation', 'select', 'bool'].contains(type)) {
         controllers[key] = TextEditingController(
           text: type == 'date' && sid(values[key]).isNotEmpty
-              ? DateTime.parse(
-                  sid(values[key]),
-                ).toLocal().toString().substring(0, 16)
+              ? DateTime.parse(sid(values[key]))
+                    .toLocal()
+                    .toString()
+                    .substring(0, 16)
               : type == 'day' && sid(values[key]).length >= 10
               ? sid(values[key]).substring(0, 10)
               : sid(values[key]),
         );
+      }
+    }
+    if (widget.entity == 'showtimes') {
+      final room = byId(related('rooms'), values['roomId']);
+      final cinema = byId(related('cinemas'), room?['cinemaId']);
+      if (cinema != null) {
+        showtimeCinemaId = sid(cinema['_id']);
+        showtimeCity = cinemaCity(cinema);
       }
     }
   }
@@ -930,6 +954,93 @@ class _EditorState extends State<AdminEditor> {
     }
   }
 
+  Widget showtimeLocationFields() {
+    final groups = groupCinemasByCity(
+      related('cinemas')
+          .where(
+            (cinema) =>
+                cinema['active'] != false || cinema['_id'] == showtimeCinemaId,
+          )
+          .toList(),
+    );
+    final cinemas = groups[showtimeCity] ?? <Json>[];
+    final rooms = related('rooms')
+        .where(
+          (room) =>
+              showtimeCinemaId != null &&
+              sid(room['cinemaId']) == showtimeCinemaId,
+        )
+        .toList();
+
+    Widget picker(
+      String label,
+      String? selected,
+      Map<String, String> options,
+      ValueChanged<String?> onChanged, {
+      Key? key,
+    }) {
+      return DropdownButtonFormField<String>(
+        key: key,
+        initialValue: options.containsKey(selected) ? selected : null,
+        isExpanded: true,
+        decoration: InputDecoration(labelText: label),
+        items: [
+          for (final option in options.entries)
+            DropdownMenuItem(
+              value: option.key,
+              child: Text(option.value, overflow: TextOverflow.ellipsis),
+            ),
+        ],
+        onChanged: busy || options.isEmpty ? null : onChanged,
+        validator: (value) => value == null ? 'Vui lòng chọn' : null,
+      );
+    }
+
+    return Column(
+      children: [
+        picker(
+          'Thành phố',
+          showtimeCity,
+          {for (final city in groups.keys) city: city},
+          (city) => setState(() {
+            showtimeCity = city;
+            showtimeCinemaId = null;
+            values['roomId'] = null;
+          }),
+        ),
+        const SizedBox(height: 18),
+        picker(
+          'Rạp',
+          showtimeCinemaId,
+          {
+            for (final cinema in cinemas)
+              sid(cinema['_id']): sid(cinema['name']),
+          },
+          (cinemaId) => setState(() {
+            showtimeCinemaId = cinemaId;
+            values['roomId'] = null;
+          }),
+          key: ValueKey(('showtime-cinema', showtimeCity)),
+        ),
+        const SizedBox(height: 18),
+        picker(
+          'Phòng',
+          sid(values['roomId']),
+          {for (final room in rooms) sid(room['_id']): sid(room['name'])},
+          (roomId) => setState(() => values['roomId'] = roomId),
+          key: ValueKey(('showtime-room', showtimeCinemaId)),
+        ),
+        if (showtimeCinemaId != null && rooms.isEmpty)
+          const Padding(
+            padding: EdgeInsets.only(top: 8),
+            child: Text(
+              'Rạp chưa có phòng chiếu. Thêm phòng trong mục Phòng chiếu.',
+            ),
+          ),
+      ],
+    );
+  }
+
   Future<void> save() async {
     if (!form.currentState!.validate()) return;
     setState(() {
@@ -946,9 +1057,9 @@ class _EditorState extends State<AdminEditor> {
           final t = controllers[key]!.text.trim();
           body[key] = t.isEmpty ? null : t;
         } else if (type == 'date') {
-          body[key] = DateTime.parse(
-            controllers[key]!.text,
-          ).toUtc().toIso8601String();
+          body[key] = DateTime.parse(controllers[key]!.text)
+              .toUtc()
+              .toIso8601String();
         } else {
           body[key] = controllers.containsKey(key)
               ? controllers[key]!.text.trim()
@@ -1003,7 +1114,9 @@ class _EditorState extends State<AdminEditor> {
               ...fields[widget.entity]!.map((f) {
                 final key = f[0], label = f[1], type = f.length > 2 ? f[2] : '';
                 Widget input;
-                if (type == 'bool') {
+                if (widget.entity == 'showtimes' && key == 'roomId') {
+                  input = showtimeLocationFields();
+                } else if (type == 'bool') {
                   input = SwitchListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(label),

@@ -47,13 +47,13 @@ export const Movie = model(
   {
     title: text,
     genre: text,
-    duration: { type: Number, required: true, min: 1 },
+    duration: { type: Number, default: null, min: 1 },
     synopsis: text,
     cast: { type: String, default: "" },
     director: { type: String, default: "" },
     ageRating: {
       type: String,
-      enum: ["P", "K", "T13", "T16", "T18"],
+      enum: ["P", "K", "T13", "T16", "T18", "NO"],
       default: "P",
     },
     status: { type: String, enum: ["now", "soon", "archived"], default: "now" },
@@ -324,7 +324,17 @@ export const RevenueEntry = model("RevenueEntry", {
   ticketNet: {type: Number, default: 0}, snackNet: {type: Number, default: 0},
   received: {type: Number, default: 0}, returned: {type: Number, default: 0},
 });
+export const Review = model("Review", {
+  movieId: id, userId: id, name: text,
+  rating: {type:Number,required:true,min:1,max:5,validate:Number.isInteger},
+  comment: {type:String,default:"",maxlength:1000},
+  hidden: {type:Boolean,default:false},
+}, [
+  [{movieId:1,userId:1},{unique:true}],
+  [{movieId:1,hidden:1,createdAt:-1,_id:-1},{}],
+]);
 export const allModels = [
+  Review,
   Snack, SnackLine, RevenueEntry,
   User,
   Session,

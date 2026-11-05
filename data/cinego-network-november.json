@@ -1,0 +1,65 @@
+{
+  "startDate": "2026-11-01",
+  "endDate": "2026-11-30",
+  "openHour": 9,
+  "closeHour": 23,
+  "breakMinutes": 20,
+  "standardPrice": 80000,
+  "vipPrice": 110000,
+  "rooms": [
+    {"name": "Phòng 01 - 2D", "rows": 8, "columns": 10},
+    {"name": "Phòng 02 - 2D", "rows": 8, "columns": 10},
+    {"name": "Phòng 03 - 2D", "rows": 8, "columns": 10}
+  ],
+  "cinemas": [
+    {
+      "name": "CineGo Hà Nội",
+      "city": "Hà Nội",
+      "address": "Tầng 6, Vincom Center Nguyễn Chí Thanh, 54A Nguyễn Chí Thanh, phường Láng, Hà Nội",
+      "latitude": 21.023582,
+      "longitude": 105.809113,
+      "source": "https://www.cgv.vn/default/cinox/site/cgv-vincom-nguyen-chi-thanh/",
+      "addressSource": "https://vnpay.vn/ve-xem-phim/rap/cgv/cgv-vincom-nguyen-chi-thanh-87",
+      "coordinateSource": "https://www.momo.vn/cinema/rap/cgv/cgv-vincom-nguyen-chi-thanh-70"
+    },
+    {
+      "name": "CineGo Long Biên",
+      "city": "Hà Nội",
+      "address": "Tầng 4, TTTM AEON MALL Long Biên, 27 Cổ Linh, Hà Nội",
+      "latitude": 21.026997,
+      "longitude": 105.89846,
+      "source": "https://aeonmall-long-bien.com.vn/cua-hang/cgv/",
+      "coordinateSource": "https://www.momo.vn/cinema/rap/cgv/cgv-aeon-long-bien-115"
+    },
+    {
+      "name": "CineGo Hồ Chí Minh",
+      "city": "Hồ Chí Minh",
+      "address": "Tầng B1, Vincom Center Landmark 81, 772 Điện Biên Phủ, phường Thạnh Mỹ Tây, TP. Hồ Chí Minh",
+      "latitude": 10.795896,
+      "longitude": 106.722455,
+      "source": "https://vincom.com.vn/vincom-center-landmark-81/gioi-thieu",
+      "addressSource": "https://vnpay.vn/ve-xem-phim/rap/cgv/cgv-vincom-center-landmark-81-123",
+      "coordinateSource": "https://www.momo.vn/cinema/rap/cgv/cgv-vincom-center-landmark-81-127"
+    },
+    {
+      "name": "CineGo Đà Nẵng",
+      "city": "Đà Nẵng",
+      "address": "Tầng 4, Vincom Plaza Ngô Quyền, 910A Ngô Quyền, phường An Hải, Đà Nẵng",
+      "latitude": 16.070311,
+      "longitude": 108.229752,
+      "source": "https://vincom.com.vn/vincom-plaza-ngo-quyen/gioi-thieu",
+      "addressSource": "https://vnpay.vn/ve-xem-phim/rap/cgv/cgv-vincom-da-nang-99",
+      "coordinateSource": "https://www.momo.vn/cinema/rap/cgv/cgv-vincom-da-nang-129"
+    },
+    {
+      "name": "CineGo Thái Nguyên",
+      "city": "Thái Nguyên",
+      "address": "Tầng 4, Vincom Plaza Thái Nguyên, 286 Lương Ngọc Quyến, phường Phan Đình Phùng, Thái Nguyên",
+      "latitude": 21.591196,
+      "longitude": 105.826066,
+      "source": "https://vincom.com.vn/vincom-plaza-thai-nguyen/gioi-thieu",
+      "addressSource": "https://vnpay.vn/ve-xem-phim/rap/cgv/cgv-vincom-thai-nguyen-140",
+      "coordinateSource": "https://www.momo.vn/cinema/rap/cgv/cgv-vincom-thai-nguyen-122"
+    }
+  ]
+}

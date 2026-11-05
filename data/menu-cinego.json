@@ -1,0 +1,112 @@
+[
+  {
+    "name": "Bỏng ngô bơ - lớn",
+    "price": 55000,
+    "stock": 0,
+    "held": 0,
+    "active": false,
+    "image": "",
+    "priceBasis": "Giá đề xuất cho CineGo, không phải giá CGV",
+    "stockBasis": "Chưa kiểm kê; chưa mở bán"
+  },
+  {
+    "name": "Bỏng ngô caramel - lớn",
+    "price": 65000,
+    "stock": 0,
+    "held": 0,
+    "active": false,
+    "image": "",
+    "priceBasis": "Giá đề xuất cho CineGo, không phải giá CGV",
+    "stockBasis": "Chưa kiểm kê; chưa mở bán"
+  },
+  {
+    "name": "Bỏng ngô phô mai - lớn",
+    "price": 65000,
+    "stock": 0,
+    "held": 0,
+    "active": false,
+    "image": "",
+    "priceBasis": "Giá đề xuất cho CineGo, không phải giá CGV",
+    "stockBasis": "Chưa kiểm kê; chưa mở bán"
+  },
+  {
+    "name": "Nachos sốt phô mai",
+    "price": 55000,
+    "stock": 0,
+    "held": 0,
+    "active": false,
+    "image": "",
+    "priceBasis": "Giá đề xuất cho CineGo, không phải giá CGV",
+    "stockBasis": "Chưa kiểm kê; chưa mở bán"
+  },
+  {
+    "name": "Xúc xích - 1 phần",
+    "price": 35000,
+    "stock": 0,
+    "held": 0,
+    "active": false,
+    "image": "",
+    "priceBasis": "Giá đề xuất cho CineGo, không phải giá CGV",
+    "stockBasis": "Chưa kiểm kê; chưa mở bán"
+  },
+  {
+    "name": "Khoai tây chiên - 1 phần",
+    "price": 40000,
+    "stock": 0,
+    "held": 0,
+    "active": false,
+    "image": "",
+    "priceBasis": "Giá đề xuất cho CineGo, không phải giá CGV",
+    "stockBasis": "Chưa kiểm kê; chưa mở bán"
+  },
+  {
+    "name": "Coca-Cola 500 ml",
+    "price": 30000,
+    "stock": 0,
+    "held": 0,
+    "active": false,
+    "image": "",
+    "priceBasis": "Giá đề xuất cho CineGo, không phải giá CGV",
+    "stockBasis": "Chưa kiểm kê; chưa mở bán"
+  },
+  {
+    "name": "Sprite 500 ml",
+    "price": 30000,
+    "stock": 0,
+    "held": 0,
+    "active": false,
+    "image": "",
+    "priceBasis": "Giá đề xuất cho CineGo, không phải giá CGV",
+    "stockBasis": "Chưa kiểm kê; chưa mở bán"
+  },
+  {
+    "name": "Fanta 500 ml",
+    "price": 30000,
+    "stock": 0,
+    "held": 0,
+    "active": false,
+    "image": "",
+    "priceBasis": "Giá đề xuất cho CineGo, không phải giá CGV",
+    "stockBasis": "Chưa kiểm kê; chưa mở bán"
+  },
+  {
+    "name": "Nước suối 500 ml",
+    "price": 20000,
+    "stock": 0,
+    "held": 0,
+    "active": false,
+    "image": "",
+    "priceBasis": "Giá đề xuất cho CineGo, không phải giá CGV",
+    "stockBasis": "Chưa kiểm kê; chưa mở bán"
+  },
+  {
+    "name": "Trà đào 500 ml",
+    "price": 35000,
+    "stock": 0,
+    "held": 0,
+    "active": false,
+    "image": "",
+    "priceBasis": "Giá đề xuất cho CineGo, không phải giá CGV",
+    "stockBasis": "Chưa kiểm kê; chưa mở bán"
+  }
+]

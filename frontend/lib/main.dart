@@ -1,8 +1,10 @@
 import 'screens/settings.dart';
 import 'screens/snacks.dart';
 import 'screens/commerce_admin.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'core/api.dart';
 import 'core/session.dart';
 import 'widgets/common.dart';
@@ -155,7 +157,9 @@ class CineGoApp extends StatelessWidget {
                 screen = const CinemasScreen();
               case 'chat':
                 protected = true;
-                screen = ChatScreen(id: parts.length > 1 ? parts[1] : '');
+                screen = parts.length > 1
+                    ? ChatScreen(id: parts[1])
+                    : const ChatRoomsScreen();
               case 'settings':
                 screen = const SettingsScreen();
               case 'snacks':
@@ -260,7 +264,7 @@ class Shell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = AppScope.of(context);
-    final wide = MediaQuery.sizeOf(context).width > 1050;
+    final wide = MediaQuery.sizeOf(context).width > 1200;
     final current = ModalRoute.of(context)?.settings.name ?? '/';
     bool on(String route) => route == '/'
         ? current == '/' ||
@@ -316,9 +320,10 @@ class Shell extends StatelessWidget {
             _NavLink('Hệ thống rạp', '/cinemas', active: on('/cinemas')),
             _NavLink('Bỏng nước', '/snacks', active: on('/snacks')),
             _NavLink('Vé của tôi', '/tickets', active: on('/tickets')),
+            _NavLink('Phòng chat', '/chat', active: on('/chat')),
             if (s.isAdmin) _NavLink('Quản trị', '/admin', active: on('/admin')),
             const SizedBox(width: 12),
-            if (MediaQuery.sizeOf(context).width > 1180)
+            if (MediaQuery.sizeOf(context).width > 1440)
               OutlinedButton.icon(
                 onPressed: () => go(context, '/cinemas'),
                 icon: const Icon(Icons.near_me_outlined, size: 18),
@@ -333,7 +338,13 @@ class Shell extends StatelessWidget {
               ),
             const SizedBox(width: 8),
           ],
-          if (s.user == null)
+          if (s.user == null && MediaQuery.sizeOf(context).width < 380)
+            IconButton(
+              tooltip: 'Đăng nhập',
+              onPressed: () => go(context, '/login'),
+              icon: const Icon(Icons.login),
+            )
+          else if (s.user == null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: FilledButton(
@@ -382,6 +393,8 @@ class Shell extends StatelessWidget {
                   value: '/tickets',
                   child: Text('Vé của tôi'),
                 ),
+              if (!wide)
+                const PopupMenuItem(value: '/chat', child: Text('Phòng chat')),
               if (!wide && s.isAdmin)
                 const PopupMenuItem(value: '/admin', child: Text('Quản trị')),
               if (!wide) const PopupMenuDivider(),

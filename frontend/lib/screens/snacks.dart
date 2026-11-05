@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+
 import '../core/api.dart';
 import '../core/format.dart';
 import '../widgets/common.dart';
@@ -79,17 +80,23 @@ class _SnackPickerState extends State<_SnackPicker> {
     int max,
     void Function(int) change, {
     bool fixed = false,
-  }) => Row(
+  }) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Expanded(child: Text(name)),
-      IconButton(
-        onPressed: fixed || n == 0 ? null : () => change(n - 1),
-        icon: const Icon(Icons.remove),
-      ),
-      Text('$n'),
-      IconButton(
-        onPressed: fixed || n >= max ? null : () => change(n + 1),
-        icon: const Icon(Icons.add),
+      Text(name),
+      Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          IconButton(
+            onPressed: fixed || n == 0 ? null : () => change(n - 1),
+            icon: const Icon(Icons.remove),
+          ),
+          Text('$n'),
+          IconButton(
+            onPressed: fixed || n >= max ? null : () => change(n + 1),
+            icon: const Icon(Icons.add),
+          ),
+        ],
       ),
     ],
   );
@@ -113,11 +120,6 @@ class _SnackPickerState extends State<_SnackPicker> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (widget.old.isNotEmpty) ...[
-                Text(
-                  widget.allRequired
-                      ? 'Đây là vé cuối của suất cũ: chuyển/hủy toàn bộ bỏng nước chưa nhận.'
-                      : 'Chọn số lượng bỏng nước cũ đi kèm vé này:',
-                ),
                 ...widget.old.map(
                   (p) => quantity(
                     '${p['name']} · ${money(p['price'])}',
@@ -131,9 +133,6 @@ class _SnackPickerState extends State<_SnackPicker> {
                 const Divider(),
               ],
               if (!widget.cancelOnly) ...[
-                const Text(
-                  'Chọn lại món tại rạp mới, hoặc để số lượng 0 nếu không mua. Giữ món cũ bằng cách chọn lại món và số lượng tương ứng.',
-                ),
                 if (widget.products.isEmpty)
                   const Text('Rạp chưa có sản phẩm đang bán.'),
                 ...widget.products.map(
@@ -322,10 +321,13 @@ class _SnacksState extends State<SnacksScreen> {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         SizedBox(
-          width: 340,
+          width: MediaQuery.sizeOf(context).width < 400
+              ? MediaQuery.sizeOf(context).width - 48
+              : 340,
           child: DropdownButtonFormField<String>(
             initialValue: cinema,
             decoration: const InputDecoration(labelText: 'Rạp nhận hàng'),
+            isExpanded: true,
             items: asList(d['cinemas'])
                 .map(
                   (c) => DropdownMenuItem(
@@ -375,7 +377,9 @@ class _SnacksState extends State<SnacksScreen> {
           children: [
             LayoutBuilder(
               builder: (context, c) {
-                final cols = c.maxWidth > 900
+                final cols = c.maxWidth < 420
+                    ? 1
+                    : c.maxWidth > 900
                     ? 4
                     : c.maxWidth > 640
                     ? 3

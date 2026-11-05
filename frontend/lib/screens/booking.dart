@@ -1,7 +1,10 @@
 import 'snacks.dart';
+
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+
 import '../core/api.dart';
 import '../core/format.dart';
 import '../platform/browser.dart';
@@ -220,9 +223,9 @@ class _BookingState extends State<BookingScreen> {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Theme.of(
-                              context,
-                            ).colorScheme.surfaceContainerHighest,
+                            Theme.of(context)
+                                .colorScheme
+                                .surfaceContainerHighest,
                             Theme.of(context).colorScheme.surface,
                           ],
                         ),
@@ -244,23 +247,20 @@ class _BookingState extends State<BookingScreen> {
                               seats
                                   .where(
                                     (s) =>
-                                        sid(
-                                          s['label'],
-                                        ).replaceAll(RegExp(r'\d'), '') ==
+                                        sid(s['label'])
+                                            .replaceAll(RegExp(r'\d'), '') ==
                                         row,
                                   )
                                   .toList()
                                 ..sort(
                                   (a, b) =>
                                       int.parse(
-                                        sid(
-                                          a['label'],
-                                        ).replaceAll(RegExp(r'\D'), ''),
+                                        sid(a['label'])
+                                            .replaceAll(RegExp(r'\D'), ''),
                                       ).compareTo(
                                         int.parse(
-                                          sid(
-                                            b['label'],
-                                          ).replaceAll(RegExp(r'\D'), ''),
+                                          sid(b['label'])
+                                              .replaceAll(RegExp(r'\D'), ''),
                                         ),
                                       ),
                                 );
@@ -431,14 +431,6 @@ class _BookingState extends State<BookingScreen> {
                       color: coral,
                     ),
                   ),
-                  if (widget.exchangeId != null)
-                    const Padding(
-                      padding: EdgeInsets.only(top: 12),
-                      child: Text(
-                        'Khoản chênh lệch sẽ được tính ở bước tiếp theo.',
-                        style: TextStyle(color: muted, fontSize: 13),
-                      ),
-                    ),
                   ErrorNote(error),
                   const SizedBox(height: 18),
                   SizedBox(
@@ -509,8 +501,7 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
       if (ms.isNotEmpty && !ms.contains(method)) method = ms.first;
       polling = widget.result == 'success';
       if (widget.result == 'failed') {
-        error =
-            'Thanh toán chưa thành công hoặc đã bị hủy. Bạn có thể thử lại khi đơn còn được giữ.';
+        error = 'Thanh toán chưa thành công hoặc đã bị hủy. Bạn có thể thử lại khi đơn còn được giữ.';
       } else if (widget.result == 'invalid') {
         error = 'Không xác minh được kết quả thanh toán. Vui lòng thử lại.';
       }
@@ -669,10 +660,9 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
         }
       } else if (mounted) {
         setState(() {
-          error =
-              orderKind == 'snack'
-                  ? 'Thanh toán chưa thành công. Bạn có thể thử lại khi đơn còn được giữ.'
-                  : 'Thanh toán chưa thành công. Vé chưa được phát hành; bạn có thể thử lại khi ghế còn được giữ.';
+          error = orderKind == 'snack'
+              ? 'Thanh toán chưa thành công. Bạn có thể thử lại khi đơn còn được giữ.'
+              : 'Thanh toán chưa thành công. Vé chưa được phát hành; bạn có thể thử lại khi ghế còn được giữ.';
           future = load();
         });
       }
@@ -697,9 +687,8 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
     released = true;
     setState(() => busy = true);
     try {
-      await AppScope.of(
-        context,
-      ).api.request('/orders/${widget.id}/cancel', method: 'POST');
+      await AppScope.of(context).api
+          .request('/orders/${widget.id}/cancel', method: 'POST');
       if (mounted) go(context, orderKind == 'snack' ? '/snacks' : '/tickets');
     } catch (e) {
       if (mounted) setState(() => error = '$e');
@@ -718,250 +707,248 @@ class _CheckoutState extends State<CheckoutScreen> with RouteAware {
           final o = asMap(d['order']),
               movie = asMap(d['movie']),
               seats = asList(d['seats']);
-          final seconds = DateTime.parse(
-            sid(o['expiresAt']),
-          ).difference(DateTime.now()).inSeconds.clamp(0, 36000);
+          final seconds = DateTime.parse(sid(o['expiresAt']))
+              .difference(DateTime.now())
+              .inSeconds
+              .clamp(0, 36000);
           final pending = o['status'] == 'pending' && seconds > 0;
           return Column(
             children: [
               // Đơn chỉ có bỏng nước không đi qua các bước chọn suất/ghế.
               if (o['kind'] != 'snack') const Steps(2),
               ResponsiveSplit(
-            left: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Heading(
-                  o['kind'] == 'exchange'
-                      ? 'Xác nhận đổi vé'
-                      : o['kind'] == 'snack'
-                      ? 'Thanh toán bỏng nước'
-                      : 'Thanh toán & nhận vé',
-                  eyebrow: 'Kiểm tra lại một chút',
-                ),
-                Panel(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        o['kind'] == 'snack'
-                            ? 'Đơn bỏng nước'
-                            : sid(movie['title']),
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      InfoLine('Rạp', sid(d['cinema']['name'])),
-                      InfoLine(
-                        o['kind'] == 'snack' ? 'Ngày nhận' : 'Suất chiếu',
-                        o['kind'] == 'snack'
-                            ? sid(o['pickupDate'])
-                            : dateTime(d['show']['startAt']),
-                      ),
-                      if (o['kind'] != 'snack')
-                        InfoLine(
-                          'Ghế',
-                          seats.map((s) => s['label']).join(', '),
-                        ),
-                      for (final line in asList(o['snacks'] ?? []))
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: Row(
-                            children: [
-                              SnackImage(
-                                url: sid(line['image']),
-                                name: sid(line['name']),
-                                width: 48,
-                                height: 48,
-                                radius: 8,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  sid(line['name']),
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
+                left: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Heading(
+                      o['kind'] == 'exchange'
+                          ? 'Xác nhận đổi vé'
+                          : o['kind'] == 'snack'
+                          ? 'Thanh toán bỏng nước'
+                          : 'Thanh toán & nhận vé',
+                      eyebrow: 'Kiểm tra lại một chút',
+                    ),
+                    Panel(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            o['kind'] == 'snack'
+                                ? 'Đơn bỏng nước'
+                                : sid(movie['title']),
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          InfoLine('Rạp', sid(d['cinema']['name'])),
+                          InfoLine(
+                            o['kind'] == 'snack' ? 'Ngày nhận' : 'Suất chiếu',
+                            o['kind'] == 'snack'
+                                ? sid(o['pickupDate'])
+                                : dateTime(d['show']['startAt']),
+                          ),
+                          if (o['kind'] != 'snack')
+                            InfoLine(
+                              'Ghế',
+                              seats.map((s) => s['label']).join(', '),
+                            ),
+                          for (final line in asList(o['snacks'] ?? []))
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Row(
+                                children: [
+                                  SnackImage(
+                                    url: sid(line['image']),
+                                    name: sid(line['name']),
+                                    width: 48,
+                                    height: 48,
+                                    radius: 8,
                                   ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      sid(line['name']),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    '${line['quantity']} × ${money(line['price'])}',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          if ((o['oldSnackTotal'] as num? ?? 0) > 0)
+                            InfoLine(
+                              'Bỏng nước cũ chuyển đổi',
+                              money(o['oldSnackTotal']),
+                            ),
+                          if (o['kind'] != 'snack' &&
+                              asList(o['snacks'] ?? []).isNotEmpty)
+                            TextButton(
+                              onPressed: () => go(context, '/snacks'),
+                              child: const Text('Xem đơn & mã nhận bỏng nước'),
+                            ),
+                          InfoLine('Trạng thái', status(o['status'])),
+                          InfoLine('Mã đơn', widget.id),
+                          if (o['status'] == 'pending')
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: Tag(
+                                seconds > 0
+                                    ? '${o['kind'] == 'snack' ? 'Giữ đơn' : 'Giữ ghế'} còn ${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}'
+                                    : (o['kind'] == 'snack'
+                                          ? 'Hết thời gian giữ đơn'
+                                          : 'Hết thời gian giữ ghế'),
+                                color: coral,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 22),
+                    Panel(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Phương thức thanh toán',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          if (AppScope.of(context).isDemo)
+                            const SizedBox.shrink()
+                          else if (AppScope.of(context).isGateway) ...[
+                            SegmentedButton<String>(
+                              segments: [
+                                for (final m in AppScope.of(
+                                  context,
+                                ).paymentMethods)
+                                  ButtonSegment(
+                                    value: m,
+                                    label: Text(_methodLabels[m] ?? m),
+                                    icon: Icon(
+                                      _methodIcons[m] ?? Icons.payment,
+                                    ),
+                                  ),
+                              ],
+                              selected: {method},
+                              onSelectionChanged: busy || polling
+                                  ? null
+                                  : (v) => setState(() => method = v.first),
+                            ),
+                            const SizedBox(height: 16),
+                            if (polling)
+                              const Padding(
+                                padding: EdgeInsets.only(top: 16),
+                                child: Tag(
+                                  'Đang xác nhận thanh toán…',
+                                  color: coral,
                                 ),
                               ),
-                              Text(
-                                '${line['quantity']} × ${money(line['price'])}',
-                              ),
-                            ],
-                          ),
-                        ),
-                      if ((o['oldSnackTotal'] as num? ?? 0) > 0)
-                        InfoLine(
-                          'Bỏng nước cũ chuyển đổi',
-                          money(o['oldSnackTotal']),
-                        ),
-                      if (o['kind'] != 'snack' &&
-                          asList(o['snacks'] ?? []).isNotEmpty)
-                        TextButton(
-                          onPressed: () => go(context, '/snacks'),
-                          child: const Text('Xem đơn & mã nhận bỏng nước'),
-                        ),
-                      InfoLine('Trạng thái', status(o['status'])),
-                      InfoLine('Mã đơn', widget.id),
-                      if (o['status'] == 'pending')
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Tag(
-                            seconds > 0
-                                ? '${o['kind'] == 'snack' ? 'Giữ đơn' : 'Giữ ghế'} còn ${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}'
-                                : (o['kind'] == 'snack'
-                                      ? 'Hết thời gian giữ đơn'
-                                      : 'Hết thời gian giữ ghế'),
-                            color: coral,
-                          ),
-                        ),
-                    ],
-                  ),
+                          ] else
+                            const Text(
+                              'Dịch vụ thanh toán chưa được cấu hình.',
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 22),
-                Panel(
+                right: Panel(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Phương thức thanh toán',
+                        'Chi tiết thanh toán',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      if (AppScope.of(context).isDemo)
-                        Text(
-                          o['kind'] == 'snack'
-                              ? 'Xác nhận đơn hàng để hoàn tất thanh toán và nhận mã lấy bỏng nước tại rạp.'
-                              : 'Xác nhận đơn hàng để hoàn tất thanh toán và nhận vé.',
-                        )
-                      else if (AppScope.of(context).isGateway) ...[
-                        SegmentedButton<String>(
-                          segments: [
-                            for (final m in AppScope.of(context).paymentMethods)
-                              ButtonSegment(
-                                value: m,
-                                label: Text(_methodLabels[m] ?? m),
-                                icon: Icon(_methodIcons[m] ?? Icons.payment),
-                              ),
-                          ],
-                          selected: {method},
-                          onSelectionChanged: busy || polling
-                              ? null
-                              : (v) => setState(() => method = v.first),
+                      const SizedBox(height: 22),
+                      const Text(
+                        'Cần thanh toán',
+                        style: TextStyle(color: muted),
+                      ),
+                      Text(
+                        money(o['total']),
+                        style: const TextStyle(
+                          color: coral,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w800,
                         ),
-                        const SizedBox(height: 16),
-                        Text(
-                          method == 'momo'
-                              ? 'Bạn sẽ được chuyển sang MoMo để quét mã QR hoặc mở ứng dụng MoMo.'
-                              : 'Bạn sẽ được chuyển sang cổng VNPay để chọn cách thanh toán (quét QR, thẻ ATM...).',
-                        ),
-                        if (polling)
-                          const Padding(
-                            padding: EdgeInsets.only(top: 16),
-                            child: Tag(
-                              'Đang xác nhận thanh toán…',
-                              color: coral,
+                      ),
+                      if (o['kind'] == 'exchange') ...[
+                        InfoLine('Giá vé mới', money(o['newValue'])),
+                        InfoLine('Hoàn chênh', money(o['refundAmount'])),
+                      ],
+                      const SizedBox(height: 22),
+                      ErrorNote(error),
+                      const SizedBox(height: 22),
+                      if (pending) ...[
+                        SizedBox(
+                          width: double.infinity,
+                          child: FilledButton(
+                            onPressed: busy || polling
+                                ? null
+                                : AppScope.of(context).isGateway
+                                ? startPayment
+                                : AppScope.of(context).isDemo
+                                ? () => pay('success')
+                                : null,
+                            child: Text(
+                              busy || polling
+                                  ? 'Đang xử lý…'
+                                  : AppScope.of(context).isGateway
+                                  ? 'Thanh toán qua ${method == 'atm'
+                                        ? 'thẻ ATM'
+                                        : method == 'momo'
+                                        ? 'MoMo'
+                                        : 'VNPay'}'
+                                  : 'Xác nhận thanh toán',
                             ),
                           ),
+                        ),
+                        const SizedBox(height: 12),
+                        TextButton(
+                          onPressed: busy ? null : cancel,
+                          child: Text(
+                            o['kind'] == 'snack'
+                                ? 'Hủy đơn'
+                                : 'Hủy đơn và trả ghế',
+                          ),
+                        ),
                       ] else
-                        const Text('Dịch vụ thanh toán chưa được cấu hình.'),
+                        FilledButton(
+                          onPressed: () => go(
+                            context,
+                            o['kind'] == 'snack'
+                                ? '/snacks'
+                                : o['status'] == 'paid'
+                                ? '/tickets'
+                                : '/movies/${movie['_id']}',
+                          ),
+                          child: Text(
+                            o['kind'] == 'snack'
+                                ? (o['status'] == 'paid'
+                                      ? 'Xem đơn bỏng nước'
+                                      : 'Đặt lại bỏng nước')
+                                : o['status'] == 'paid'
+                                ? 'Xem vé của tôi'
+                                : 'Chọn lại suất chiếu',
+                          ),
+                        ),
                     ],
                   ),
                 ),
-              ],
-            ),
-            right: Panel(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Chi tiết thanh toán',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 22),
-                  const Text('Cần thanh toán', style: TextStyle(color: muted)),
-                  Text(
-                    money(o['total']),
-                    style: const TextStyle(
-                      color: coral,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  if (o['kind'] == 'exchange') ...[
-                    InfoLine('Giá vé mới', money(o['newValue'])),
-                    InfoLine('Hoàn chênh', money(o['refundAmount'])),
-                    const Text(
-                      'Vé cũ giữ nguyên đến khi đổi thành công. Mã QR sẽ được thay mới.',
-                      style: TextStyle(color: muted, fontSize: 13),
-                    ),
-                  ],
-                  const SizedBox(height: 22),
-                  Text(
-                    o['kind'] == 'snack'
-                        ? 'Phần chưa nhận có thể hủy và hoàn tiền trong mục Bỏng nước.'
-                        : 'Chính sách: hủy/đổi trước ${o['policy']['changeCutoffHours']} giờ; hoàn ${o['policy']['refundPercent']}% khi hủy.',
-                    style: const TextStyle(color: muted, fontSize: 13),
-                  ),
-                  ErrorNote(error),
-                  const SizedBox(height: 22),
-                  if (pending) ...[
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                        onPressed: busy || polling
-                            ? null
-                            : AppScope.of(context).isGateway
-                            ? startPayment
-                            : AppScope.of(context).isDemo
-                            ? () => pay('success')
-                            : null,
-                        child: Text(
-                          busy || polling
-                              ? 'Đang xử lý…'
-                              : AppScope.of(context).isGateway
-                              ? 'Thanh toán qua ${method == 'atm'
-                                    ? 'thẻ ATM'
-                                    : method == 'momo'
-                                    ? 'MoMo'
-                                    : 'VNPay'}'
-                              : 'Xác nhận thanh toán',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton(
-                      onPressed: busy ? null : cancel,
-                      child: Text(o['kind'] == 'snack' ? 'Hủy đơn' : 'Hủy đơn và trả ghế'),
-                    ),
-                  ] else
-                    FilledButton(
-                      onPressed: () => go(
-                        context,
-                        o['kind'] == 'snack'
-                            ? '/snacks'
-                            : o['status'] == 'paid'
-                            ? '/tickets'
-                            : '/movies/${movie['_id']}',
-                      ),
-                      child: Text(
-                        o['kind'] == 'snack'
-                            ? (o['status'] == 'paid'
-                                  ? 'Xem đơn bỏng nước'
-                                  : 'Đặt lại bỏng nước')
-                            : o['status'] == 'paid'
-                            ? 'Xem vé của tôi'
-                            : 'Chọn lại suất chiếu',
-                      ),
-                    ),
-                ],
               ),
-            ),
-          ),
             ],
           );
         },
