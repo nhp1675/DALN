@@ -146,6 +146,14 @@ class _CommerceAdminState extends State<CommerceAdminScreen> {
   @override
   Widget build(BuildContext context) => PageBody(
     children: [
+      TextButton.icon(
+        onPressed: busy
+            ? null
+            : () => Navigator.of(context).pushReplacementNamed('/admin'),
+        icon: const Icon(Icons.arrow_back, size: 18),
+        label: const Text('Quay lại quản trị rạp phim'),
+      ),
+      const SizedBox(height: 12),
       Heading(
         'Kho & doanh thu',
         action: IconButton(
