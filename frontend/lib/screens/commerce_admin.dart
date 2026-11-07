@@ -418,25 +418,71 @@ class _ProductFormState extends State<_ProductForm> {
     super.dispose();
   }
 
+  InputDecoration fieldDecoration(String label, {String? hint, String? suffix}) =>
+      InputDecoration(
+        labelText: label,
+        hintText: hint,
+        suffixText: suffix,
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+      );
+
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: Text(widget.product == null ? 'Thêm món / combo' : 'Sửa sản phẩm'),
-    content: SizedBox(
-      width: 480,
-      child: SingleChildScrollView(
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    // Account for dialog insets/padding and larger accessibility text.
+    final compact = MediaQuery.sizeOf(context).width < 600 ||
+        MediaQuery.textScalerOf(context).scale(16) > 20;
+    final priceField = TextFormField(
+      controller: price,
+      keyboardType: TextInputType.number,
+      decoration: fieldDecoration('Giá bán', suffix: 'đ'),
+      validator: (v) => (int.tryParse(v ?? '') ?? 0) < 1000
+          ? 'Giá từ 1.000đ'
+          : null,
+    );
+    final stockField = TextFormField(
+      controller: stock,
+      keyboardType: TextInputType.number,
+      decoration: fieldDecoration('Số lượng tồn thực tế'),
+      validator: (v) => (int.tryParse(v ?? '') ?? -1) < 0
+          ? 'Nhập số nguyên không âm'
+          : null,
+    );
+    return AlertDialog(
+      backgroundColor: colors.surface,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+      titlePadding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+      contentPadding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
+      actionsPadding: const EdgeInsets.fromLTRB(20, 8, 20, 20),
+      scrollable: true,
+      title: Text(
+        widget.product == null ? 'Thêm món / combo' : 'Sửa sản phẩm',
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+      ),
+      content: SizedBox(
+        width: 560,
         child: Form(
           key: form,
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               DropdownButtonFormField<String>(
                 initialValue: cinema,
-                decoration: const InputDecoration(labelText: 'Rạp'),
+                isExpanded: true,
+                decoration: fieldDecoration('Rạp'),
                 items: widget.cinemas
                     .map(
                       (c) => DropdownMenuItem(
                         value: sid(c['_id']),
-                        child: Text(sid(c['name'])),
+                        child: Text(
+                          sid(c['name']),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     )
                     .toList(),
@@ -445,77 +491,119 @@ class _ProductFormState extends State<_ProductForm> {
                     : (v) => setState(() => cinema = v),
                 validator: (v) => v == null ? 'Chọn rạp' : null,
               ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: name,
-                decoration: const InputDecoration(labelText: 'Tên món / combo'),
+                onChanged: (_) => setState(() {}),
+                decoration: fieldDecoration('Tên món / combo'),
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Nhập tên' : null,
               ),
+              const SizedBox(height: 24),
+              Text(
+                'Hình ảnh',
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              const SizedBox(height: 12),
               TextFormField(
                 controller: image,
+                keyboardType: TextInputType.url,
                 onChanged: (_) => setState(() {}),
-                decoration: const InputDecoration(
-                  labelText: 'Link ảnh (https://…)',
+                decoration: fieldDecoration('Link ảnh', hint: 'https://...'),
+              ),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: colors.surfaceContainerLow,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: colors.outlineVariant),
+                ),
+                child: Row(
+                  children: [
+                    SnackImage(
+                      url: image.text.trim(),
+                      name: name.text,
+                      width: 80,
+                      height: 64,
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Ảnh xem trước',
+                            style: Theme.of(context).textTheme.labelMedium
+                                ?.copyWith(color: colors.onSurfaceVariant),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            name.text.trim().isEmpty
+                                ? 'Món / combo'
+                                : name.text.trim(),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: SnackImage(
-                  url: image.text.trim(),
-                  name: name.text,
-                  width: 96,
-                  height: 72,
+              const SizedBox(height: 24),
+              if (compact) ...[
+                priceField,
+                const SizedBox(height: 20),
+                stockField,
+              ] else
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: priceField),
+                    const SizedBox(width: 16),
+                    Expanded(child: stockField),
+                  ],
                 ),
-              ),
-              TextFormField(
-                controller: price,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Giá (đồng)'),
-                validator: (v) => (int.tryParse(v ?? '') ?? 0) < 1000
-                    ? 'Giá từ 1.000đ'
-                    : null,
-              ),
-              TextFormField(
-                controller: stock,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Số lượng tồn thực tế',
+              const SizedBox(height: 24),
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(color: colors.outlineVariant),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                validator: (v) => (int.tryParse(v ?? '') ?? -1) < 0
-                    ? 'Nhập số nguyên không âm'
-                    : null,
-              ),
-              SwitchListTile(
-                title: const Text('Đang bán'),
-                value: active,
-                onChanged: (v) => setState(() => active = v),
+                child: SwitchListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                  title: const Text('Đang bán'),
+                  value: active,
+                  onChanged: (v) => setState(() => active = v),
+                ),
               ),
             ],
           ),
         ),
       ),
-    ),
-    actions: [
-      TextButton(
-        onPressed: () => Navigator.pop(context),
-        child: const Text('Đóng'),
-      ),
-      FilledButton(
-        onPressed: () {
-          if (form.currentState!.validate()) {
-            Navigator.pop(context, {
-              'cinemaId': cinema,
-              'name': name.text.trim(),
-              'image': image.text.trim(),
-              'price': int.parse(price.text),
-              'stock': int.parse(stock.text),
-              'active': active,
-            });
-          }
-        },
-        child: const Text('Lưu'),
-      ),
-    ],
-  );
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Đóng'),
+        ),
+        FilledButton(
+          onPressed: () {
+            if (form.currentState!.validate()) {
+              Navigator.pop(context, {
+                'cinemaId': cinema,
+                'name': name.text.trim(),
+                'image': image.text.trim(),
+                'price': int.parse(price.text),
+                'stock': int.parse(stock.text),
+                'active': active,
+              });
+            }
+          },
+          child: const Text('Lưu'),
+        ),
+      ],
+    );
+  }
 }
