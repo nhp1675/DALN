@@ -12,6 +12,10 @@ const env = z
     APP_ORIGIN: z.string().url().default("http://localhost:4000"),
     MONGODB_URI: z.string().min(1),
     SESSION_SECRET: z.string().min(48),
+    ALLOW_DEMO_PAYMENTS: z
+      .enum(["true", "false"])
+      .default("false")
+      .transform((value) => value === "true"),
     PAYMENT_MODE: z
       .enum(["demo", "online", "vnpay", "disabled"])
       .default("disabled"),
@@ -49,12 +53,12 @@ const env = z
 if (env.PAYMENT_MODE === "vnpay") env.PAYMENT_MODE = "online";
 if (
   env.NODE_ENV === "production" &&
-  (env.PAYMENT_MODE === "demo" ||
+  ((env.PAYMENT_MODE === "demo" && !env.ALLOW_DEMO_PAYMENTS) ||
     !env.APP_ORIGIN.startsWith("https://") ||
     env.SESSION_SECRET.includes("replace-with"))
 )
   throw Error(
-    "Production requires HTTPS, random session secret, and a real payment integration. Demo payments are prohibited.",
+    "Production requires HTTPS, a random session secret, and explicit permission for demo payments.",
   );
 if (
   env.NODE_ENV === "production" &&
@@ -87,6 +91,9 @@ if (env.PAYMENT_MODE === "online") {
     throw Error("Production must not use sandbox payment gateway URLs.");
 }
 export const config = env;
+export const demoPaymentsAllowed =
+  env.PAYMENT_MODE === "demo" &&
+  (env.NODE_ENV !== "production" || env.ALLOW_DEMO_PAYMENTS);
 export const vnpay = {
   tmnCode: env.VNP_TMN_CODE,
   hashSecret: env.VNP_HASH_SECRET,

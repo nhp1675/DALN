@@ -1,7 +1,8 @@
 # CineGo
 
-**Link deploy: https://cinego-nhom7.netlify.app/**
-<!-- Chèn URL website CineGo vào dòng trên khi triển khai. -->
+**Link deploy:https://cinego-nhom7.netlify.app**
+
+**Link tài khoản thanh toán demo:https://sandbox.vnpayment.vn/apis/vnpay-demo**
 
 CineGo là hệ thống đặt vé xem phim trực tuyến, xây dựng bằng Flutter Web, Node.js và MongoDB. Dự án hỗ trợ tìm phim, xem lịch chiếu, chọn ghế, thanh toán, nhận vé QR và quản lý hoạt động của rạp.
 

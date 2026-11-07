@@ -1,4 +1,4 @@
-import {config} from '../config.js';
+import {config, demoPaymentsAllowed} from '../config.js';
 import { randomBytes } from 'node:crypto';
 import { Snack, SnackLine, Order, Ticket, Showtime, Cinema, Allocation, Refund, RevenueEntry, User } from '../models.js';
 import { create, fail, same, transaction, audit } from '../core.js';
@@ -123,7 +123,7 @@ export async function cancelLines(userId, selections, session, {ticket=null,requ
   return total;
 }
 export async function cancelStandalone(userId,selections) {
-  if(config.NODE_ENV==="production" || config.PAYMENT_MODE==="disabled")fail(503,"Hoàn tiền mô phỏng chỉ dùng trong môi trường thử nghiệm.");
+  if((config.NODE_ENV==="production" && !demoPaymentsAllowed) || config.PAYMENT_MODE==="disabled")fail(503,"Hoàn tiền mô phỏng chỉ dùng trong môi trường thử nghiệm.");
   return transaction(async session=>{
     await User.updateOne({_id:userId},{$inc:{bookingRevision:1}},{session});
     const refunded=await cancelLines(userId,selections,session);

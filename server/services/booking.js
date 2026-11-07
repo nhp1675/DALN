@@ -2,7 +2,7 @@ import { reserveSnacks, releaseSnacks, selectChanges, takeCredit, allocate, refu
 import { assertMovieOnSale } from './movies.js';
 import mongoose from "mongoose";
 import { randomBytes } from "node:crypto";
-import { config, policy, vnpay, momo, paymentMethods } from "../config.js";
+import { config, policy, vnpay, momo, paymentMethods, demoPaymentsAllowed } from "../config.js";
 import {
   RevenueEntry,
   Cinema,
@@ -214,7 +214,7 @@ export async function exchange(userId, ticketId, { seatId, idempotencyKey, snack
     const snackLines = await reserveSnacks(target.cinemaId,snacks,session,changes);
     const snackTotal = snackLines.reduce((n,x)=>n+x.price*x.quantity,0);
     const difference = seat.price + snackTotal - ticket.currentValue - oldSnackTotal;
-    if(difference<0 && config.NODE_ENV==="production")fail(503,"Hoàn tiền mô phỏng chỉ dùng trong môi trường thử nghiệm.");
+    if(difference<0 && config.NODE_ENV==="production" && !demoPaymentsAllowed)fail(503,"Hoàn tiền mô phỏng chỉ dùng trong môi trường thử nghiệm.");
     const order = await create(
       Order,
       {
@@ -439,7 +439,7 @@ async function settlePaid(order, items, { provider, reference }, session) {
   return order;
 }
 export async function payDemo(userId, orderId, outcome) {
-  if (config.PAYMENT_MODE !== "demo" || config.NODE_ENV === "production")
+  if (!demoPaymentsAllowed)
     fail(503, "Thanh toán chưa được cấu hình. Liên hệ quản trị viên.");
   return transaction(async (session) => {
     const order = await Order.findOne({ _id: orderId, userId }).session(
@@ -663,7 +663,7 @@ export async function cancelOrder(userId, orderId) {
 }
 export async function cancelTicket(userId, ticketId, snackChanges = []) {
   // Hoàn tiền hiện vẫn là mô phỏng (chưa gọi API hoàn tiền của VNPay).
-  if (config.PAYMENT_MODE === "disabled" || config.NODE_ENV === "production")
+  if (config.PAYMENT_MODE === "disabled" || (config.NODE_ENV === "production" && !demoPaymentsAllowed))
     fail(503, "Dịch vụ hoàn tiền chưa được cấu hình.");
   return transaction(async (session) => {
     const ticket = await Ticket.findOne({ _id: ticketId, userId }).session(
